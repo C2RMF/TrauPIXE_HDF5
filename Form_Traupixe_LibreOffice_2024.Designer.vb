@@ -473,7 +473,7 @@ Partial Class Form_Traupixe_H5_2024
         '
         'Tps_Calc
         '
-        Me.Tps_Calc.Location = New System.Drawing.Point(280, 9)
+        Me.Tps_Calc.Location = New System.Drawing.Point(279, 9)
         Me.Tps_Calc.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
         Me.Tps_Calc.Name = "Tps_Calc"
         Me.Tps_Calc.Size = New System.Drawing.Size(100, 27)
@@ -526,13 +526,13 @@ Partial Class Form_Traupixe_H5_2024
         Me.mnuOxydeOUI.Checked = True
         Me.mnuOxydeOUI.CheckState = System.Windows.Forms.CheckState.Checked
         Me.mnuOxydeOUI.Name = "mnuOxydeOUI"
-        Me.mnuOxydeOUI.Size = New System.Drawing.Size(224, 26)
+        Me.mnuOxydeOUI.Size = New System.Drawing.Size(113, 26)
         Me.mnuOxydeOUI.Text = "Yes"
         '
         'mnuOxydeNON
         '
         Me.mnuOxydeNON.Name = "mnuOxydeNON"
-        Me.mnuOxydeNON.Size = New System.Drawing.Size(224, 26)
+        Me.mnuOxydeNON.Size = New System.Drawing.Size(113, 26)
         Me.mnuOxydeNON.Text = "No"
         '
         'LODToolStripMenuItem

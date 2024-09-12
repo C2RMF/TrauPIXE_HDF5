@@ -1843,7 +1843,7 @@ Public Class Form_Traupixe_H5_2024
 
     End Sub
 
-
+    'Comm
 
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
         Button2.Enabled = False
@@ -2747,12 +2747,7 @@ Public Class Form_Traupixe_H5_2024
             For l = 0 To Nb_Process - 1
 
                 If OnlyTrace = False Then
-                    '    Tab_Best_Done(l) = False
-                    '    Parametres_All_Thread.Num_File = l + ((Nb_Process1) * (J - 1))
-                    '    Parametres_All_Thread.Num_Proc = l
-                    '    Parametres_All_Thread.Num_Trc = Nb_Trc
-                    '    Thread_Best_Value(l).Start(Parametres_All_Thread)
-                    'Calcul_Final_Best_Conc_New_Thread(l + ((Nb_Process1) * (J - 1)), l, Nb_Trc) ', nb_data_read
+
                     If Error_Matrix(l) = False Then
                         Calcul_Final_Best_Conc_New_Thread(tab_select_file_indices(l + ((Nb_Process1) * (J - 1))), l, Nb_Trc) ', nb_data_read
 
@@ -2761,20 +2756,7 @@ Public Class Form_Traupixe_H5_2024
                     End If
 
                 End If
-                'Next l
 
-
-                'Do
-                '    For l = 0 To Nb_Process - 1
-                '        Tab_Thread_Best_Value_Alive(l) = Thread_Best_Value(l).IsAlive
-                '        If Tab_Thread_Best_Value_Alive(l) = False And Tab_Best_Done(l) = False Then
-                '            Best_Done += 1
-                '            Tab_Best_Done(l) = True
-                '        End If
-                '    Next l
-                'Loop While Best_Done <> Nb_Process
-
-                'For l = 0 To Nb_Process - 1
 
                 Ecrire_Entete_Excel(l + ((Nb_Process1) * (J - 1)))
 
@@ -3088,7 +3070,7 @@ Public Class Form_Traupixe_H5_2024
 
         ToolStripStatusLabel1.Text = "Matrix processing"
         '  Fs_Log.writeline("Calculate MATRIX" & CStr(Num_Fichier))
-
+        data = ""
         For I = 0 To Nb_Process - 1
 
             '********************************************************* Ecriture ENTETE DATE COMMENTAIRE SUR GUPIXWIN.PAR *******************
@@ -3129,6 +3111,9 @@ Public Class Form_Traupixe_H5_2024
                 End If
 
                 data = SR.ReadLine
+                If Len(data) < 6 Then
+                    data = "2048  0" & vbCrLf
+                End If
 
                 If data = Nothing Then
                     MsgBox("Fatal Error, check matrix spectra file'" & Fichier_Matrix(I + Num_Fichier) & "' file is empty", MsgBoxStyle.Information, "Error reading Matrix file")
@@ -3137,6 +3122,7 @@ Public Class Form_Traupixe_H5_2024
                 End If
 
                 Dim entete_tmp = Mid(data, 5, 2)
+                Dim nbcanaux = Mid(data, 1, 4)
                 'data = Strings.StrReverse(data)
                 If entete_tmp = " 1" Then
                     'data = Strings.StrReverse(data)
@@ -3204,14 +3190,27 @@ Public Class Form_Traupixe_H5_2024
                     'Else
                     '    Tab_IsPonctuel(I) = False
                     'End If
+                    If nbcanaux <> 0 Then
+                        data = data & vbCrLf & MyDate & " '" & MyHeures & "' " + tps_cps + " " + Somme + "  '  '" + vbCrLf
+                        For T = 0 To nbcanaux - 1
+                            data += SR.ReadLine() + vbCrLf
+                        Next T
+                    Else
+                        data = data & vbCrLf & MyDate & " '" & MyHeures & "' " + tps_cps + " " + Somme + "  '  '" + vbCrLf + SR.ReadToEnd()
+                    End If
 
-                    data = data & vbCrLf & MyDate & " '" & MyHeures & "' " + tps_cps + " " + Somme + "  '  '" + vbCrLf & SR.ReadToEnd()
-
+                    '& SR.ReadToEnd()
+                    Dim titi = Len(data)
                 Else
-                    data = data & vbCrLf & SR.ReadToEnd()
+                    If nbcanaux <> 0 Then
+                        For T = 0 To nbcanaux - 1
+                            data += SR.ReadLine() + vbCrLf
+                        Next T
+                    Else
+                        data = data & vbCrLf & SR.ReadToEnd()
+                    End If
+                    'Example      '2007-2-12' '15:19:50' 572  1709185 'COMMENTAIRE'
                 End If
-                'Example      '2007-2-12' '15:19:50' 572  1709185 'COMMENTAIRE'
-
                 SR.Close()
 
             End If
@@ -3620,7 +3619,13 @@ Public Class Form_Traupixe_H5_2024
 
                     If Error_Trace(I, Num_Trc) = False Then
                         data = SR.ReadLine
+
+                        If Len(data) < 6 Then ' BUg pas d'entete avec le nb de canaux on le force à 2048 !
+                            data = "2048  0" & vbCrLf
+                        End If
+
                         Dim entete_tmp = Mid(data, 5, 2)
+                        Dim nbcanaux = Mid(data, 1, 4)
 
                         If entete_tmp = " 1" Then 'Strings.RSet(data, 1) = "1" Or Strings.RSet(data, 2) = "1 " Then
                             ' testDateTime, "dddd, MMM d yyyy")
@@ -3649,7 +3654,19 @@ Public Class Form_Traupixe_H5_2024
 
                             tps_cps = Mid(Str_Entete, pos, pos1 - pos)
                             commentaire = " '" & Mid(Str_Entete, pos1, Len(Str_Entete) + 1 - pos1) & "'"
-                            data = data & vbCrLf & MyDate & " '" & MyHeures & "' " & tps_cps & " '  '" & vbCrLf & SR.ReadToEnd
+
+                            If nbcanaux <> 0 Then
+                                data = data & vbCrLf & MyDate & " '" & MyHeures & "' " & tps_cps & " '  '" & vbCrLf
+
+                                For T = 0 To nbcanaux - 1
+                                    data += SR.ReadLine() + vbCrLf
+                                Next T
+
+                            Else
+                                data = data & vbCrLf & MyDate & " '" & MyHeures & "' " & tps_cps & " '  '" & vbCrLf & SR.ReadToEnd
+                            End If
+
+                            'data = data & vbCrLf & MyDate & " '" & MyHeures & "' " & tps_cps & " '  '" & vbCrLf & SR.ReadToEnd
 
                         Else
                             data = data & vbCrLf & SR.ReadToEnd
