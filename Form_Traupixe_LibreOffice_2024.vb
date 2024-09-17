@@ -1622,11 +1622,11 @@ Public Class Form_Traupixe_H5_2024
                     ' Text_Lst_Ox_Trc.Text = File.ReadAllText(Chemin_Data & "\config-exp.ini") 'str
                     str = Text_Lst_Ox_Trc.Text
                     Check_Trc_As_Oxy.Checked = True
-                    If str = "All trace As Oxide" Then
+                    If UCase(str) = "ALL TRACE AS OXIDE" Then
                         Ck_AllAsOxy.Checked = True
                         Check_Trc_As_Oxy.Checked = True
                         Check_Trc_As_Oxy.Enabled = False
-                    ElseIf str = "No oxide" Then
+                    ElseIf UCase(str) = "NO OXIDE" Then
                         Ck_AllAsOxy.Checked = False
                         Check_Trc_As_Oxy.Checked = False
                     Else
@@ -2054,7 +2054,7 @@ Public Class Form_Traupixe_H5_2024
             File.WriteAllText(Chemin_Data & "\config-exp.ini", "[Trace-oxide]" & vbCrLf & Text_Lst_Ox_Trc.Text)
             'End If
         Else
-            File.WriteAllText(Chemin_Data & "\config-exp.ini", "[Trace-oxide]" & vbCrLf & "No oxide")
+            File.WriteAllText(Chemin_Data & "\config-exp.ini", "[Trace-oxide]" & vbCrLf & "NO OXIDE")
         End If
 
         '########################################## TRACE AS oxide IN EXCEL SHEET 100% ,ppm , S_100 et S_ppm
@@ -2064,7 +2064,7 @@ Public Class Form_Traupixe_H5_2024
                 ' Text_Lst_Ox_Trc.Text = "All trace as oxide"
                 'Text_Lst_Ox_Trc.Enabled = False
                 Lecture_Fichier_Par_Trc(2, 0)
-            ElseIf Text_Lst_Ox_Trc.Text <> "No oxide" Then
+            ElseIf UCase(Text_Lst_Ox_Trc.Text) <> "NO OXIDE" Then
 
                 Nom_Excel_Trx_O = "_Elem-Ox_" & Strings.Replace(Text_Lst_Ox_Trc.Text, ",", "_")
 
@@ -3387,7 +3387,7 @@ Public Class Form_Traupixe_H5_2024
                     If Error_Matrix(I) = False Then
                         If Calcul_With_Trc = False Then
                             ReDim Val_Mat_Mtx(Nb_Process - 1, CInt(Nb_Elements_Mat))
-                            ReDim Val_Inv_Mtx(Nb_Process - 1, 20)
+                            ReDim Val_Inv_Mtx(Nb_Process - 1, 50)
                             'Lecture_Matrix(I + Num_Fichier, I)
                             '''Insert_Matrix(Num_Fichier + I, I)
                             If nb_gamma > 0 Then
@@ -3510,7 +3510,7 @@ Public Class Form_Traupixe_H5_2024
 
         'Nb_Elements_Mtx_inv = Mid(Str, 1, 2)
         ReDim Val_Mat_Mtx(Nb_Process - 1, CInt(Nb_Elements_Mat))
-        ReDim Val_Inv_Mtx(Nb_Process - 1, 20)
+        ReDim Val_Inv_Mtx(Nb_Process - 1, 50)
         Indice_Pivot_trc(Num_Trc, 0) = -1
 
         'Filter_T = CSng(TextF_From.Text)
@@ -4075,7 +4075,7 @@ Public Class Form_Traupixe_H5_2024
         Try
             SR = File.OpenText((Chemin_GupixWin_Multi(Num_Proc) & "\pixstats.out"))
         Catch ex As Exception
-            Sleep(100)
+            Sleep(500)
             SR = File.OpenText((Chemin_GupixWin_Multi(Num_Proc) & "\pixstats.out"))
         End Try
 
@@ -6159,7 +6159,6 @@ suite:
         Dim nb_el_only_gamma As Integer
         Dim el_only_gamma As Boolean
         Dim Ma, Mo, Va, Vo
-        Dim rapport_x As Double
         Dim rapport_y As Double
         Dim pos1 As Integer
         Dim indx_G As Integer
@@ -6244,13 +6243,27 @@ suite:
                 If CInt(gamma_conc_init(Num_File, indx_G)) > 0 Then
                     Mo = 16
                     Select Case CInt(info_gamma_z(indx_G))
+
+                        Case 56 'Na2O
+                            Ma = 137
+                            Va = 1
+                            Vo = 1
+                            rapport_y = (Vo * Mo / (Va * Ma + Vo * Mo))
+                            Sum_pixe_oxide_correction += (Double.Parse(SplitText(1), USACulture)) * rapport_y
+
+                        Case 82 'Na2O
+                            Ma = 207
+                            Va = 1
+                            Vo = 1
+                            rapport_y = (Vo * Mo / (Va * Ma + Vo * Mo))
+                            Sum_pixe_oxide_correction += (Double.Parse(SplitText(1), USACulture)) * rapport_y
+
                         Case 11 'Na2O
                             Ma = 23
                             Va = 2
                             Vo = 1
                             rapport_y = (Vo * Mo / (Va * Ma + Vo * Mo))
                             Sum_pixe_oxide_correction += (Double.Parse(SplitText(1), USACulture)) * rapport_y
-                            'Sum_pixe_oxide_correction += Math.Round((Double.Parse(SplitText(1), USACulture)) * rapport_y, 4)
 
                         Case 9 'F
                             Sum_pixe_oxide_correction += (Double.Parse(SplitText(1), USACulture)) * 1
@@ -6292,6 +6305,7 @@ suite:
 
                     End Select
 
+
                     'conc_pixe_tmp = conc_pixe_tmp + Double.Parse(SplitText(1), USACulture)
 
                     Try
@@ -6317,19 +6331,8 @@ suite:
                 'End If
             End If
 
-
-
-            'If 100 < conc_mat_tmp < 101 Then conc_mat_tmp = 100
-
-
-            'If Double.Parse(SplitText(1), USACulture) * 1000 > 10 Then
             i = i + 1
-            'Else
-            '    i = i
-            'End If
-
-            '  Txt_Fichier_PAR_Trc = Txt_Fichier_PAR_Trc + Str + vbCrLf ' + " NL " + Mid(tab_Info_mat.Raie(I), 1, 2) + vbCrLf
-        Loop
+        Loop 'END of FILE
 
         ReDim Preserve tmp_struct(i)
         Dim sum_t_gamma As Double
@@ -6349,11 +6352,9 @@ suite:
 
         For j = 0 To UBound(tmp_struct) - 1
 
-
-
             If tmp_struct(j).Z <> info_gamma_z(num_gamma) Then 'PAS un elemnt fourni par Gamma
 
-                Select Case tmp_struct(j).Z ' Pas dans Gamma
+                Select Case CInt(tmp_struct(j).Z) ' Pas dans Gamma
                     Case 8
                         tmp_struct(j).conc = Math.Round((tmp_struct(j).conc * normalize_factor) + (sum_gamma_oxide(Num_File) / 1000000), 4, MidpointRounding.AwayFromZero) 'Gamma
                         Val_Inv_Mtx(Num_Proc, Nb_elem_Inv_local) = CStr(tmp_struct(j).conc)
@@ -6393,17 +6394,11 @@ suite:
                         tmp_struct(j).conc = Math.Round((gamma_conc(Num_File, num_gamma) / 1000000), 4, MidpointRounding.AwayFromZero) 'Gamma
 
                 End Select
-                'tmp_struct(j).conc = Math.Round((gamma_conc(num_gamma, Num_Proc) / 1000000), 4) 'Gamma
-                'End If
                 last_sum += tmp_struct(j).conc
             End If
         Next
 
         'Construction Fichier PixMTX.out
-        'tmp_nb_elem_total = 0
-
-
-        '= Strings.InStr(Strings.Format(tmp_struct(0).conc, "0.0000"), ",", vbTextCompare) > 0
 
         last_sum = 0
 
@@ -6416,50 +6411,52 @@ suite:
                     ' If info_gamma(num_gamma + 1, 0) <> "" Then num_gamma += 1
                 End If
             Next j
+
             If el_only_gamma = True Then
 
-                If Num_Proc = 0 Then Tab_Entete_Inv(Nb_elem_Inv_local) = info_gamma_z(i) 'Ex Lithium Z = 3
+                    If Num_Proc = 0 Then Tab_Entete_Inv(Nb_elem_Inv_local) = info_gamma_z(i) 'Ex Lithium Z = 3
 
-                nb_el_only_gamma += 1
-                If gamma_conc(Num_File, i) > 0 Then
-                    Nb_El_Mat += 1
-                    AStr = Strings.Format(Math.Round(gamma_conc(Num_File, i) / 1000000, 4), "0.0000")
-                    last_sum += Math.Round(gamma_conc(Num_File, i) / 1000000, 4)
-                    pos1 = Strings.InStr(info_gamma_name(i), "O", vbTextCompare) 'Recherche l'element O dans le nom pour récuperer nom elementaire
-                    Text_Mat = Text_Mat & info_gamma_z(i) & " " & Strings.Replace(AStr, ",", ".") & "  NL" & "  "
+                    nb_el_only_gamma += 1
+                    If gamma_conc(Num_File, i) > 0 Then
+                        Nb_El_Mat += 1
+                        AStr = Strings.Format(Math.Round(gamma_conc(Num_File, i) / 1000000, 4), "0.0000")
+                        last_sum += Math.Round(gamma_conc(Num_File, i) / 1000000, 4)
+                        pos1 = Strings.InStr(info_gamma_name(i), "O", vbTextCompare) 'Recherche l'element O dans le nom pour récuperer nom elementaire
+                        Text_Mat = Text_Mat & info_gamma_z(i) & " " & Strings.Replace(AStr, ",", ".") & "  NL" & "  "
 
-                    Select Case info_gamma_z(i)
+                        Select Case info_gamma_z(i)
 
-                        Case 1
-                            Text_Mat = Text_Mat & "H" & vbCrLf
-                        Case 2
-                            Text_Mat = Text_Mat & "He" & vbCrLf
-                        Case 3
-                            Text_Mat = Text_Mat & "Li" & vbCrLf
-                        Case 4
-                            Text_Mat = Text_Mat & "Be" & vbCrLf
-                        Case 5
-                            Text_Mat = Text_Mat & "B" & vbCrLf
-                        Case 6
-                            Text_Mat = Text_Mat & "C" & vbCrLf
-                        Case 7
-                            Text_Mat = Text_Mat & "N" & vbCrLf
-                        Case 9
-                            Text_Mat = Text_Mat & "F" & vbCrLf
+                            Case 1
+                                Text_Mat = Text_Mat & "H" & vbCrLf
+                            Case 2
+                                Text_Mat = Text_Mat & "He" & vbCrLf
+                            Case 3
+                                Text_Mat = Text_Mat & "Li" & vbCrLf
+                            Case 4
+                                Text_Mat = Text_Mat & "Be" & vbCrLf
+                            Case 5
+                                Text_Mat = Text_Mat & "B" & vbCrLf
+                            Case 6
+                                Text_Mat = Text_Mat & "C" & vbCrLf
+                            Case 7
+                                Text_Mat = Text_Mat & "N" & vbCrLf
+                            Case 9
+                                Text_Mat = Text_Mat & "F" & vbCrLf
 
-                        Case Else
-                            If pos1 > 0 Then
-                                Text_Mat = Text_Mat & Strings.Left(info_gamma_name(i), pos1 - 1) & vbCrLf
-                            Else
-                                Text_Mat = Text_Mat & Strings.Left(info_gamma_name(i), 2) & vbCrLf
-                            End If
+                            Case Else
+                                If pos1 > 0 Then
+                                    Text_Mat = Text_Mat & Strings.Left(info_gamma_name(i), pos1 - 1) & vbCrLf
+                                Else
+                                    Text_Mat = Text_Mat & Strings.Left(info_gamma_name(i), 2) & vbCrLf
+                                End If
 
-                    End Select
-                    el_only_gamma = True
+                        End Select
+                        el_only_gamma = True
 
+                    End If
                 End If
-            End If
-        Next i
+
+            Next i
 
         For j = 0 To UBound(tmp_struct) - 1
             last_sum += tmp_struct(j).conc
@@ -6470,36 +6467,7 @@ suite:
             Text_Mat = Text_Mat & tmp_struct(j).Z & " " & Strings.Replace(AStr, ",", ".") & "  " & tmp_struct(j).layer & "  " & tmp_struct(j).name & vbCrLf
         Next
 
-
-        'For j = 0 To nb_el_only_gamma - 1
-        '    ' Text_Mat = Text_Mat & tmp_struct(j).Z & " " & Strings.Replace(AStr, ",", ".") & "  " & tmp_struct(j).layer & "  " & tmp_struct(j).name & vbCrLf
-        'Next
-        'For j = 0 To Nb_Elements_Mat - 1
-        '    If CInt(SplitText(0)) < 11 Then
-        '        Tab_Entete_Inv(Nb_elem_Inv) = SplitText(0)
-        '        Conc_Invisible = Double.Parse(SplitText(1), USACulture) * 1
-        '        Val_Inv_Mtx(Num_Proc, Nb_elem_Inv) = SplitText(1) 'Conc_Invisible
-        '        Nb_El_Mat = Nb_El_Mat + 1
-        '        Nb_elem_Inv = Nb_elem_Inv + 1
-        '        Nb_Elements_Mtx_inv = Nb_elem_Inv
-        '        Text_Mat = Text_Mat + MyStr + vbCrLf
-        '        Exit For
-        '    End If
-
-        '    If SplitText(0) = CStr(Tab_Info_Mat.Z(j)) And SplitText(1) <> "0.0000" Then
-        '        Val_Mat_Mtx(Num_Proc, j) = SplitText(1)
-        '        Nb_El_Mat = Nb_El_Mat + 1
-        '        Text_Mat = Text_Mat + MyStr + vbCrLf
-        '        Exit For
-        '    End If
-
-
-        'If mnuOxydeOUI.Checked = True Then
-        '    Elem_Type = " 1"
-        'Else
         Elem_Type = " 0"
-        'End If
-        'Next
 
         Txt_Fichier_PAR_Trc = Txt_Fichier_PAR_Trc + CStr(Nb_El_Mat) + Elem_Type + vbTab + "(Number of matrix elements for thick/intermediate/layered target followed" + vbCrLf _
             + vbTab + vbTab + "by weight type.  Number of elements shows -1 if n/a; weight type 0 for" + vbCrLf _
@@ -9662,8 +9630,8 @@ pass_mat:   ' Only_Trace
                         'If indx_mat <> -1 Then
                         i = indx_mat
                         Y_N_Q = Val_Mat_Y_N_Q(Num_Proc, i)
-                        If Z = 32 Then
-                            Z = 32
+                        If Z = 50 Then
+                            Z = 50
                         End If
 
                         Z_Mat = Tab_Info_Mat.Z(i)
@@ -9864,8 +9832,8 @@ pass_mat:   ' Only_Trace
                             'If Z_Trc > Z and Then Exit For
                             Y_N_Q = All_Y_N_Q(J)
                             Z_Trc = All_Z_Trc(J)
-                            If Z = 32 Then
-                                Z = 32
+                            If Z = 50 Then
+                                Z = 50
                             End If
                             If Z_Trc = Z Then
 
@@ -11038,7 +11006,7 @@ pass_mat:   ' Only_Trace
 
         If Ck_AllAsOxy.Checked = True And mnuOxydeOUI.Checked = True Then
             Check_Trc_As_Oxy.Enabled = False
-            Text_Lst_Ox_Trc.Text = "All trace as Oxide"
+            Text_Lst_Ox_Trc.Text = "ALL TRACE AS OXIDE"
             Check_Trc_As_Oxy.Checked = True
         Else
             Check_Trc_As_Oxy.Enabled = True
@@ -11926,7 +11894,7 @@ Myend:
         o = Strings.Replace("0.2000", ",", ".")
         ReDim Tab_Info_Mat.Z(50)
         ReDim Tab_Info_Mat.Inv(50)
-        ReDim Val_Inv_Mtx(50, 20)
+        ReDim Val_Inv_Mtx(50, 50)
         'Read_gamma_xls()
         '  ''''  Insert_Matrix_gamma(0, 0)
         'Dim temp(100) As Integer
@@ -12692,26 +12660,71 @@ Okread:
 
 
                         Mo = 16 'Masse Oxygen
+                        Dim sameformula As Boolean
+                        sameformula = False
+
                         Select Case CInt(info_gamma_z(j))
 
-                            Case 11 'Na2O
-                                If UCase(info_gamma_name(j)) = "NA2O" Then
-                                    Ma = 23
-                                    Va = 2
+                            Case 56 'Na2O
+                                If UCase(info_gamma_name(j)) = "BAO" Then sameformula = True
+                                Ma = 137
+                                Va = 1
+                                Vo = 1
+                                calc_gamma_conc_oxide(Va, Ma, Vo, Mo, tmp_conc, i, j, sameformula)
+
+                                'rapport_x = (Va * Ma / (Va * Ma + Vo * Mo))
+                                '    rapport_y = (Vo * Mo / (Va * Ma + Vo * Mo))
+                                '    gamma_conc_init(i, j) = CInt(tmp_conc)
+                                '    gamma_conc(i, j) = CInt(CInt(tmp_conc) * rapport_x) 'Extrait conc elemental
+                                '    gamma_conc_oxide(i, j) = CInt(CInt(tmp_conc) * rapport_y) 'Extrait conc O
+                                '    sum_gamma_conc(i) += gamma_conc(i, j) ' Sum Gamma Elem without O
+                                '    sum_gamma_oxide(i) += gamma_conc_oxide(i, j) ' Sum Gamma O
+                                'Else
+                                '    gamma_conc_init(i, j) = CInt(tmp_conc)
+                                '    gamma_conc(i, j) = gamma_conc_init(i, j)
+                                '    sum_gamma_conc(i) += gamma_conc_init(i, j)
+                                '    gamma_conc_oxide(i, j) = 0
+                                'End If
+
+                            Case 82 'PbO
+                                If UCase(info_gamma_name(j)) = "PBO" Then sameformula = True
+                                Ma = 207
+                                    Va = 1
                                     Vo = 1
-                                    rapport_x = (Va * Ma / (Va * Ma + Vo * Mo))
-                                    rapport_y = (Vo * Mo / (Va * Ma + Vo * Mo))
-                                    gamma_conc_init(i, j) = CInt(tmp_conc)
-                                    gamma_conc(i, j) = CInt(CInt(tmp_conc) * rapport_x) 'Extrait conc Na de Na2O
-                                    gamma_conc_oxide(i, j) = CInt(CInt(tmp_conc) * rapport_y) 'Extrait conc O de Na2O
-                                    sum_gamma_conc(i) += gamma_conc(i, j) ' Sum Gamma Elem without O
-                                    sum_gamma_oxide(i) += gamma_conc_oxide(i, j) ' Sum Gamma O
-                                Else
-                                    gamma_conc_init(i, j) = CInt(tmp_conc)
-                                    gamma_conc(i, j) = gamma_conc_init(i, j)
-                                    sum_gamma_conc(i) += gamma_conc_init(i, j)
-                                    gamma_conc_oxide(i, j) = 0
-                                End If
+                                    calc_gamma_conc_oxide(Va, Ma, Vo, Mo, tmp_conc, i, j, sameformula)
+                                '    rapport_x = (Va * Ma / (Va * Ma + Vo * Mo))
+                                '    rapport_y = (Vo * Mo / (Va * Ma + Vo * Mo))
+                                '    gamma_conc_init(i, j) = CInt(tmp_conc)
+                                '    gamma_conc(i, j) = CInt(CInt(tmp_conc) * rapport_x) 'Extrait conc elemental
+                                '    gamma_conc_oxide(i, j) = CInt(CInt(tmp_conc) * rapport_y) 'Extrait conc O
+                                '    sum_gamma_conc(i) += gamma_conc(i, j) ' Sum Gamma Elem without O
+                                '    sum_gamma_oxide(i) += gamma_conc_oxide(i, j) ' Sum Gamma O
+                                'Else
+                                '    gamma_conc_init(i, j) = CInt(tmp_conc)
+                                '    gamma_conc(i, j) = gamma_conc_init(i, j)
+                                '    sum_gamma_conc(i) += gamma_conc_init(i, j)
+                                '    gamma_conc_oxide(i, j) = 0
+                                'End If
+
+                            Case 11 'Na2O
+                                If UCase(info_gamma_name(j)) = "NA2O" Then sameformula = True
+                                Ma = 23
+                                    Va = 2
+                                Vo = 1
+                                calc_gamma_conc_oxide(Va, Ma, Vo, Mo, tmp_conc, i, j, sameformula)
+                                '    rapport_x = (Va * Ma / (Va * Ma + Vo * Mo))
+                                '    rapport_y = (Vo * Mo / (Va * Ma + Vo * Mo))
+                                '    gamma_conc_init(i, j) = CInt(tmp_conc)
+                                '    gamma_conc(i, j) = CInt(CInt(tmp_conc) * rapport_x) 'Extrait conc Na de Na2O
+                                '    gamma_conc_oxide(i, j) = CInt(CInt(tmp_conc) * rapport_y) 'Extrait conc O de Na2O
+                                '    sum_gamma_conc(i) += gamma_conc(i, j) ' Sum Gamma Elem without O
+                                '    sum_gamma_oxide(i) += gamma_conc_oxide(i, j) ' Sum Gamma O
+                                'Else
+                                '    gamma_conc_init(i, j) = CInt(tmp_conc)
+                                '    gamma_conc(i, j) = gamma_conc_init(i, j)
+                                '    sum_gamma_conc(i) += gamma_conc_init(i, j)
+                                '    gamma_conc_oxide(i, j) = 0
+                                'End If
 
                             Case 9 'F
                                 gamma_conc_init(i, j) = CInt(tmp_conc)
@@ -12721,42 +12734,44 @@ Okread:
                                 sum_gamma_oxide(i) += gamma_conc_oxide(i, j) ' Sum Gamma O
 
                             Case 3 ' Li2O
-                                If UCase(info_gamma_name(j)) = "LI2O" Then
-                                    Ma = 7
-                                    Va = 2
-                                    Vo = 1
-                                    rapport_x = (Va * Ma / (Va * Ma + Vo * Mo))
-                                    rapport_y = (Vo * Mo / (Va * Ma + Vo * Mo))
-                                    gamma_conc_init(i, j) = CInt(tmp_conc)
-                                    gamma_conc(i, j) = CInt(CInt(tmp_conc) * rapport_x)
-                                    gamma_conc_oxide(i, j) = CInt(CInt(tmp_conc) * rapport_y)
-                                    sum_gamma_conc(i) += gamma_conc(i, j) ' Sum Gamma Elem without O
-                                    sum_gamma_oxide(i) += gamma_conc_oxide(i, j) ' Sum Gamma O
-                                Else
-                                    gamma_conc_init(i, j) = CInt(tmp_conc)
-                                    gamma_conc(i, j) = gamma_conc_init(i, j)
-                                    sum_gamma_conc(i) += gamma_conc_init(i, j)
-                                    gamma_conc_oxide(i, j) = 0
-                                End If
+                                If UCase(info_gamma_name(j)) = "LI2O" Then sameformula = True
+                                Ma = 7
+                                Va = 2
+                                Vo = 1
+                                calc_gamma_conc_oxide(Va, Ma, Vo, Mo, tmp_conc, i, j, sameformula)
+                                '    rapport_x = (Va * Ma / (Va * Ma + Vo * Mo))
+                                '    rapport_y = (Vo * Mo / (Va * Ma + Vo * Mo))
+                                '    gamma_conc_init(i, j) = CInt(tmp_conc)
+                                '    gamma_conc(i, j) = CInt(CInt(tmp_conc) * rapport_x)
+                                '    gamma_conc_oxide(i, j) = CInt(CInt(tmp_conc) * rapport_y)
+                                '    sum_gamma_conc(i) += gamma_conc(i, j) ' Sum Gamma Elem without O
+                                '    sum_gamma_oxide(i) += gamma_conc_oxide(i, j) ' Sum Gamma O
+                                'Else
+                                '    gamma_conc_init(i, j) = CInt(tmp_conc)
+                                '    gamma_conc(i, j) = gamma_conc_init(i, j)
+                                '    sum_gamma_conc(i) += gamma_conc_init(i, j)
+                                '    gamma_conc_oxide(i, j) = 0
+                                'End If
 
                             Case 1 ' H2O
-                                If UCase(info_gamma_name(j)) = "H2O" Then
-                                    Ma = 1
-                                    Va = 2
-                                    Vo = 1
-                                    rapport_x = (Va * Ma / (Va * Ma + Vo * Mo))
-                                    rapport_y = (Vo * Mo / (Va * Ma + Vo * Mo))
-                                    gamma_conc_init(i, j) = CInt(tmp_conc)
-                                    gamma_conc(i, j) = CInt(CInt(tmp_conc) * rapport_x)
-                                    gamma_conc_oxide(i, j) = CInt(CInt(tmp_conc) * rapport_y)
-                                    sum_gamma_conc(i) += gamma_conc(i, j) ' Sum Gamma Elem without O
-                                    sum_gamma_oxide(i) += gamma_conc_oxide(i, j) ' Sum Gamma O
-                                Else
-                                    gamma_conc_init(i, j) = CInt(tmp_conc)
-                                    gamma_conc(i, j) = gamma_conc_init(i, j)
-                                    sum_gamma_conc(i) += gamma_conc_init(i, j)
-                                    gamma_conc_oxide(i, j) = 0
-                                End If
+                                If UCase(info_gamma_name(j)) = "H2O" Then sameformula = True
+                                Ma = 1
+                                Va = 2
+                                Vo = 1
+                                calc_gamma_conc_oxide(Va, Ma, Vo, Mo, tmp_conc, i, j, sameformula)
+                                '    rapport_x = (Va * Ma / (Va * Ma + Vo * Mo))
+                                '    rapport_y = (Vo * Mo / (Va * Ma + Vo * Mo))
+                                '    gamma_conc_init(i, j) = CInt(tmp_conc)
+                                '    gamma_conc(i, j) = CInt(CInt(tmp_conc) * rapport_x)
+                                '    gamma_conc_oxide(i, j) = CInt(CInt(tmp_conc) * rapport_y)
+                                '    sum_gamma_conc(i) += gamma_conc(i, j) ' Sum Gamma Elem without O
+                                '    sum_gamma_oxide(i) += gamma_conc_oxide(i, j) ' Sum Gamma O
+                                'Else
+                                '    gamma_conc_init(i, j) = CInt(tmp_conc)
+                                '    gamma_conc(i, j) = gamma_conc_init(i, j)
+                                '    sum_gamma_conc(i) += gamma_conc_init(i, j)
+                                '    gamma_conc_oxide(i, j) = 0
+                                'End If
 
                             Case 4 ' BeO
                                 If UCase(info_gamma_name(j)) = "BEO" Then
@@ -12783,60 +12798,65 @@ Okread:
                                     gamma_conc_oxide(i, j) = 0
                                 End If
                             Case 5 ' B2O3
-                                If UCase(info_gamma_name(j)) = "B2O3" Then
-                                    Ma = 10.8
-                                    Va = 2
-                                    Vo = 3
-                                    rapport_x = (Va * Ma / (Va * Ma + Vo * Mo))
-                                    rapport_y = (Vo * Mo / (Va * Ma + Vo * Mo))
-                                    gamma_conc_init(i, j) = CInt(tmp_conc)
-                                    gamma_conc(i, j) = CInt(CInt(tmp_conc) * rapport_x)
-                                    gamma_conc_oxide(i, j) = CInt(CInt(tmp_conc) * rapport_y)
-                                    sum_gamma_conc(i) += gamma_conc(i, j) ' Sum Gamma Elem without O
-                                    sum_gamma_oxide(i) += gamma_conc_oxide(i, j) ' Sum Gamma O
-                                Else
-                                    gamma_conc_init(i, j) = CInt(tmp_conc)
-                                    gamma_conc(i, j) = gamma_conc_init(i, j)
-                                    sum_gamma_conc(i) += gamma_conc_init(i, j)
-                                    gamma_conc_oxide(i, j) = 0
-                                End If
+
+                                If UCase(info_gamma_name(j)) = "B2O3" Then sameformula = True
+                                Ma = 10.8
+                                Va = 2
+                                Vo = 3
+                                calc_gamma_conc_oxide(Va, Ma, Vo, Mo, tmp_conc, i, j, sameformula)
+                                '    rapport_x = (Va * Ma / (Va * Ma + Vo * Mo))
+                                '    rapport_y = (Vo * Mo / (Va * Ma + Vo * Mo))
+                                '    gamma_conc_init(i, j) = CInt(tmp_conc)
+                                '    gamma_conc(i, j) = CInt(CInt(tmp_conc) * rapport_x)
+                                '    gamma_conc_oxide(i, j) = CInt(CInt(tmp_conc) * rapport_y)
+                                '    sum_gamma_conc(i) += gamma_conc(i, j) ' Sum Gamma Elem without O
+                                '    sum_gamma_oxide(i) += gamma_conc_oxide(i, j) ' Sum Gamma O
+                                'Else
+                                '    gamma_conc_init(i, j) = CInt(tmp_conc)
+                                '    gamma_conc(i, j) = gamma_conc_init(i, j)
+                                '    sum_gamma_conc(i) += gamma_conc_init(i, j)
+                                '    gamma_conc_oxide(i, j) = 0
+                                'End If
                             Case 6 ' CO2
-                                If UCase(info_gamma_name(j)) = "CO2" Then
-                                    Ma = 12
-                                    Va = 1
-                                    Vo = 2
-                                    rapport_x = (Va * Ma / (Va * Ma + Vo * Mo))
-                                    rapport_y = (Vo * Mo / (Va * Ma + Vo * Mo))
-                                    gamma_conc_init(i, j) = CInt(tmp_conc)
-                                    gamma_conc(i, j) = CInt(CInt(tmp_conc) * rapport_x)
-                                    gamma_conc_oxide(i, j) = CInt(CInt(tmp_conc) * rapport_y)
-                                    sum_gamma_conc(i) += gamma_conc(i, j) ' Sum Gamma Elem without O
-                                    sum_gamma_oxide(i) += gamma_conc_oxide(i, j) ' Sum Gamma O
-                                Else
-                                    gamma_conc_init(i, j) = CInt(tmp_conc)
-                                    gamma_conc(i, j) = gamma_conc_init(i, j)
-                                    sum_gamma_conc(i) += gamma_conc_init(i, j)
-                                    gamma_conc_oxide(i, j) = 0
-                                End If
+                                If UCase(info_gamma_name(j)) = "CO2" Then sameformula = True
+
+                                Ma = 12
+                                Va = 1
+                                Vo = 2
+                                calc_gamma_conc_oxide(Va, Ma, Vo, Mo, tmp_conc, i, j, sameformula)
+                                '    rapport_x = (Va * Ma / (Va * Ma + Vo * Mo))
+                                '    rapport_y = (Vo * Mo / (Va * Ma + Vo * Mo))
+                                '    gamma_conc_init(i, j) = CInt(tmp_conc)
+                                '    gamma_conc(i, j) = CInt(CInt(tmp_conc) * rapport_x)
+                                '    gamma_conc_oxide(i, j) = CInt(CInt(tmp_conc) * rapport_y)
+                                '    sum_gamma_conc(i) += gamma_conc(i, j) ' Sum Gamma Elem without O
+                                '    sum_gamma_oxide(i) += gamma_conc_oxide(i, j) ' Sum Gamma O
+                                'Else
+                                '    gamma_conc_init(i, j) = CInt(tmp_conc)
+                                '    gamma_conc(i, j) = gamma_conc_init(i, j)
+                                '    sum_gamma_conc(i) += gamma_conc_init(i, j)
+                                '    gamma_conc_oxide(i, j) = 0
+                                'End If
 
                             Case 7 ' NO2
-                                If UCase(info_gamma_name(j)) = "NO2" Then
-                                    Ma = 14
-                                    Va = 1
-                                    Vo = 2
-                                    rapport_x = (Va * Ma / (Va * Ma + Vo * Mo))
-                                    rapport_y = (Vo * Mo / (Va * Ma + Vo * Mo))
-                                    gamma_conc_init(i, j) = CInt(tmp_conc)
-                                    gamma_conc(i, j) = CInt(CInt(tmp_conc) * rapport_x)
-                                    gamma_conc_oxide(i, j) = CInt(CInt(tmp_conc) * rapport_y)
-                                    sum_gamma_conc(i) += gamma_conc(i, j) ' Sum Gamma Elem without O
-                                    sum_gamma_oxide(i) += gamma_conc_oxide(i, j) ' Sum Gamma O
-                                Else
-                                    gamma_conc_init(i, j) = CInt(tmp_conc)
-                                    gamma_conc(i, j) = gamma_conc_init(i, j)
-                                    sum_gamma_conc(i) += gamma_conc_init(i, j)
-                                    gamma_conc_oxide(i, j) = 0
-                                End If
+                                If UCase(info_gamma_name(j)) = "NO2" Then sameformula = True
+                                Ma = 14
+                                Va = 1
+                                Vo = 2
+                                calc_gamma_conc_oxide(Va, Ma, Vo, Mo, tmp_conc, i, j, sameformula)
+                                '    rapport_x = (Va * Ma / (Va * Ma + Vo * Mo))
+                                '    rapport_y = (Vo * Mo / (Va * Ma + Vo * Mo))
+                                '    gamma_conc_init(i, j) = CInt(tmp_conc)
+                                '    gamma_conc(i, j) = CInt(CInt(tmp_conc) * rapport_x)
+                                '    gamma_conc_oxide(i, j) = CInt(CInt(tmp_conc) * rapport_y)
+                                '    sum_gamma_conc(i) += gamma_conc(i, j) ' Sum Gamma Elem without O
+                                '    sum_gamma_oxide(i) += gamma_conc_oxide(i, j) ' Sum Gamma O
+                                'Else
+                                '    gamma_conc_init(i, j) = CInt(tmp_conc)
+                                '    gamma_conc(i, j) = gamma_conc_init(i, j)
+                                '    sum_gamma_conc(i) += gamma_conc_init(i, j)
+                                '    gamma_conc_oxide(i, j) = 0
+                                'End If
 
 
                             Case Else ' forme elementaire
@@ -13055,7 +13075,46 @@ Okread:
 
                         If gamma_filename(i) = LvFiles.SelectedItems(i).Text Then
                             Mo = 16 'Masse Oxygen
+
                             Select Case CInt(info_gamma_z(j))
+
+                                Case 56 'BaO
+                                    If UCase(info_gamma_name(j)) = "BAO" Then
+                                        Ma = 137
+                                        Va = 1
+                                        Vo = 1
+                                        rapport_x = (Va * Ma / (Va * Ma + Vo * Mo))
+                                        rapport_y = (Vo * Mo / (Va * Ma + Vo * Mo))
+                                        gamma_conc_init(i, j) = CInt(tmp_conc)
+                                        gamma_conc(i, j) = CInt(CInt(tmp_conc) * rapport_x) 'Extrait conc Na de Na2O
+                                        gamma_conc_oxide(i, j) = CInt(CInt(tmp_conc) * rapport_y) 'Extrait conc O de Na2O
+                                        sum_gamma_conc(i) += gamma_conc(i, j) ' Sum Gamma Elem without O
+                                        sum_gamma_oxide(i) += gamma_conc_oxide(i, j) ' Sum Gamma O
+                                    Else
+                                        gamma_conc_init(i, j) = CInt(tmp_conc)
+                                        gamma_conc(i, j) = gamma_conc_init(i, j)
+                                        sum_gamma_conc(i) += gamma_conc_init(i, j)
+                                        gamma_conc_oxide(i, j) = 0
+                                    End If
+
+                                Case 82 'PbO
+                                    If UCase(info_gamma_name(j)) = "PBO" Then
+                                        Ma = 207
+                                        Va = 1
+                                        Vo = 1
+                                        rapport_x = (Va * Ma / (Va * Ma + Vo * Mo))
+                                        rapport_y = (Vo * Mo / (Va * Ma + Vo * Mo))
+                                        gamma_conc_init(i, j) = CInt(tmp_conc)
+                                        gamma_conc(i, j) = CInt(CInt(tmp_conc) * rapport_x) 'Extrait conc Na de Na2O
+                                        gamma_conc_oxide(i, j) = CInt(CInt(tmp_conc) * rapport_y) 'Extrait conc O de Na2O
+                                        sum_gamma_conc(i) += gamma_conc(i, j) ' Sum Gamma Elem without O
+                                        sum_gamma_oxide(i) += gamma_conc_oxide(i, j) ' Sum Gamma O
+                                    Else
+                                        gamma_conc_init(i, j) = CInt(tmp_conc)
+                                        gamma_conc(i, j) = gamma_conc_init(i, j)
+                                        sum_gamma_conc(i) += gamma_conc_init(i, j)
+                                        gamma_conc_oxide(i, j) = 0
+                                    End If
 
                                 Case 11 'Na2O
                                     If UCase(info_gamma_name(j)) = "NA2O" Then
@@ -13232,6 +13291,23 @@ Okread:
         'Dim Z As Integer
         'Z = 11
         'indx = Array.IndexOf(info_gamma_Z, CStr(Z))
+
+    End Sub
+    Public Sub calc_gamma_conc_oxide(Va As Integer, Ma As Integer, Vo As Integer, Mo As Integer, tmp_conc As Integer, i As Integer, j As Integer, sameformula As Boolean)
+        If sameformula = True Then
+            Dim rapport_x = (Va * Ma / (Va * Ma + Vo * Mo))
+            Dim rapport_y = (Vo * Mo / (Va * Ma + Vo * Mo))
+            gamma_conc_init(i, j) = CInt(tmp_conc)
+            gamma_conc(i, j) = CInt(CInt(tmp_conc) * rapport_x) 'Extrait conc Na de Na2O
+            gamma_conc_oxide(i, j) = CInt(CInt(tmp_conc) * rapport_y) 'Extrait conc O de Na2O
+            sum_gamma_conc(i) += gamma_conc(i, j) ' Sum Gamma Elem without O
+            sum_gamma_oxide(i) += gamma_conc_oxide(i, j) ' Sum Gamma O
+        Else
+            gamma_conc_init(i, j) = CInt(tmp_conc)
+            gamma_conc(i, j) = gamma_conc_init(i, j)
+            sum_gamma_conc(i) += gamma_conc_init(i, j)
+            gamma_conc_oxide(i, j) = 0
+        End If
 
     End Sub
 
