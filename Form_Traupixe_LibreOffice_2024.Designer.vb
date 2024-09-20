@@ -136,54 +136,52 @@ Partial Class Form_Traupixe_H5_2024
         '
         Me.LstPar_Mat.Font = New System.Drawing.Font("Calibri", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
         Me.LstPar_Mat.FormattingEnabled = True
-        Me.LstPar_Mat.ItemHeight = 17
-        Me.LstPar_Mat.Location = New System.Drawing.Point(8, 48)
-        Me.LstPar_Mat.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.LstPar_Mat.Location = New System.Drawing.Point(7, 36)
+        Me.LstPar_Mat.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.LstPar_Mat.Name = "LstPar_Mat"
-        Me.LstPar_Mat.Size = New System.Drawing.Size(376, 38)
+        Me.LstPar_Mat.Size = New System.Drawing.Size(330, 30)
         Me.LstPar_Mat.TabIndex = 7
         '
         'LstPar_Trc
         '
         Me.LstPar_Trc.Font = New System.Drawing.Font("Calibri", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
         Me.LstPar_Trc.FormattingEnabled = True
-        Me.LstPar_Trc.ItemHeight = 17
-        Me.LstPar_Trc.Location = New System.Drawing.Point(8, 276)
-        Me.LstPar_Trc.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.LstPar_Trc.Location = New System.Drawing.Point(7, 207)
+        Me.LstPar_Trc.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.LstPar_Trc.Name = "LstPar_Trc"
         Me.LstPar_Trc.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
-        Me.LstPar_Trc.Size = New System.Drawing.Size(384, 55)
+        Me.LstPar_Trc.Size = New System.Drawing.Size(336, 30)
         Me.LstPar_Trc.TabIndex = 9
         '
         'ComboBoxDrive
         '
         Me.ComboBoxDrive.Font = New System.Drawing.Font("Calibri", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
         Me.ComboBoxDrive.FormattingEnabled = True
-        Me.ComboBoxDrive.Location = New System.Drawing.Point(8, 48)
-        Me.ComboBoxDrive.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.ComboBoxDrive.Location = New System.Drawing.Point(7, 36)
+        Me.ComboBoxDrive.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.ComboBoxDrive.Name = "ComboBoxDrive"
-        Me.ComboBoxDrive.Size = New System.Drawing.Size(343, 25)
+        Me.ComboBoxDrive.Size = New System.Drawing.Size(301, 21)
         Me.ComboBoxDrive.TabIndex = 10
         '
         'trvFolders
         '
         Me.trvFolders.Font = New System.Drawing.Font("Calibri", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.trvFolders.Location = New System.Drawing.Point(5, 156)
-        Me.trvFolders.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.trvFolders.Location = New System.Drawing.Point(4, 117)
+        Me.trvFolders.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.trvFolders.Name = "trvFolders"
         Me.trvFolders.ShowPlusMinus = False
         Me.trvFolders.ShowRootLines = False
-        Me.trvFolders.Size = New System.Drawing.Size(347, 524)
+        Me.trvFolders.Size = New System.Drawing.Size(304, 394)
         Me.trvFolders.TabIndex = 11
         '
         'LvFiles
         '
         Me.LvFiles.Font = New System.Drawing.Font("Calibri", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
         Me.LvFiles.GridLines = True
-        Me.LvFiles.Location = New System.Drawing.Point(361, 156)
-        Me.LvFiles.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.LvFiles.Location = New System.Drawing.Point(316, 117)
+        Me.LvFiles.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.LvFiles.Name = "LvFiles"
-        Me.LvFiles.Size = New System.Drawing.Size(420, 524)
+        Me.LvFiles.Size = New System.Drawing.Size(368, 394)
         Me.LvFiles.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.LvFiles.TabIndex = 12
         Me.LvFiles.UseCompatibleStateImageBehavior = False
@@ -192,10 +190,10 @@ Partial Class Form_Traupixe_H5_2024
         'BtRefresh
         '
         Me.BtRefresh.Font = New System.Drawing.Font("Calibri", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.BtRefresh.Location = New System.Drawing.Point(362, 44)
-        Me.BtRefresh.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.BtRefresh.Location = New System.Drawing.Point(317, 33)
+        Me.BtRefresh.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.BtRefresh.Name = "BtRefresh"
-        Me.BtRefresh.Size = New System.Drawing.Size(151, 33)
+        Me.BtRefresh.Size = New System.Drawing.Size(132, 25)
         Me.BtRefresh.TabIndex = 13
         Me.BtRefresh.Text = "Refresh spectra"
         Me.BtRefresh.UseVisualStyleBackColor = True
@@ -203,37 +201,37 @@ Partial Class Form_Traupixe_H5_2024
         'CbDetMat
         '
         Me.CbDetMat.FormattingEnabled = True
-        Me.CbDetMat.Location = New System.Drawing.Point(8, 8)
-        Me.CbDetMat.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.CbDetMat.Location = New System.Drawing.Point(7, 6)
+        Me.CbDetMat.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.CbDetMat.Name = "CbDetMat"
-        Me.CbDetMat.Size = New System.Drawing.Size(67, 27)
+        Me.CbDetMat.Size = New System.Drawing.Size(59, 23)
         Me.CbDetMat.TabIndex = 14
         Me.CbDetMat.Text = "X0"
         '
         'Par_det0
         '
-        Me.Par_det0.Location = New System.Drawing.Point(82, 8)
-        Me.Par_det0.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Par_det0.Location = New System.Drawing.Point(72, 6)
+        Me.Par_det0.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Par_det0.Name = "Par_det0"
-        Me.Par_det0.Size = New System.Drawing.Size(215, 27)
+        Me.Par_det0.Size = New System.Drawing.Size(189, 23)
         Me.Par_det0.TabIndex = 16
         '
         'Par_det1
         '
-        Me.Par_det1.Location = New System.Drawing.Point(82, 37)
-        Me.Par_det1.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Par_det1.Location = New System.Drawing.Point(72, 28)
+        Me.Par_det1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Par_det1.Name = "Par_det1"
-        Me.Par_det1.Size = New System.Drawing.Size(215, 27)
+        Me.Par_det1.Size = New System.Drawing.Size(189, 23)
         Me.Par_det1.TabIndex = 17
         '
         'Check_det0
         '
         Me.Check_det0.AutoSize = True
         Me.Check_det0.Font = New System.Drawing.Font("Calibri", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.Check_det0.Location = New System.Drawing.Point(4, 10)
-        Me.Check_det0.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Check_det0.Location = New System.Drawing.Point(4, 8)
+        Me.Check_det0.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Check_det0.Name = "Check_det0"
-        Me.Check_det0.Size = New System.Drawing.Size(58, 25)
+        Me.Check_det0.Size = New System.Drawing.Size(46, 19)
         Me.Check_det0.TabIndex = 22
         Me.Check_det0.Text = "BE0"
         Me.Check_det0.UseVisualStyleBackColor = True
@@ -241,10 +239,10 @@ Partial Class Form_Traupixe_H5_2024
         'Check_det1
         '
         Me.Check_det1.AutoSize = True
-        Me.Check_det1.Location = New System.Drawing.Point(4, 39)
-        Me.Check_det1.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Check_det1.Location = New System.Drawing.Point(4, 29)
+        Me.Check_det1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Check_det1.Name = "Check_det1"
-        Me.Check_det1.Size = New System.Drawing.Size(60, 25)
+        Me.Check_det1.Size = New System.Drawing.Size(47, 19)
         Me.Check_det1.TabIndex = 23
         Me.Check_det1.Text = "HE1"
         Me.Check_det1.UseVisualStyleBackColor = True
@@ -252,38 +250,38 @@ Partial Class Form_Traupixe_H5_2024
         'Check_det2
         '
         Me.Check_det2.AutoSize = True
-        Me.Check_det2.Location = New System.Drawing.Point(4, 68)
-        Me.Check_det2.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Check_det2.Location = New System.Drawing.Point(4, 51)
+        Me.Check_det2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Check_det2.Name = "Check_det2"
-        Me.Check_det2.Size = New System.Drawing.Size(60, 25)
+        Me.Check_det2.Size = New System.Drawing.Size(47, 19)
         Me.Check_det2.TabIndex = 24
         Me.Check_det2.Text = "HE2"
         Me.Check_det2.UseVisualStyleBackColor = True
         '
         'Par_det2
         '
-        Me.Par_det2.Location = New System.Drawing.Point(82, 66)
-        Me.Par_det2.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Par_det2.Location = New System.Drawing.Point(72, 50)
+        Me.Par_det2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Par_det2.Name = "Par_det2"
-        Me.Par_det2.Size = New System.Drawing.Size(215, 27)
+        Me.Par_det2.Size = New System.Drawing.Size(189, 23)
         Me.Par_det2.TabIndex = 25
         '
         'Par_det5
         '
-        Me.Par_det5.Location = New System.Drawing.Point(82, 153)
-        Me.Par_det5.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Par_det5.Location = New System.Drawing.Point(72, 115)
+        Me.Par_det5.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Par_det5.Name = "Par_det5"
-        Me.Par_det5.Size = New System.Drawing.Size(215, 27)
+        Me.Par_det5.Size = New System.Drawing.Size(189, 23)
         Me.Par_det5.TabIndex = 31
         '
         'Check_det5
         '
         Me.Check_det5.AutoSize = True
         Me.Check_det5.BackColor = System.Drawing.Color.LightGray
-        Me.Check_det5.Location = New System.Drawing.Point(4, 155)
-        Me.Check_det5.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Check_det5.Location = New System.Drawing.Point(4, 116)
+        Me.Check_det5.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Check_det5.Name = "Check_det5"
-        Me.Check_det5.Size = New System.Drawing.Size(69, 25)
+        Me.Check_det5.Size = New System.Drawing.Size(54, 19)
         Me.Check_det5.TabIndex = 30
         Me.Check_det5.Text = "HE10"
         Me.Check_det5.UseVisualStyleBackColor = False
@@ -291,10 +289,10 @@ Partial Class Form_Traupixe_H5_2024
         'Check_det4
         '
         Me.Check_det4.AutoSize = True
-        Me.Check_det4.Location = New System.Drawing.Point(4, 126)
-        Me.Check_det4.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Check_det4.Location = New System.Drawing.Point(4, 94)
+        Me.Check_det4.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Check_det4.Name = "Check_det4"
-        Me.Check_det4.Size = New System.Drawing.Size(60, 25)
+        Me.Check_det4.Size = New System.Drawing.Size(47, 19)
         Me.Check_det4.TabIndex = 29
         Me.Check_det4.Text = "HE4"
         Me.Check_det4.UseVisualStyleBackColor = True
@@ -302,45 +300,45 @@ Partial Class Form_Traupixe_H5_2024
         'Check_det3
         '
         Me.Check_det3.AutoSize = True
-        Me.Check_det3.Location = New System.Drawing.Point(4, 97)
-        Me.Check_det3.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Check_det3.Location = New System.Drawing.Point(4, 73)
+        Me.Check_det3.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Check_det3.Name = "Check_det3"
-        Me.Check_det3.Size = New System.Drawing.Size(60, 25)
+        Me.Check_det3.Size = New System.Drawing.Size(47, 19)
         Me.Check_det3.TabIndex = 28
         Me.Check_det3.Text = "HE3"
         Me.Check_det3.UseVisualStyleBackColor = True
         '
         'Par_det4
         '
-        Me.Par_det4.Location = New System.Drawing.Point(82, 124)
-        Me.Par_det4.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Par_det4.Location = New System.Drawing.Point(72, 93)
+        Me.Par_det4.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Par_det4.Name = "Par_det4"
-        Me.Par_det4.Size = New System.Drawing.Size(215, 27)
+        Me.Par_det4.Size = New System.Drawing.Size(189, 23)
         Me.Par_det4.TabIndex = 27
         '
         'Par_det3
         '
-        Me.Par_det3.Location = New System.Drawing.Point(82, 95)
-        Me.Par_det3.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Par_det3.Location = New System.Drawing.Point(72, 71)
+        Me.Par_det3.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Par_det3.Name = "Par_det3"
-        Me.Par_det3.Size = New System.Drawing.Size(215, 27)
+        Me.Par_det3.Size = New System.Drawing.Size(189, 23)
         Me.Par_det3.TabIndex = 26
         '
         'Par_det8
         '
-        Me.Par_det8.Location = New System.Drawing.Point(82, 240)
-        Me.Par_det8.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Par_det8.Location = New System.Drawing.Point(72, 180)
+        Me.Par_det8.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Par_det8.Name = "Par_det8"
-        Me.Par_det8.Size = New System.Drawing.Size(215, 27)
+        Me.Par_det8.Size = New System.Drawing.Size(189, 23)
         Me.Par_det8.TabIndex = 37
         '
         'Check_det8
         '
         Me.Check_det8.AutoSize = True
-        Me.Check_det8.Location = New System.Drawing.Point(4, 242)
-        Me.Check_det8.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Check_det8.Location = New System.Drawing.Point(4, 182)
+        Me.Check_det8.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Check_det8.Name = "Check_det8"
-        Me.Check_det8.Size = New System.Drawing.Size(69, 25)
+        Me.Check_det8.Size = New System.Drawing.Size(54, 19)
         Me.Check_det8.TabIndex = 36
         Me.Check_det8.Text = "HE13"
         Me.Check_det8.UseVisualStyleBackColor = True
@@ -348,10 +346,10 @@ Partial Class Form_Traupixe_H5_2024
         'Check_det7
         '
         Me.Check_det7.AutoSize = True
-        Me.Check_det7.Location = New System.Drawing.Point(4, 213)
-        Me.Check_det7.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Check_det7.Location = New System.Drawing.Point(4, 160)
+        Me.Check_det7.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Check_det7.Name = "Check_det7"
-        Me.Check_det7.Size = New System.Drawing.Size(69, 25)
+        Me.Check_det7.Size = New System.Drawing.Size(54, 19)
         Me.Check_det7.TabIndex = 35
         Me.Check_det7.Text = "HE12"
         Me.Check_det7.UseVisualStyleBackColor = True
@@ -359,46 +357,46 @@ Partial Class Form_Traupixe_H5_2024
         'Check_det6
         '
         Me.Check_det6.AutoSize = True
-        Me.Check_det6.Location = New System.Drawing.Point(4, 184)
-        Me.Check_det6.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Check_det6.Location = New System.Drawing.Point(4, 138)
+        Me.Check_det6.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Check_det6.Name = "Check_det6"
-        Me.Check_det6.Size = New System.Drawing.Size(69, 25)
+        Me.Check_det6.Size = New System.Drawing.Size(54, 19)
         Me.Check_det6.TabIndex = 34
         Me.Check_det6.Text = "HE11"
         Me.Check_det6.UseVisualStyleBackColor = True
         '
         'Par_det7
         '
-        Me.Par_det7.Location = New System.Drawing.Point(82, 211)
-        Me.Par_det7.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Par_det7.Location = New System.Drawing.Point(72, 158)
+        Me.Par_det7.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Par_det7.Name = "Par_det7"
-        Me.Par_det7.Size = New System.Drawing.Size(215, 27)
+        Me.Par_det7.Size = New System.Drawing.Size(189, 23)
         Me.Par_det7.TabIndex = 33
         '
         'Par_det6
         '
-        Me.Par_det6.Location = New System.Drawing.Point(82, 182)
-        Me.Par_det6.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Par_det6.Location = New System.Drawing.Point(72, 136)
+        Me.Par_det6.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Par_det6.Name = "Par_det6"
-        Me.Par_det6.Size = New System.Drawing.Size(215, 27)
+        Me.Par_det6.Size = New System.Drawing.Size(189, 23)
         Me.Par_det6.TabIndex = 32
         '
         'Par_Mat
         '
-        Me.Par_Mat.Location = New System.Drawing.Point(86, 8)
-        Me.Par_Mat.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Par_Mat.Location = New System.Drawing.Point(75, 6)
+        Me.Par_Mat.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Par_Mat.Name = "Par_Mat"
-        Me.Par_Mat.Size = New System.Drawing.Size(298, 27)
+        Me.Par_Mat.Size = New System.Drawing.Size(261, 23)
         Me.Par_Mat.TabIndex = 38
         Me.Par_Mat.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Button2
         '
         Me.Button2.Font = New System.Drawing.Font("Calibri", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.Button2.Location = New System.Drawing.Point(11, 98)
-        Me.Button2.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Button2.Location = New System.Drawing.Point(10, 74)
+        Me.Button2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(117, 51)
+        Me.Button2.Size = New System.Drawing.Size(102, 38)
         Me.Button2.TabIndex = 39
         Me.Button2.Text = "Run"
         Me.Button2.UseVisualStyleBackColor = True
@@ -409,10 +407,10 @@ Partial Class Form_Traupixe_H5_2024
         Me.Label1.BackColor = System.Drawing.Color.Gray
         Me.Label1.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.Label1.ForeColor = System.Drawing.Color.White
-        Me.Label1.Location = New System.Drawing.Point(800, 33)
-        Me.Label1.Margin = New System.Windows.Forms.Padding(5, 0, 5, 0)
+        Me.Label1.Location = New System.Drawing.Point(700, 25)
+        Me.Label1.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(63, 23)
+        Me.Label1.Size = New System.Drawing.Size(48, 17)
         Me.Label1.TabIndex = 40
         Me.Label1.Text = "Matrix"
         '
@@ -421,40 +419,40 @@ Partial Class Form_Traupixe_H5_2024
         Me.Label2.AutoSize = True
         Me.Label2.BackColor = System.Drawing.Color.LightGray
         Me.Label2.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.Label2.Location = New System.Drawing.Point(803, 164)
-        Me.Label2.Margin = New System.Windows.Forms.Padding(5, 0, 5, 0)
+        Me.Label2.Location = New System.Drawing.Point(703, 123)
+        Me.Label2.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(52, 23)
+        Me.Label2.Size = New System.Drawing.Size(40, 17)
         Me.Label2.TabIndex = 41
         Me.Label2.Text = "Trace"
         '
         'Nb_Proc
         '
         Me.Nb_Proc.Font = New System.Drawing.Font("Calibri", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.Nb_Proc.Location = New System.Drawing.Point(335, 177)
-        Me.Nb_Proc.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Nb_Proc.Location = New System.Drawing.Point(293, 133)
+        Me.Nb_Proc.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Nb_Proc.Name = "Nb_Proc"
-        Me.Nb_Proc.Size = New System.Drawing.Size(22, 24)
+        Me.Nb_Proc.Size = New System.Drawing.Size(20, 21)
         Me.Nb_Proc.TabIndex = 43
         Me.Nb_Proc.Text = "4"
         Me.Nb_Proc.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'ProgressBar1
         '
-        Me.ProgressBar1.Location = New System.Drawing.Point(89, 718)
-        Me.ProgressBar1.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.ProgressBar1.Location = New System.Drawing.Point(78, 538)
+        Me.ProgressBar1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.ProgressBar1.Name = "ProgressBar1"
-        Me.ProgressBar1.Size = New System.Drawing.Size(692, 22)
+        Me.ProgressBar1.Size = New System.Drawing.Size(606, 16)
         Me.ProgressBar1.TabIndex = 44
         '
         'ComboBox_Type_Calc
         '
         Me.ComboBox_Type_Calc.FormattingEnabled = True
         Me.ComboBox_Type_Calc.Items.AddRange(New Object() {"Ponctual", "EDF Map"})
-        Me.ComboBox_Type_Calc.Location = New System.Drawing.Point(597, 83)
-        Me.ComboBox_Type_Calc.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.ComboBox_Type_Calc.Location = New System.Drawing.Point(522, 62)
+        Me.ComboBox_Type_Calc.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.ComboBox_Type_Calc.Name = "ComboBox_Type_Calc"
-        Me.ComboBox_Type_Calc.Size = New System.Drawing.Size(86, 28)
+        Me.ComboBox_Type_Calc.Size = New System.Drawing.Size(76, 23)
         Me.ComboBox_Type_Calc.TabIndex = 45
         Me.ComboBox_Type_Calc.Text = "Ponctual"
         Me.ComboBox_Type_Calc.Visible = False
@@ -463,20 +461,20 @@ Partial Class Form_Traupixe_H5_2024
         '
         Me.Progress.Enabled = False
         Me.Progress.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.Progress.Location = New System.Drawing.Point(152, 108)
-        Me.Progress.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Progress.Location = New System.Drawing.Point(133, 81)
+        Me.Progress.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Progress.Name = "Progress"
-        Me.Progress.Size = New System.Drawing.Size(84, 34)
+        Me.Progress.Size = New System.Drawing.Size(74, 29)
         Me.Progress.TabIndex = 46
         Me.Progress.Text = "0 / 0"
         Me.Progress.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Tps_Calc
         '
-        Me.Tps_Calc.Location = New System.Drawing.Point(279, 9)
-        Me.Tps_Calc.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Tps_Calc.Location = New System.Drawing.Point(244, 7)
+        Me.Tps_Calc.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Tps_Calc.Name = "Tps_Calc"
-        Me.Tps_Calc.Size = New System.Drawing.Size(100, 27)
+        Me.Tps_Calc.Size = New System.Drawing.Size(88, 23)
         Me.Tps_Calc.TabIndex = 47
         Me.Tps_Calc.Text = "??:??:??"
         Me.Tps_Calc.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
@@ -485,20 +483,20 @@ Partial Class Form_Traupixe_H5_2024
         'MyPause
         '
         Me.MyPause.Font = New System.Drawing.Font("Calibri", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.MyPause.Location = New System.Drawing.Point(263, 98)
-        Me.MyPause.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.MyPause.Location = New System.Drawing.Point(230, 74)
+        Me.MyPause.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.MyPause.Name = "MyPause"
-        Me.MyPause.Size = New System.Drawing.Size(117, 51)
+        Me.MyPause.Size = New System.Drawing.Size(102, 38)
         Me.MyPause.TabIndex = 48
         Me.MyPause.Text = "Pause"
         Me.MyPause.UseVisualStyleBackColor = True
         '
         'Text_Status
         '
-        Me.Text_Status.Location = New System.Drawing.Point(133, 788)
-        Me.Text_Status.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Text_Status.Location = New System.Drawing.Point(116, 591)
+        Me.Text_Status.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Text_Status.Name = "Text_Status"
-        Me.Text_Status.Size = New System.Drawing.Size(660, 27)
+        Me.Text_Status.Size = New System.Drawing.Size(578, 23)
         Me.Text_Status.TabIndex = 49
         Me.Text_Status.Text = "??:??:??"
         Me.Text_Status.Visible = False
@@ -509,8 +507,8 @@ Partial Class Form_Traupixe_H5_2024
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuOxyde, Me.LODToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Padding = New System.Windows.Forms.Padding(8, 3, 0, 3)
-        Me.MenuStrip1.Size = New System.Drawing.Size(1203, 30)
+        Me.MenuStrip1.Padding = New System.Windows.Forms.Padding(7, 2, 0, 2)
+        Me.MenuStrip1.Size = New System.Drawing.Size(1053, 24)
         Me.MenuStrip1.TabIndex = 50
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -518,7 +516,7 @@ Partial Class Form_Traupixe_H5_2024
         '
         Me.mnuOxyde.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuOxydeOUI, Me.mnuOxydeNON})
         Me.mnuOxyde.Name = "mnuOxyde"
-        Me.mnuOxyde.Size = New System.Drawing.Size(62, 24)
+        Me.mnuOxyde.Size = New System.Drawing.Size(50, 20)
         Me.mnuOxyde.Text = "Oxide"
         '
         'mnuOxydeOUI
@@ -526,26 +524,26 @@ Partial Class Form_Traupixe_H5_2024
         Me.mnuOxydeOUI.Checked = True
         Me.mnuOxydeOUI.CheckState = System.Windows.Forms.CheckState.Checked
         Me.mnuOxydeOUI.Name = "mnuOxydeOUI"
-        Me.mnuOxydeOUI.Size = New System.Drawing.Size(113, 26)
+        Me.mnuOxydeOUI.Size = New System.Drawing.Size(91, 22)
         Me.mnuOxydeOUI.Text = "Yes"
         '
         'mnuOxydeNON
         '
         Me.mnuOxydeNON.Name = "mnuOxydeNON"
-        Me.mnuOxydeNON.Size = New System.Drawing.Size(113, 26)
+        Me.mnuOxydeNON.Size = New System.Drawing.Size(91, 22)
         Me.mnuOxydeNON.Text = "No"
         '
         'LODToolStripMenuItem
         '
         Me.LODToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GupixLODNWrite0ToolStripMenuItem, Me.WriteAllValuesToolStripMenuItem, Me.RoundConcentrationToolStripMenuItem})
         Me.LODToolStripMenuItem.Name = "LODToolStripMenuItem"
-        Me.LODToolStripMenuItem.Size = New System.Drawing.Size(51, 24)
+        Me.LODToolStripMenuItem.Size = New System.Drawing.Size(42, 20)
         Me.LODToolStripMenuItem.Text = "LOD"
         '
         'GupixLODNWrite0ToolStripMenuItem
         '
         Me.GupixLODNWrite0ToolStripMenuItem.Name = "GupixLODNWrite0ToolStripMenuItem"
-        Me.GupixLODNWrite0ToolStripMenuItem.Size = New System.Drawing.Size(240, 26)
+        Me.GupixLODNWrite0ToolStripMenuItem.Size = New System.Drawing.Size(192, 22)
         Me.GupixLODNWrite0ToolStripMenuItem.Text = "Gupix LOD = N write 0"
         '
         'WriteAllValuesToolStripMenuItem
@@ -553,7 +551,7 @@ Partial Class Form_Traupixe_H5_2024
         Me.WriteAllValuesToolStripMenuItem.Checked = True
         Me.WriteAllValuesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked
         Me.WriteAllValuesToolStripMenuItem.Name = "WriteAllValuesToolStripMenuItem"
-        Me.WriteAllValuesToolStripMenuItem.Size = New System.Drawing.Size(240, 26)
+        Me.WriteAllValuesToolStripMenuItem.Size = New System.Drawing.Size(192, 22)
         Me.WriteAllValuesToolStripMenuItem.Text = "Write all values"
         '
         'RoundConcentrationToolStripMenuItem
@@ -561,98 +559,98 @@ Partial Class Form_Traupixe_H5_2024
         Me.RoundConcentrationToolStripMenuItem.Checked = True
         Me.RoundConcentrationToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked
         Me.RoundConcentrationToolStripMenuItem.Name = "RoundConcentrationToolStripMenuItem"
-        Me.RoundConcentrationToolStripMenuItem.Size = New System.Drawing.Size(240, 26)
+        Me.RoundConcentrationToolStripMenuItem.Size = New System.Drawing.Size(192, 22)
         Me.RoundConcentrationToolStripMenuItem.Text = "Round Concentration"
         '
         'Pivot_det0
         '
-        Me.Pivot_det0.Location = New System.Drawing.Point(306, 8)
-        Me.Pivot_det0.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Pivot_det0.Location = New System.Drawing.Point(268, 6)
+        Me.Pivot_det0.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Pivot_det0.Name = "Pivot_det0"
-        Me.Pivot_det0.Size = New System.Drawing.Size(85, 27)
+        Me.Pivot_det0.Size = New System.Drawing.Size(75, 23)
         Me.Pivot_det0.TabIndex = 51
         Me.Pivot_det0.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Pivot_det1
         '
-        Me.Pivot_det1.Location = New System.Drawing.Point(306, 37)
-        Me.Pivot_det1.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Pivot_det1.Location = New System.Drawing.Point(268, 28)
+        Me.Pivot_det1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Pivot_det1.Name = "Pivot_det1"
-        Me.Pivot_det1.Size = New System.Drawing.Size(85, 27)
+        Me.Pivot_det1.Size = New System.Drawing.Size(75, 23)
         Me.Pivot_det1.TabIndex = 53
         Me.Pivot_det1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Pivot_det2
         '
-        Me.Pivot_det2.Location = New System.Drawing.Point(306, 66)
-        Me.Pivot_det2.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Pivot_det2.Location = New System.Drawing.Point(268, 50)
+        Me.Pivot_det2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Pivot_det2.Name = "Pivot_det2"
-        Me.Pivot_det2.Size = New System.Drawing.Size(85, 27)
+        Me.Pivot_det2.Size = New System.Drawing.Size(75, 23)
         Me.Pivot_det2.TabIndex = 54
         Me.Pivot_det2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Pivot_det5
         '
-        Me.Pivot_det5.Location = New System.Drawing.Point(306, 153)
-        Me.Pivot_det5.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Pivot_det5.Location = New System.Drawing.Point(268, 115)
+        Me.Pivot_det5.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Pivot_det5.Name = "Pivot_det5"
-        Me.Pivot_det5.Size = New System.Drawing.Size(85, 27)
+        Me.Pivot_det5.Size = New System.Drawing.Size(75, 23)
         Me.Pivot_det5.TabIndex = 57
         Me.Pivot_det5.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Pivot_det4
         '
-        Me.Pivot_det4.Location = New System.Drawing.Point(306, 124)
-        Me.Pivot_det4.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Pivot_det4.Location = New System.Drawing.Point(268, 93)
+        Me.Pivot_det4.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Pivot_det4.Name = "Pivot_det4"
-        Me.Pivot_det4.Size = New System.Drawing.Size(85, 27)
+        Me.Pivot_det4.Size = New System.Drawing.Size(75, 23)
         Me.Pivot_det4.TabIndex = 56
         Me.Pivot_det4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Pivot_det3
         '
-        Me.Pivot_det3.Location = New System.Drawing.Point(306, 95)
-        Me.Pivot_det3.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Pivot_det3.Location = New System.Drawing.Point(268, 71)
+        Me.Pivot_det3.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Pivot_det3.Name = "Pivot_det3"
-        Me.Pivot_det3.Size = New System.Drawing.Size(85, 27)
+        Me.Pivot_det3.Size = New System.Drawing.Size(75, 23)
         Me.Pivot_det3.TabIndex = 55
         Me.Pivot_det3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Pivot_det8
         '
-        Me.Pivot_det8.Location = New System.Drawing.Point(306, 240)
-        Me.Pivot_det8.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Pivot_det8.Location = New System.Drawing.Point(268, 180)
+        Me.Pivot_det8.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Pivot_det8.Name = "Pivot_det8"
-        Me.Pivot_det8.Size = New System.Drawing.Size(85, 27)
+        Me.Pivot_det8.Size = New System.Drawing.Size(75, 23)
         Me.Pivot_det8.TabIndex = 60
         Me.Pivot_det8.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Pivot_det7
         '
-        Me.Pivot_det7.Location = New System.Drawing.Point(306, 211)
-        Me.Pivot_det7.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Pivot_det7.Location = New System.Drawing.Point(268, 158)
+        Me.Pivot_det7.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Pivot_det7.Name = "Pivot_det7"
-        Me.Pivot_det7.Size = New System.Drawing.Size(85, 27)
+        Me.Pivot_det7.Size = New System.Drawing.Size(75, 23)
         Me.Pivot_det7.TabIndex = 59
         Me.Pivot_det7.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Pivot_det6
         '
         Me.Pivot_det6.AccessibleDescription = ""
-        Me.Pivot_det6.Location = New System.Drawing.Point(306, 182)
-        Me.Pivot_det6.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Pivot_det6.Location = New System.Drawing.Point(268, 136)
+        Me.Pivot_det6.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Pivot_det6.Name = "Pivot_det6"
-        Me.Pivot_det6.Size = New System.Drawing.Size(85, 27)
+        Me.Pivot_det6.Size = New System.Drawing.Size(75, 23)
         Me.Pivot_det6.TabIndex = 58
         Me.Pivot_det6.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Same_Z
         '
         Me.Same_Z.AutoSize = True
-        Me.Same_Z.Location = New System.Drawing.Point(713, 85)
-        Me.Same_Z.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Same_Z.Location = New System.Drawing.Point(624, 64)
+        Me.Same_Z.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Same_Z.Name = "Same_Z"
-        Me.Same_Z.Size = New System.Drawing.Size(68, 24)
+        Me.Same_Z.Size = New System.Drawing.Size(55, 19)
         Me.Same_Z.TabIndex = 61
         Me.Same_Z.Text = "Same"
         Me.Same_Z.UseVisualStyleBackColor = True
@@ -662,30 +660,30 @@ Partial Class Form_Traupixe_H5_2024
         '
         Me.TextXLS.Enabled = False
         Me.TextXLS.Font = New System.Drawing.Font("Arial Narrow", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.TextXLS.Location = New System.Drawing.Point(89, 688)
-        Me.TextXLS.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.TextXLS.Location = New System.Drawing.Point(78, 516)
+        Me.TextXLS.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.TextXLS.Name = "TextXLS"
-        Me.TextXLS.Size = New System.Drawing.Size(692, 26)
+        Me.TextXLS.Size = New System.Drawing.Size(606, 22)
         Me.TextXLS.TabIndex = 62
         Me.TextXLS.Text = "Gupix-?????_Mat-??_Trc-??_Pivot-??.xls"
         '
         'LabelAppend
         '
         Me.LabelAppend.AutoSize = True
-        Me.LabelAppend.Location = New System.Drawing.Point(5, 691)
-        Me.LabelAppend.Margin = New System.Windows.Forms.Padding(5, 0, 5, 0)
+        Me.LabelAppend.Location = New System.Drawing.Point(4, 518)
+        Me.LabelAppend.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.LabelAppend.Name = "LabelAppend"
-        Me.LabelAppend.Size = New System.Drawing.Size(80, 20)
+        Me.LabelAppend.Size = New System.Drawing.Size(63, 15)
         Me.LabelAppend.TabIndex = 64
         Me.LabelAppend.Text = "Append to"
         '
         'LabelNew
         '
         Me.LabelNew.AutoSize = True
-        Me.LabelNew.Location = New System.Drawing.Point(5, 691)
-        Me.LabelNew.Margin = New System.Windows.Forms.Padding(5, 0, 5, 0)
+        Me.LabelNew.Location = New System.Drawing.Point(4, 518)
+        Me.LabelNew.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.LabelNew.Name = "LabelNew"
-        Me.LabelNew.Size = New System.Drawing.Size(80, 20)
+        Me.LabelNew.Size = New System.Drawing.Size(62, 15)
         Me.LabelNew.TabIndex = 65
         Me.LabelNew.Text = "Create       "
         '
@@ -694,30 +692,30 @@ Partial Class Form_Traupixe_H5_2024
         Me.Check_Trc_As_Oxy.AutoSize = True
         Me.Check_Trc_As_Oxy.Checked = True
         Me.Check_Trc_As_Oxy.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.Check_Trc_As_Oxy.Location = New System.Drawing.Point(15, 11)
-        Me.Check_Trc_As_Oxy.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Check_Trc_As_Oxy.Location = New System.Drawing.Point(13, 8)
+        Me.Check_Trc_As_Oxy.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Check_Trc_As_Oxy.Name = "Check_Trc_As_Oxy"
-        Me.Check_Trc_As_Oxy.Size = New System.Drawing.Size(130, 25)
+        Me.Check_Trc_As_Oxy.Size = New System.Drawing.Size(104, 19)
         Me.Check_Trc_As_Oxy.TabIndex = 74
         Me.Check_Trc_As_Oxy.Text = "Elem. as oxide"
         Me.Check_Trc_As_Oxy.UseVisualStyleBackColor = True
         '
         'Text_Lst_Ox_Trc
         '
-        Me.Text_Lst_Ox_Trc.Location = New System.Drawing.Point(10, 37)
-        Me.Text_Lst_Ox_Trc.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Text_Lst_Ox_Trc.Location = New System.Drawing.Point(9, 28)
+        Me.Text_Lst_Ox_Trc.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Text_Lst_Ox_Trc.Name = "Text_Lst_Ox_Trc"
-        Me.Text_Lst_Ox_Trc.Size = New System.Drawing.Size(370, 27)
+        Me.Text_Lst_Ox_Trc.Size = New System.Drawing.Size(324, 23)
         Me.Text_Lst_Ox_Trc.TabIndex = 75
         Me.Text_Lst_Ox_Trc.Text = "19,20,25,26,29,82"
         '
         'Ck_AllAsOxy
         '
         Me.Ck_AllAsOxy.AutoSize = True
-        Me.Ck_AllAsOxy.Location = New System.Drawing.Point(126, 11)
-        Me.Ck_AllAsOxy.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Ck_AllAsOxy.Location = New System.Drawing.Point(110, 8)
+        Me.Ck_AllAsOxy.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Ck_AllAsOxy.Name = "Ck_AllAsOxy"
-        Me.Ck_AllAsOxy.Size = New System.Drawing.Size(110, 25)
+        Me.Ck_AllAsOxy.Size = New System.Drawing.Size(90, 19)
         Me.Ck_AllAsOxy.TabIndex = 76
         Me.Ck_AllAsOxy.Text = "All as oxide"
         Me.Ck_AllAsOxy.UseVisualStyleBackColor = True
@@ -725,10 +723,10 @@ Partial Class Form_Traupixe_H5_2024
         'ListFileInit
         '
         Me.ListFileInit.GridLines = True
-        Me.ListFileInit.Location = New System.Drawing.Point(1208, 194)
-        Me.ListFileInit.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.ListFileInit.Location = New System.Drawing.Point(1057, 146)
+        Me.ListFileInit.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.ListFileInit.Name = "ListFileInit"
-        Me.ListFileInit.Size = New System.Drawing.Size(140, 211)
+        Me.ListFileInit.Size = New System.Drawing.Size(123, 159)
         Me.ListFileInit.Sorting = System.Windows.Forms.SortOrder.Ascending
         Me.ListFileInit.TabIndex = 79
         Me.ListFileInit.UseCompatibleStateImageBehavior = False
@@ -739,24 +737,24 @@ Partial Class Form_Traupixe_H5_2024
         '
         Me.StatusStrip1.ImageScalingSize = New System.Drawing.Size(24, 24)
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripStatusLabel2, Me.ToolStripStatusLabel1})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 736)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 550)
         Me.StatusStrip1.Name = "StatusStrip1"
-        Me.StatusStrip1.Padding = New System.Windows.Forms.Padding(1, 0, 18, 0)
-        Me.StatusStrip1.Size = New System.Drawing.Size(1203, 27)
+        Me.StatusStrip1.Padding = New System.Windows.Forms.Padding(1, 0, 16, 0)
+        Me.StatusStrip1.Size = New System.Drawing.Size(1053, 22)
         Me.StatusStrip1.TabIndex = 80
         Me.StatusStrip1.Text = "StatusStrip1"
         '
         'ToolStripStatusLabel2
         '
         Me.ToolStripStatusLabel2.Name = "ToolStripStatusLabel2"
-        Me.ToolStripStatusLabel2.Size = New System.Drawing.Size(0, 21)
+        Me.ToolStripStatusLabel2.Size = New System.Drawing.Size(0, 17)
         '
         'ToolStripStatusLabel1
         '
         Me.ToolStripStatusLabel1.Font = New System.Drawing.Font("Arial Narrow", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
         Me.ToolStripStatusLabel1.Margin = New System.Windows.Forms.Padding(200, 3, 0, 2)
         Me.ToolStripStatusLabel1.Name = "ToolStripStatusLabel1"
-        Me.ToolStripStatusLabel1.Size = New System.Drawing.Size(336, 22)
+        Me.ToolStripStatusLabel1.Size = New System.Drawing.Size(254, 17)
         Me.ToolStripStatusLabel1.Text = "                             Status TRAUPIXE                         "
         '
         'Chk_RoundValue
@@ -764,10 +762,10 @@ Partial Class Form_Traupixe_H5_2024
         Me.Chk_RoundValue.AutoSize = True
         Me.Chk_RoundValue.Checked = True
         Me.Chk_RoundValue.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.Chk_RoundValue.Location = New System.Drawing.Point(11, 180)
-        Me.Chk_RoundValue.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Chk_RoundValue.Location = New System.Drawing.Point(10, 135)
+        Me.Chk_RoundValue.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Chk_RoundValue.Name = "Chk_RoundValue"
-        Me.Chk_RoundValue.Size = New System.Drawing.Size(125, 25)
+        Me.Chk_RoundValue.Size = New System.Drawing.Size(100, 19)
         Me.Chk_RoundValue.TabIndex = 81
         Me.Chk_RoundValue.Text = "Round values"
         Me.Chk_RoundValue.UseVisualStyleBackColor = True
@@ -775,10 +773,10 @@ Partial Class Form_Traupixe_H5_2024
         'Adjust_Filter
         '
         Me.Adjust_Filter.Font = New System.Drawing.Font("Calibri", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.Adjust_Filter.Location = New System.Drawing.Point(169, 85)
-        Me.Adjust_Filter.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Adjust_Filter.Location = New System.Drawing.Point(148, 64)
+        Me.Adjust_Filter.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Adjust_Filter.Name = "Adjust_Filter"
-        Me.Adjust_Filter.Size = New System.Drawing.Size(160, 51)
+        Me.Adjust_Filter.Size = New System.Drawing.Size(140, 38)
         Me.Adjust_Filter.TabIndex = 82
         Me.Adjust_Filter.Text = "Adjust Filter"
         Me.Adjust_Filter.UseVisualStyleBackColor = True
@@ -790,11 +788,11 @@ Partial Class Form_Traupixe_H5_2024
         Me.TabControl1.Controls.Add(Me.Tab_Adjust)
         Me.TabControl1.Controls.Add(Me.TabPage1)
         Me.TabControl1.Font = New System.Drawing.Font("Calibri", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.TabControl1.Location = New System.Drawing.Point(800, 541)
-        Me.TabControl1.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.TabControl1.Location = New System.Drawing.Point(700, 406)
+        Me.TabControl1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(400, 203)
+        Me.TabControl1.Size = New System.Drawing.Size(350, 152)
         Me.TabControl1.TabIndex = 83
         '
         'Calcul
@@ -809,21 +807,21 @@ Partial Class Form_Traupixe_H5_2024
         Me.Calcul.Controls.Add(Me.Ck_AllAsOxy)
         Me.Calcul.Controls.Add(Me.Progress)
         Me.Calcul.Controls.Add(Me.Tps_Calc)
-        Me.Calcul.Location = New System.Drawing.Point(4, 31)
-        Me.Calcul.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Calcul.Location = New System.Drawing.Point(4, 27)
+        Me.Calcul.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Calcul.Name = "Calcul"
-        Me.Calcul.Padding = New System.Windows.Forms.Padding(5, 4, 5, 4)
-        Me.Calcul.Size = New System.Drawing.Size(392, 168)
+        Me.Calcul.Padding = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.Calcul.Size = New System.Drawing.Size(342, 121)
         Me.Calcul.TabIndex = 0
         Me.Calcul.Text = "Process Spectra"
         Me.Calcul.UseVisualStyleBackColor = True
         '
         'Text_gamma
         '
-        Me.Text_gamma.Location = New System.Drawing.Point(11, 68)
-        Me.Text_gamma.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Text_gamma.Location = New System.Drawing.Point(10, 51)
+        Me.Text_gamma.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Text_gamma.Name = "Text_gamma"
-        Me.Text_gamma.Size = New System.Drawing.Size(369, 27)
+        Me.Text_gamma.Size = New System.Drawing.Size(323, 23)
         Me.Text_gamma.TabIndex = 82
         Me.Text_gamma.Text = "File ""external-conc.csv"" not found"
         '
@@ -841,11 +839,11 @@ Partial Class Form_Traupixe_H5_2024
         Me.Tab_Adjust.Controls.Add(Me.ComboBox_Type_F)
         Me.Tab_Adjust.Controls.Add(Me.TextF_From)
         Me.Tab_Adjust.Controls.Add(Me.Adjust_Filter)
-        Me.Tab_Adjust.Location = New System.Drawing.Point(4, 31)
-        Me.Tab_Adjust.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Tab_Adjust.Location = New System.Drawing.Point(4, 27)
+        Me.Tab_Adjust.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Tab_Adjust.Name = "Tab_Adjust"
-        Me.Tab_Adjust.Padding = New System.Windows.Forms.Padding(5, 4, 5, 4)
-        Me.Tab_Adjust.Size = New System.Drawing.Size(392, 168)
+        Me.Tab_Adjust.Padding = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.Tab_Adjust.Size = New System.Drawing.Size(342, 121)
         Me.Tab_Adjust.TabIndex = 1
         Me.Tab_Adjust.Text = "Adjust Absorbers"
         Me.Tab_Adjust.UseVisualStyleBackColor = True
@@ -853,89 +851,89 @@ Partial Class Form_Traupixe_H5_2024
         'Label10
         '
         Me.Label10.AutoSize = True
-        Me.Label10.Location = New System.Drawing.Point(10, 113)
-        Me.Label10.Margin = New System.Windows.Forms.Padding(5, 0, 5, 0)
+        Me.Label10.Location = New System.Drawing.Point(9, 85)
+        Me.Label10.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(156, 21)
+        Me.Label10.Size = New System.Drawing.Size(120, 15)
         Me.Label10.TabIndex = 88
         Me.Label10.Text = "mm / inert gas or Air"
         '
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(9, 97)
-        Me.Label9.Margin = New System.Windows.Forms.Padding(5, 0, 5, 0)
+        Me.Label9.Location = New System.Drawing.Point(8, 73)
+        Me.Label9.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(154, 21)
+        Me.Label9.Size = New System.Drawing.Size(122, 15)
         Me.Label9.TabIndex = 87
         Me.Label9.Text = "µm / solid absorbers"
         '
         'Label8
         '
         Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(130, 19)
-        Me.Label8.Margin = New System.Windows.Forms.Padding(5, 0, 5, 0)
+        Me.Label8.Location = New System.Drawing.Point(114, 14)
+        Me.Label8.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(84, 21)
+        Me.Label8.Size = New System.Drawing.Size(66, 15)
         Me.Label8.TabIndex = 85
         Me.Label8.Text = "Z absorber"
         '
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(226, 57)
-        Me.Label7.Margin = New System.Windows.Forms.Padding(5, 0, 5, 0)
+        Me.Label7.Location = New System.Drawing.Point(198, 43)
+        Me.Label7.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(41, 21)
+        Me.Label7.Size = New System.Drawing.Size(30, 15)
         Me.Label7.TabIndex = 85
         Me.Label7.Text = "Step"
         '
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(112, 55)
-        Me.Label6.Margin = New System.Windows.Forms.Padding(5, 0, 5, 0)
+        Me.Label6.Location = New System.Drawing.Point(98, 41)
+        Me.Label6.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(25, 21)
+        Me.Label6.Size = New System.Drawing.Size(19, 15)
         Me.Label6.TabIndex = 85
         Me.Label6.Text = "To"
         '
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(9, 57)
-        Me.Label5.Margin = New System.Windows.Forms.Padding(5, 0, 5, 0)
+        Me.Label5.Location = New System.Drawing.Point(8, 43)
+        Me.Label5.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(47, 21)
+        Me.Label5.Size = New System.Drawing.Size(35, 15)
         Me.Label5.TabIndex = 84
         Me.Label5.Text = "From"
         '
         'TextF_Z
         '
-        Me.TextF_Z.Location = New System.Drawing.Point(216, 13)
-        Me.TextF_Z.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.TextF_Z.Location = New System.Drawing.Point(189, 10)
+        Me.TextF_Z.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.TextF_Z.Name = "TextF_Z"
-        Me.TextF_Z.Size = New System.Drawing.Size(47, 27)
+        Me.TextF_Z.Size = New System.Drawing.Size(42, 23)
         Me.TextF_Z.TabIndex = 83
         Me.TextF_Z.Text = "102"
         Me.TextF_Z.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'TextF_Step
         '
-        Me.TextF_Step.Location = New System.Drawing.Point(266, 51)
-        Me.TextF_Step.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.TextF_Step.Location = New System.Drawing.Point(233, 38)
+        Me.TextF_Step.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.TextF_Step.Name = "TextF_Step"
-        Me.TextF_Step.Size = New System.Drawing.Size(69, 27)
+        Me.TextF_Step.Size = New System.Drawing.Size(61, 23)
         Me.TextF_Step.TabIndex = 86
         Me.TextF_Step.Text = "0.1"
         Me.TextF_Step.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'TextF_To
         '
-        Me.TextF_To.Location = New System.Drawing.Point(146, 51)
-        Me.TextF_To.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.TextF_To.Location = New System.Drawing.Point(128, 38)
+        Me.TextF_To.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.TextF_To.Name = "TextF_To"
-        Me.TextF_To.Size = New System.Drawing.Size(54, 27)
+        Me.TextF_To.Size = New System.Drawing.Size(48, 23)
         Me.TextF_To.TabIndex = 85
         Me.TextF_To.Text = "1"
         Me.TextF_To.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
@@ -944,20 +942,20 @@ Partial Class Form_Traupixe_H5_2024
         '
         Me.ComboBox_Type_F.FormattingEnabled = True
         Me.ComboBox_Type_F.Items.AddRange(New Object() {"Matrix", "Trace"})
-        Me.ComboBox_Type_F.Location = New System.Drawing.Point(18, 13)
-        Me.ComboBox_Type_F.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.ComboBox_Type_F.Location = New System.Drawing.Point(16, 10)
+        Me.ComboBox_Type_F.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.ComboBox_Type_F.Name = "ComboBox_Type_F"
-        Me.ComboBox_Type_F.Size = New System.Drawing.Size(91, 27)
+        Me.ComboBox_Type_F.Size = New System.Drawing.Size(80, 23)
         Me.ComboBox_Type_F.TabIndex = 10
         Me.ComboBox_Type_F.TabStop = False
         Me.ComboBox_Type_F.Text = "Matrix"
         '
         'TextF_From
         '
-        Me.TextF_From.Location = New System.Drawing.Point(56, 51)
-        Me.TextF_From.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.TextF_From.Location = New System.Drawing.Point(49, 38)
+        Me.TextF_From.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.TextF_From.Name = "TextF_From"
-        Me.TextF_From.Size = New System.Drawing.Size(53, 27)
+        Me.TextF_From.Size = New System.Drawing.Size(47, 23)
         Me.TextF_From.TabIndex = 84
         Me.TextF_From.Text = "0.1"
         Me.TextF_From.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
@@ -965,31 +963,29 @@ Partial Class Form_Traupixe_H5_2024
         'TabPage1
         '
         Me.TabPage1.Controls.Add(Me.Button_Extract)
-        Me.TabPage1.Location = New System.Drawing.Point(4, 31)
-        Me.TabPage1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
+        Me.TabPage1.Location = New System.Drawing.Point(4, 27)
         Me.TabPage1.Name = "TabPage1"
-        Me.TabPage1.Padding = New System.Windows.Forms.Padding(3, 4, 3, 4)
-        Me.TabPage1.Size = New System.Drawing.Size(392, 168)
+        Me.TabPage1.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
+        Me.TabPage1.Size = New System.Drawing.Size(342, 121)
         Me.TabPage1.TabIndex = 2
         Me.TabPage1.Text = "Extract spectra"
         Me.TabPage1.UseVisualStyleBackColor = True
         '
         'Button_Extract
         '
-        Me.Button_Extract.Location = New System.Drawing.Point(34, 29)
-        Me.Button_Extract.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
+        Me.Button_Extract.Location = New System.Drawing.Point(30, 22)
         Me.Button_Extract.Name = "Button_Extract"
-        Me.Button_Extract.Size = New System.Drawing.Size(165, 59)
+        Me.Button_Extract.Size = New System.Drawing.Size(144, 44)
         Me.Button_Extract.TabIndex = 0
         Me.Button_Extract.Text = "Extract hdf5 for GUPIX"
         Me.Button_Extract.UseVisualStyleBackColor = True
         '
         'Button6
         '
-        Me.Button6.Location = New System.Drawing.Point(1216, 414)
-        Me.Button6.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Button6.Location = New System.Drawing.Point(1064, 310)
+        Me.Button6.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Button6.Name = "Button6"
-        Me.Button6.Size = New System.Drawing.Size(103, 59)
+        Me.Button6.Size = New System.Drawing.Size(90, 44)
         Me.Button6.TabIndex = 84
         Me.Button6.Text = "Button6"
         Me.Button6.UseVisualStyleBackColor = True
@@ -1004,10 +1000,10 @@ Partial Class Form_Traupixe_H5_2024
         '
         'Button7
         '
-        Me.Button7.Location = New System.Drawing.Point(1210, 121)
-        Me.Button7.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Button7.Location = New System.Drawing.Point(1059, 91)
+        Me.Button7.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Button7.Name = "Button7"
-        Me.Button7.Size = New System.Drawing.Size(97, 60)
+        Me.Button7.Size = New System.Drawing.Size(85, 45)
         Me.Button7.TabIndex = 86
         Me.Button7.Text = "Button7"
         Me.Button7.UseVisualStyleBackColor = True
@@ -1015,10 +1011,10 @@ Partial Class Form_Traupixe_H5_2024
         '
         'Button8
         '
-        Me.Button8.Location = New System.Drawing.Point(1210, 503)
-        Me.Button8.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Button8.Location = New System.Drawing.Point(1059, 377)
+        Me.Button8.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Button8.Name = "Button8"
-        Me.Button8.Size = New System.Drawing.Size(103, 59)
+        Me.Button8.Size = New System.Drawing.Size(90, 44)
         Me.Button8.TabIndex = 87
         Me.Button8.Text = "Button8"
         Me.Button8.UseVisualStyleBackColor = True
@@ -1028,10 +1024,10 @@ Partial Class Form_Traupixe_H5_2024
         '
         Me.Box_txtFiltre.AcceptsReturn = True
         Me.Box_txtFiltre.Font = New System.Drawing.Font("Calibri", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.Box_txtFiltre.Location = New System.Drawing.Point(648, 45)
-        Me.Box_txtFiltre.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Box_txtFiltre.Location = New System.Drawing.Point(567, 34)
+        Me.Box_txtFiltre.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Box_txtFiltre.Name = "Box_txtFiltre"
-        Me.Box_txtFiltre.Size = New System.Drawing.Size(127, 27)
+        Me.Box_txtFiltre.Size = New System.Drawing.Size(112, 23)
         Me.Box_txtFiltre.TabIndex = 88
         Me.Box_txtFiltre.Text = "*"
         Me.Box_txtFiltre.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
@@ -1040,10 +1036,10 @@ Partial Class Form_Traupixe_H5_2024
         '
         Me.Label11.AutoSize = True
         Me.Label11.Font = New System.Drawing.Font("Calibri", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.Label11.Location = New System.Drawing.Point(545, 51)
-        Me.Label11.Margin = New System.Windows.Forms.Padding(5, 0, 5, 0)
+        Me.Label11.Location = New System.Drawing.Point(477, 38)
+        Me.Label11.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(110, 21)
+        Me.Label11.Size = New System.Drawing.Size(86, 15)
         Me.Label11.TabIndex = 89
         Me.Label11.Text = "Filter filename"
         '
@@ -1051,20 +1047,19 @@ Partial Class Form_Traupixe_H5_2024
         '
         Me.ListBox_HDF5.Font = New System.Drawing.Font("Calibri", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
         Me.ListBox_HDF5.FormattingEnabled = True
-        Me.ListBox_HDF5.ItemHeight = 17
-        Me.ListBox_HDF5.Location = New System.Drawing.Point(8, 85)
-        Me.ListBox_HDF5.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.ListBox_HDF5.Location = New System.Drawing.Point(7, 64)
+        Me.ListBox_HDF5.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.ListBox_HDF5.Name = "ListBox_HDF5"
-        Me.ListBox_HDF5.Size = New System.Drawing.Size(343, 55)
+        Me.ListBox_HDF5.Size = New System.Drawing.Size(301, 30)
         Me.ListBox_HDF5.TabIndex = 90
         '
         'TxtBox_HDF5_File
         '
         Me.TxtBox_HDF5_File.Font = New System.Drawing.Font("Calibri", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.TxtBox_HDF5_File.Location = New System.Drawing.Point(362, 119)
-        Me.TxtBox_HDF5_File.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.TxtBox_HDF5_File.Location = New System.Drawing.Point(317, 89)
+        Me.TxtBox_HDF5_File.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.TxtBox_HDF5_File.Name = "TxtBox_HDF5_File"
-        Me.TxtBox_HDF5_File.Size = New System.Drawing.Size(419, 24)
+        Me.TxtBox_HDF5_File.Size = New System.Drawing.Size(367, 21)
         Me.TxtBox_HDF5_File.TabIndex = 91
         Me.TxtBox_HDF5_File.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
@@ -1100,10 +1095,9 @@ Partial Class Form_Traupixe_H5_2024
         Me.Panel1.Controls.Add(Me.Par_det0)
         Me.Panel1.Controls.Add(Me.LstPar_Trc)
         Me.Panel1.Font = New System.Drawing.Font("Calibri", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.Panel1.Location = New System.Drawing.Point(800, 186)
-        Me.Panel1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
+        Me.Panel1.Location = New System.Drawing.Point(700, 140)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(400, 347)
+        Me.Panel1.Size = New System.Drawing.Size(350, 260)
         Me.Panel1.TabIndex = 92
         '
         'Panel2
@@ -1113,36 +1107,36 @@ Partial Class Form_Traupixe_H5_2024
         Me.Panel2.Controls.Add(Me.CbDetMat)
         Me.Panel2.Controls.Add(Me.LstPar_Mat)
         Me.Panel2.Font = New System.Drawing.Font("Calibri", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.Panel2.Location = New System.Drawing.Point(800, 55)
-        Me.Panel2.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
+        Me.Panel2.Location = New System.Drawing.Point(700, 41)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(400, 100)
+        Me.Panel2.Size = New System.Drawing.Size(350, 75)
         Me.Panel2.TabIndex = 93
         '
         'Button_Run2
         '
         Me.Button_Run2.Font = New System.Drawing.Font("Calibri", 7.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.Button_Run2.Location = New System.Drawing.Point(361, 85)
-        Me.Button_Run2.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Button_Run2.Location = New System.Drawing.Point(316, 64)
+        Me.Button_Run2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Button_Run2.Name = "Button_Run2"
-        Me.Button_Run2.Size = New System.Drawing.Size(88, 26)
+        Me.Button_Run2.Size = New System.Drawing.Size(77, 20)
         Me.Button_Run2.TabIndex = 94
         Me.Button_Run2.Text = "Run"
         Me.Button_Run2.UseVisualStyleBackColor = True
         '
         'TextProcessIf
         '
-        Me.TextProcessIf.Location = New System.Drawing.Point(472, 85)
+        Me.TextProcessIf.Location = New System.Drawing.Point(413, 64)
+        Me.TextProcessIf.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
         Me.TextProcessIf.Name = "TextProcessIf"
-        Me.TextProcessIf.Size = New System.Drawing.Size(111, 27)
+        Me.TextProcessIf.Size = New System.Drawing.Size(98, 23)
         Me.TextProcessIf.TabIndex = 95
         Me.TextProcessIf.Visible = False
         '
         'Form_Traupixe_H5_2024
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1203, 763)
+        Me.ClientSize = New System.Drawing.Size(1053, 572)
         Me.Controls.Add(Me.TextProcessIf)
         Me.Controls.Add(Me.Button_Run2)
         Me.Controls.Add(Me.Label1)
@@ -1173,10 +1167,10 @@ Partial Class Form_Traupixe_H5_2024
         Me.Controls.Add(Me.MenuStrip1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.MainMenuStrip = Me.MenuStrip1
-        Me.Margin = New System.Windows.Forms.Padding(5, 4, 5, 4)
+        Me.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.MaximizeBox = False
         Me.Name = "Form_Traupixe_H5_2024"
-        Me.Text = "TrauPIXE 25.06 - C2RMF"
+        Me.Text = "TrauPIXE 25.07 - C2RMF"
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()
         Me.StatusStrip1.ResumeLayout(False)
