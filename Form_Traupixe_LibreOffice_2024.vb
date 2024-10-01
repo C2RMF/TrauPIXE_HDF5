@@ -41,6 +41,7 @@ Public Class Form_Traupixe_H5_2024
     'Dim worksheet As Excel.Worksheet
     'Dim workbook As Excel.Workbook
     ' Dim Fs_Log As Object
+    Dim skip_Pb_mtx As Boolean
     Dim nb_process_custom As Boolean
     Dim Global_Nb_Swap As Integer
     Dim K_Name_HED_Mat As String
@@ -57,6 +58,7 @@ Public Class Form_Traupixe_H5_2024
     Dim Use_ext_charge_Trc(10) As Boolean
     Dim num_column_charge_csv_MAT As Integer
     Dim num_column_charge_csv_TRC(10) As Integer
+    Dim limite_conc_red_ok As Integer
 
     Dim K_Name_HED_Trc(10) As String
     Dim L_Name_HED_Trc(10) As String
@@ -102,6 +104,11 @@ Public Class Form_Traupixe_H5_2024
         Public layer As String
         Public name As String
     End Structure
+
+
+    Public atomic_info_Z(125) As String
+    Public atomic_info_name(125) As String
+    Public atomic_info_mass(125) As Single
 
     Dim Gupix_Path = "c:\gupixwin\gupix"
     Dim Ext_Trc0 As String
@@ -1333,10 +1340,19 @@ Public Class Form_Traupixe_H5_2024
         Else
             Ext_Mat = CbDetMat.Text
             Ext_Par_Mat = "*" & CbDetMat.Text & "*.par"
+            If Myinit = True Then
+                Try
+                    ComboBox_Type_F.Items.RemoveAt(0)
+                Catch ex As Exception
+
+                End Try
+
+                ComboBox_Type_F.Items.Insert(0, Ext_Mat)
+            End If
         End If
 
 
-        If Myinit = True And Ext_Mat <> "" Then
+            If Myinit = True And Ext_Mat <> "" Then
             Maj_Par_Files_Mat()
             If hdf5_mode = True Then
                 List_HDF5_group(Chemin_hdf5)
@@ -1398,6 +1414,7 @@ Public Class Form_Traupixe_H5_2024
         Dim Ind1 As Integer
         Dim SplitText() As String
         Dim folder As String = CStr(trvFolders.SelectedNode.Tag)
+        limite_conc_red_ok = 50000 'utlisé dans "calcul_best_conc" si conc. < 5% on prend la valeur RED
 
         If Not folder Is Nothing AndAlso Directory.Exists(folder) Then
 
@@ -1447,8 +1464,6 @@ Public Class Form_Traupixe_H5_2024
         End If
 
     End Sub
-
-
 
     Private Sub Adjust_Filter_Click(sender As Object, e As EventArgs) Handles Adjust_Filter.Click
         Dim ext As String
@@ -1528,7 +1543,7 @@ Public Class Form_Traupixe_H5_2024
         If Nb_Trc > 0 Then
             Calcul_With_Trc = True
         Else
-            ComboBox_Type_F.SelectedIndex = 0
+            'ComboBox_Type_F.SelectedIndex = 0
         End If
 
         If Par_Mat.Text <> "" And Nb_file > 0 Then
@@ -1609,7 +1624,7 @@ Public Class Form_Traupixe_H5_2024
         End If
 
         Filter_T = Filter_From
-        If ComboBox_Type_F.Text = "Matrix" Then
+        If ComboBox_Type_F.Text = CbDetMat.Text Then
 
             For i = 0 To Nb_Process - 1
                 Filter_Create_Par_Mat(TextF_Z.Text, Filter_T, i)
@@ -1617,12 +1632,16 @@ Public Class Form_Traupixe_H5_2024
                 Filter_T = Math.Round(Filter_T + Filter_Step, 2)
             Next i
         Else
-            For i = 0 To Nb_Process - 1
-                Filter_Create_Par_Trc(TextF_Z.Text, Filter_T, i) ' Crée N fois le même fichier Mat Par avec Z filtre = 1000 pour ne pas chercher un vrai Z Filter
-                Tab_Comment(i) = CStr(Filter_T)
-                Filter_T = Math.Round(Filter_T + Filter_Step, 2) 'CSng(TextF_Step.Text)
-                '     Filter_Create_Par_Trc("1000", Filter_T, i) ' Crée N fois le même fichier Mat Par
-            Next i
+            For t = 0 To Nb_Trc - 1
+                If ComboBox_Type_F.Text = NomDet_Trc(t) Then
+                    For i = 0 To Nb_Process - 1
+                        Filter_Create_Par_Trc(TextF_Z.Text, Filter_T, i, t) ' Crée N fois le même fichier Mat Par avec Z filtre = 1000 pour ne pas chercher un vrai Z Filter
+                        Tab_Comment(i) = CStr(Filter_T)
+                        Filter_T = Math.Round(Filter_T + Filter_Step, 2) 'CSng(TextF_Step.Text)
+                        '     Filter_Create_Par_Trc("1000", Filter_T, i) ' Crée N fois le même fichier Mat Par
+                    Next i
+                End If
+            Next
         End If
 
         TextF_Z.Enabled = False
@@ -2000,6 +2019,8 @@ Public Class Form_Traupixe_H5_2024
         Dim Thread_Data_Excel_Alive(100) As Boolean
         Dim Tab_Inc_Done(100) As Boolean
         Dim Parametres_All_Thread As Struct_Parametres_Thread
+        Dim nb_process_main As Integer
+        Dim nb_elem As Integer
 
 
         Nb_Oxyde_X2 = 0
@@ -2095,8 +2116,38 @@ Public Class Form_Traupixe_H5_2024
                 tab_select_file_indices(l) = LvFiles.SelectedIndices(0)
             Next l
 
+            If ComboBox_Type_F.Text = CbDetMat.Text Then
+                Sequence_Matrix_Multi_Thread(0, 0, Nb_Process)
+            Else
+                nb_process_main = Nb_Process
+                Nb_Process = 1
+                Sequence_Matrix_Multi_Thread(0, 0, 1) ' 1 Process
+                Nb_Process = nb_process_main
+                For i = 1 To Nb_Process - 1
+                    Info_Experience_Mat(i) = Info_Experience_Mat(0)
+                    Tab_Name_File(i) = Tab_Name_File(0)
 
-            Sequence_Matrix_Multi_Thread(0, 0)
+                    My.Computer.FileSystem.CopyFile((Chemin_GupixWin_Multi(0) & "\PixMTX.out"), (Chemin_GupixWin_Multi(i) & "\PixMTX.out"), True)
+                    'My.Computer.FileSystem.CopyFile((Chemin_GupixWin_Multi(0) & "\.out"), (Chemin_GupixWin_Multi(i) & "\PixMTX.out"), True)
+
+                    For nb_elem = 0 To Nb_Elements_Mat - 1
+                        Val_Mat_Conc(i, nb_elem) = Val_Mat_Conc(0, nb_elem)
+                        Val_Mat_Oxyde(i, nb_elem) = Val_Mat_Oxyde(0, nb_elem)
+                        Val_Mat_LOD(i, nb_elem) = Val_Mat_LOD(0, nb_elem)
+                        Val_Mat_Fit_Error(i, nb_elem) = Val_Mat_Fit_Error(0, nb_elem)
+                        Val_Mat_Total_Error(i, nb_elem) = Val_Mat_Total_Error(0, nb_elem)
+                        Val_Mat_Final_Error(i, nb_elem) = Val_Mat_Final_Error(0, nb_elem)
+                        Val_Mat_Y_N_Q(i, nb_elem) = Val_Mat_Y_N_Q(0, nb_elem)
+                        Str_Mat_Conc_100(i, nb_elem) = Str_Mat_Conc_100(0, nb_elem)
+                        Val_Mat_Conc_ppm(i, nb_elem) = Val_Mat_Conc_ppm(0, nb_elem)
+                        Val_Mat_Conc_RED(i, nb_elem) = Val_Mat_Conc_RED(0, nb_elem)
+                        Val_Mat_Best_Yes(i, nb_elem) = Val_Mat_Best_Yes(0, nb_elem)
+                    Next
+
+
+                Next i
+            End If
+
 
 
             ToolStripStatusLabel1.Text = "Matrix Sequence Finish"
@@ -2107,7 +2158,8 @@ Public Class Form_Traupixe_H5_2024
             If Nb_Trc > 0 Then
 
                 For i = 0 To Nb_Trc - 1
-                    Lecture_Fichier_Par_Trc(4, i) ' RECUPERE LES chemins fichiers HED ?
+                    copy_par_file_trc(i)
+                    Lecture_par_trc_HED_NbElem(i) ' RECUPERE LES chemins fichiers HED ?
                 Next i
 
                 For i = 0 To Nb_Trc - 1
@@ -2135,6 +2187,7 @@ Public Class Form_Traupixe_H5_2024
                 ReDim Val_Trc_Best_Yes(Nb_Process - 1, Nb_Trc_Total)
                 ReDim Val_Trc_Best_Yes_RED(Nb_Process - 1, Nb_Trc_Total)
                 ReDim Val_Trc_Pivot_Error(Nb_Process - 1, Nb_Trc)
+                ReDim Error_Trace(Nb_Process - 1, Nb_Trc)
 
             End If
 
@@ -2144,7 +2197,7 @@ Public Class Form_Traupixe_H5_2024
             If Nb_Trc > 0 Then
 
                 For i = 0 To Nb_Trc - 1
-                    copy_par_file_trc(i)
+
                     Sequence_Trace_Multi_Thread(Num_Fichier, nb_file, i)
                 Next i
 
@@ -2418,7 +2471,7 @@ Public Class Form_Traupixe_H5_2024
                 If Use_HED_Mat = True Then
                     Create_Fichier_Par_Mat_HED()
                 End If
-                Sequence_Matrix_Multi_Thread(Num_Fichier, IntNb_File)
+                Sequence_Matrix_Multi_Thread(Num_Fichier, IntNb_File, Nb_Process)
             End If
 
             If Fatal_Error = True Then Exit Function
@@ -2749,7 +2802,7 @@ Public Class Form_Traupixe_H5_2024
     '****************************** SEQUENCE MATRICE************************************************
     '***********************************************************************************************
 
-    Public Sub Sequence_Matrix_Multi_Thread(Num_Fichier As Integer, Num_Fin As Integer)
+    Public Sub Sequence_Matrix_Multi_Thread(Num_Fichier As Integer, Num_Fin As Integer, nb_process_loc As Integer)
         Dim canaux As Integer
         Dim Charge As Single
         Dim I As Integer
@@ -2798,7 +2851,8 @@ Public Class Form_Traupixe_H5_2024
         ToolStripStatusLabel1.Text = "Matrix processing"
         '  Fs_Log.writeline("Calculate MATRIX" & CStr(Num_Fichier))
         data = ""
-        For I = 0 To Nb_Process - 1
+
+        For I = 0 To nb_process_loc - 1
 
             '********************************************************* Ecriture ENTETE DATE COMMENTAIRE SUR GUPIXWIN.PAR *******************
 
@@ -2945,10 +2999,9 @@ Public Class Form_Traupixe_H5_2024
             If Adjust_Filter_B = True And ComboBox_Type_F.Text = "Matrix" Then
                 If Use_ext_charge_Mat = True Then Txt_Fichier_PAR_Mat_Filter(I) = Insert_Charge_in_Par_File(Txt_Fichier_PAR_Mat_Filter(I), I + Num_Fichier, num_column_charge_csv_MAT) '0 = Matrix 
                 File.WriteAllText(Chemin_GupixWin_Multi(I) & "\gupixwin.par", Txt_Fichier_PAR_Mat_Filter(I) & vbCrLf & data & vbCrLf & "--------------------------------------------------" & vbCrLf)
-            End If
 
-            If Use_HED_Mat = True Then
-                If Use_ext_charge_Mat = True Then Txt_Fichier_PAR_Mat_HED(I) = Insert_Charge_in_Par_File(Txt_Fichier_PAR_Mat_Filter(I), I + Num_Fichier, num_column_charge_csv_MAT) '0 = Matrix 
+            ElseIf Use_HED_Mat = True Then
+                If Use_ext_charge_Mat = True Then Txt_Fichier_PAR_Mat_HED(I) = Insert_Charge_in_Par_File(Txt_Fichier_PAR_Mat_HED(I), I + Num_Fichier, num_column_charge_csv_MAT) '0 = Matrix 
                 File.WriteAllText(Chemin_GupixWin_Multi(I) & "\gupixwin.par", Txt_Fichier_PAR_Mat_HED(I) & vbCrLf & data & vbCrLf & "--------------------------------------------------" & vbCrLf)
             Else
                 If Use_ext_charge_Mat = True Then Txt_Fichier_PAR_Mat = Insert_Charge_in_Par_File(Txt_Fichier_PAR_Mat, I + Num_Fichier, num_column_charge_csv_MAT) '0 = Matrix 
@@ -2964,7 +3017,7 @@ Public Class Form_Traupixe_H5_2024
         Next I
 
         '************************************* EXECUTION DE PIXWIN.EXE ********************
-        For I = 0 To Nb_Process - 1
+        For I = 0 To nb_process_loc - 1
 
             If hdf5_mode = True Then
                 If Attrib_Spectrum(Num_Fichier + I, 0, 7) > 0 Then ret = Shell(Chemin_GupixWin_Multi(I) & "\pixwin.bat", vbHide)
@@ -3001,7 +3054,7 @@ Public Class Form_Traupixe_H5_2024
 
         Do
 
-            For I = 0 To Nb_Process - 1
+            For I = 0 To nb_process_loc - 1
 
                 If hdf5_mode = True Then
                     If Attrib_Spectrum(Num_Fichier + I, 0, 7) = 0 And Tab_Data_Lue(I) = False Then ' CAS SPECTRE = 0 
@@ -3087,8 +3140,8 @@ Public Class Form_Traupixe_H5_2024
 
                     If Error_Matrix(I) = False Then
                         If Calcul_With_Trc = False Then
-                            ReDim Val_Mat_Mtx(Nb_Process - 1, CInt(Nb_Elements_Mat))
-                            ReDim Val_Inv_Mtx(Nb_Process - 1, 50)
+                            ReDim Val_Mat_Mtx(nb_process_loc - 1, CInt(Nb_Elements_Mat))
+                            ReDim Val_Inv_Mtx(nb_process_loc - 1, 50)
                             If nb_gamma > 0 And tab_gamma_external_value_ok(Num_Fichier + I) Then
                                 Insert_Matrix_gamma(tab_select_file_indices(Num_Fichier + I), I)
                             Else
@@ -3103,17 +3156,17 @@ Public Class Form_Traupixe_H5_2024
 
             My.Application.DoEvents() : System.Threading.Thread.Sleep(20)
 
-            If (Nb_Process - nb_data_read) < Nb_Process - (Nb_Process - 1) And get_tps = False Then
+            If (nb_process_loc - nb_data_read) < nb_process_loc - (nb_process_loc - 1) And get_tps = False Then
                 start1 = DateAndTime.Timer '############ Initilisate le cpt Temps pour le dernier Process
                 get_tps = True
-            ElseIf (Nb_Process - nb_data_read) >= Nb_Process Then
+            ElseIf (nb_process_loc - nb_data_read) >= nb_process_loc Then
                 start1 = DateAndTime.Timer
             End If
             'Start1 = Timer
-            If DateAndTime.Timer - start1 > Nb_Process * 4 Then ' Temps d'attente pour le dernier calcul
+            If DateAndTime.Timer - start1 > nb_process_loc * 4 Then ' Temps d'attente pour le dernier calcul
                 Exit Do
             End If
-        Loop While nb_data_read <> Nb_Process
+        Loop While nb_data_read <> nb_process_loc
 
 
         Result = 0
@@ -3134,7 +3187,7 @@ Public Class Form_Traupixe_H5_2024
         '"""Recup OXYDE
         'If mnuOxydeOUI.Checked = True Then Lit_Oxyde tab_oxyde, 1
         'Lit_Depth (1)
-        For I = 0 To Nb_Process - 1
+        For I = 0 To nb_process_loc - 1
             thread_tab_Element(I) = Nothing
             thread_tab_oxyde(I) = Nothing
         Next I
@@ -3343,7 +3396,7 @@ Public Class Form_Traupixe_H5_2024
 
                 If Error_Trace(I, Num_Trc) = False Then
 
-                    If Adjust_Filter_B = True And ComboBox_Type_F.Text = "Trace" Then ' ADJUST FILTER
+                    If Adjust_Filter_B = True And ComboBox_Type_F.Text = NomDet_Trc(Num_Trc) Then ' ADJUST FILTER
                         Kill(Chemin_GupixWin_Multi(I) & "\gupixwin.par")
                         File.WriteAllText(Chemin_GupixWin_Multi(I) & "\gupixwin.par", Txt_Fichier_PAR_Trc_Filter(Num_Fichier + I) & vbCrLf & data & vbCrLf & "--------------------------------------------------" & vbCrLf)
                         Pivot = Val(Pivot1(Tab_Num_Trc(Num_Trc)))
@@ -3918,7 +3971,7 @@ Public Class Form_Traupixe_H5_2024
     End Sub
 
 
-    Sub Filter_Create_Par_Trc(Z As String, Filter_Thickness As Single, Num_Process As Integer)
+    Sub Filter_Create_Par_Trc(Z As String, Filter_Thickness As Single, Num_Process As Integer, Num_trc As Integer)
         Dim i As Integer
         Dim Str As String
         Dim Pos_Space As Integer
@@ -3932,7 +3985,7 @@ Public Class Form_Traupixe_H5_2024
         Dim local_str As String
         Dim SR As StreamReader
 
-        SR = File.OpenText(Chemin_Data + "\" + Tab_File_Par_Trc(0))
+        SR = File.OpenText(Chemin_Data + "\" + Tab_File_Par_Trc(Num_trc))
 
         Do
             Str = SR.ReadLine
@@ -8205,6 +8258,9 @@ OpenWorkbook_OK:
                 select_pixe_gamma = "pixe_mode"
             End If
 
+            If Z = 82 Then
+                Z = 82
+            End If
 
             Select Case select_pixe_gamma
 
@@ -8272,8 +8328,9 @@ pass_mat:   ' Only_Trace
                     Indice_Trc_0 = -1
                     Indice_Trc_1 = -1
 
-                    If Z = 82 And CbDetMat.Text = "X0" Then
+                    If Z = 82 And skip_Pb_mtx = True Then
                         Best_Stat_0 = 1000000 'Permet pour le Pb de prendre la valeur en HE quelque soit sont l'erreur Total (Fit+Stat
+                        Y_N_Q_Prev = "N" ' Ajout 29/09/2024
                     End If
                     indx_trc = Array.IndexOf(All_Z_Trc, Z) 'Search Z in All_Z_Trc
 
@@ -8336,29 +8393,29 @@ pass_mat:   ' Only_Trace
                                 Comp_Ok = False
                             End If
 
-                            If Best_Stat_1 < Best_Stat_0 And Comp_Ok = True Then
+                            If (Best_Stat_1 < Best_Stat_0 And Comp_Ok = True) Or (Y_N_Q = "Y" And Y_N_Q_Prev <> "Y") Then
 
-                                Conc_Return = Retourne_Conc_Trc(Y_N_Q, Num_Proc, i, Z)
+                                Conc_Return = Retourne_Conc_Trc(Y_N_Q, Num_proc, i, Z)
 
                                 If Conc_Return(1) < 9999 Then ' ? mais valeur trop haute pour ? 'PbMa en trc par exemple
                                     Best_Stat_0 = Best_Stat_1
                                     Best_Stat_1 = 10000000
 
-                                    Val_Trc_Best_Yes(Num_Proc, Indice_Trc_1) = Conc_Return(0)
+                                    Val_Trc_Best_Yes(Num_proc, Indice_Trc_1) = Conc_Return(0)
                                     If Y_N_Q = "?" Then
-                                        Val_Trc_Best_Yes_RED(Num_Proc, Indice_Trc_1) = Conc_Return(1)
+                                        Val_Trc_Best_Yes_RED(Num_proc, Indice_Trc_1) = Conc_Return(1)
                                     Else
-                                        Val_Trc_Best_Yes_RED(Num_Proc, Indice_Trc_1) = Conc_Return(0)
+                                        Val_Trc_Best_Yes_RED(Num_proc, Indice_Trc_1) = Conc_Return(0)
                                     End If
 
 
                                     If Indice_Mat_0 <> -1 Then
-                                        Val_Mat_Best_Yes(Num_Proc, Indice_Mat_0) = Nothing
-                                        Val_Mat_Best_Yes_RED(Num_Proc, Indice_Mat_0) = Nothing
+                                        Val_Mat_Best_Yes(Num_proc, Indice_Mat_0) = Nothing
+                                        Val_Mat_Best_Yes_RED(Num_proc, Indice_Mat_0) = Nothing
                                         Indice_Mat_0 = -1
                                     ElseIf Indice_Trc_0 <> -1 Then
-                                        Val_Trc_Best_Yes(Num_Proc, Indice_Trc_0) = Nothing
-                                        Val_Trc_Best_Yes_RED(Num_Proc, Indice_Trc_0) = Nothing
+                                        Val_Trc_Best_Yes(Num_proc, Indice_Trc_0) = Nothing
+                                        Val_Trc_Best_Yes_RED(Num_proc, Indice_Trc_0) = Nothing
                                         Indice_Trc_0 = Indice_Trc_1
                                     End If
                                     Indice_Trc_0 = Indice_Trc_1
@@ -8548,13 +8605,21 @@ pass_mat:   ' Only_Trace
                         Best_LOD_mat_current = -1
                     End If
 
+                    If Z = 82 And skip_Pb_mtx = True Then
+                        Z = 82
+                        indx_mat = -1
+                        Y_N_Q_Prev = "N"
+                    End If
+
+                    If Z = 82 Then
+                        Z = 82
+                    End If
+
                     Do While indx_mat <> -1
                         'If indx_mat <> -1 Then
                         'i = indx_mat
                         Y_N_Q = Val_Mat_Y_N_Q(Num_Proc, indx_mat)
-                        If Z = 25 Then
-                            Z = 25
-                        End If
+
 
                         Z_Mat = Tab_Info_Mat.Z(indx_mat)
                         Best_Done = True
@@ -8652,13 +8717,14 @@ pass_mat:   ' Only_Trace
                                     Str_Mat_Conc_100(Num_Proc, Indice_Mat_0) = "<" & Strings.Format((Math.Round(Conc_Return(2) * 3.3 / 10000, Nb_Dig)), Str_Prec)
                                     Val_Mat_Conc_ppm(Num_Proc, Indice_Mat_0) = "<" & Strings.Format(Conc_Return(2) * 3.3, 0)
 
-                                    If Conc_Return(1) < 9999 Then
-                                        Val_Conc_S_RED_ppm(Num_Proc, Ind_Z_100) = Strings.Format(Conc_Return(1) * (million_norm / Somme_RED), 0)
-                                        Val_Conc_S_RED100(Num_Proc, Ind_Z_100) = Strings.Format((Math.Round((Conc_Return(1) * (million_norm / Somme_RED)) / 10000, Nb_Dig)), Str_Prec)
+                                    If Conc_Return(1) < limite_conc_red_ok Then ' 5 % de val en ROUGE
+                                        Val_Conc_S_RED_ppm(Num_proc, Ind_Z_100) = Strings.Format(Conc_Return(1) * (million_norm / Somme_RED), 0)
+                                        Val_Conc_S_RED100(Num_proc, Ind_Z_100) = Strings.Format((Math.Round((Conc_Return(1) * (million_norm / Somme_RED)) / 10000, Nb_Dig)), Str_Prec)
                                     Else
                                         Val_Conc_S_RED_ppm(Num_Proc, Ind_Z_100) = "<" & Strings.Format(Conc_Return(2) * 3.3, 0)
                                         Val_Conc_S_RED100(Num_Proc, Ind_Z_100) = "<" & Strings.Format((Math.Round(Conc_Return(2) * 1 / 10000, Nb_Dig)), Str_Prec)
                                     End If
+
                                     Val_Conc_S_100(Num_Proc, Ind_Z_100) = "<" & Strings.Format((Math.Round(Conc_Return(2) * 3.3 / 10000, Nb_Dig)), Str_Prec)
                                     Val_Conc_S_ppm(Num_Proc, Ind_Z_100) = "<" & Strings.Format(Conc_Return(2) * 3.3, 0)
                                     Val_YNQ_Final(Num_Proc, Ind_Z_100) = "?"
@@ -8669,7 +8735,6 @@ pass_mat:   ' Only_Trace
                                 End If
 
                             End If
-
 
 
                             If Y_N_Q = "N" Then ' VALEUR LOD
@@ -8730,8 +8795,8 @@ pass_mat:   ' Only_Trace
                             'If Z_Trc > Z and Then Exit For
                             Y_N_Q = All_Y_N_Q(indx_trc)
                             Z_Trc = All_Z_Trc(indx_trc)
-                            If Z = 47 Then
-                                Z = 47
+                            If Z = 82 Then
+                                Z = 82
                             End If
                             'If Z_Trc = Z Then
 
@@ -9297,14 +9362,26 @@ pass_mat:   ' Only_Trace
     End Sub
 
     Private Sub Check_det0_CheckedChanged(sender As Object, e As EventArgs) Handles Check_det0.CheckedChanged
-
+        Dim Det_use_Q As Boolean
         Par_det0.Text = ""
 
         If Check_det0.Checked = True Then
             Select_Par_files = 0
             Ext_Par_Trc = "*" & Check_det0.Text & ".par"
             Maj_Par_Files_Trc(Par_det0, "det0")
-            Maj_Files_Trc("det0", Check_det0.Text)
+            'Maj_Files_Trc("det0", Check_det0.Text)
+
+            ComboBox_Type_F.Items.Add(Check_det0.Text)
+            If hdf5_mode = False Then Maj_Files_Trc("det0", Check_det0.Text)
+
+            Det_use_Q = Det_one_use_charge(Check_det0.Text)
+            If Det_use_Q = False Then
+                Pivot_det0.Enabled = True
+                Pivot_det0.Focus()
+            Else
+                Pivot_det0.Text = "File-Q"
+                Pivot_det0.Enabled = False
+            End If
 
             Pivot_det0.Focus()
         Else
@@ -9319,11 +9396,14 @@ pass_mat:   ' Only_Trace
 
     Private Sub Check_det1_CheckedChanged(sender As Object, e As EventArgs) Handles Check_det1.CheckedChanged
         Dim Det_use_Q As Boolean
+
         If Check_det1.Checked = True Then
             Select_Par_files = 1
             Ext_Par_Trc = "*" & Check_det1.Text & ".par"
             Maj_Par_Files_Trc(Par_det1, "det1")
+            ComboBox_Type_F.Items.Add(Check_det1.Text)
             If hdf5_mode = False Then Maj_Files_Trc("det1", Check_det1.Text)
+
             Det_use_Q = Det_one_use_charge(Check_det1.Text)
             If Det_use_Q = False Then
                 Pivot_det1.Enabled = True
@@ -9344,12 +9424,21 @@ pass_mat:   ' Only_Trace
 
 
     Private Sub Check_det2_CheckedChanged(sender As Object, e As EventArgs) Handles Check_det2.CheckedChanged
-
+        Dim Det_use_Q As Boolean
         If Check_det2.Checked = True Then
             Select_Par_files = 2
             Ext_Par_Trc = "*" & Check_det2.Text & ".par" '"*HE2*.par"
+            ComboBox_Type_F.Items.Add(Check_det2.Text)
             Maj_Par_Files_Trc(Par_det2, "det2")
             If hdf5_mode = False Then Maj_Files_Trc("det2", Check_det2.Text)
+            Det_use_Q = Det_one_use_charge(Check_det2.Text)
+            If Det_use_Q = False Then
+                Pivot_det2.Enabled = True
+                Pivot_det2.Focus()
+            Else
+                Pivot_det2.Text = "File-Q"
+                Pivot_det2.Enabled = False
+            End If
             Pivot_det2.Focus()
         Else
             Select_Par_files = -1
@@ -9363,12 +9452,22 @@ pass_mat:   ' Only_Trace
 
 
     Private Sub Check_det3_CheckedChanged(sender As Object, e As EventArgs) Handles Check_det3.CheckedChanged
-
+        Dim Det_use_Q As Boolean
         If Check_det3.Checked = True Then
             Select_Par_files = 3
             Ext_Par_Trc = "*" & Check_det3.Text & ".par" '"*HE3*.par"
+            ComboBox_Type_F.Items.Add(Check_det3.Text)
             Maj_Par_Files_Trc(Par_det3, "det3")
             If hdf5_mode = False Then Maj_Files_Trc("det3", Check_det3.Text)
+
+            Det_use_Q = Det_one_use_charge(Check_det3.Text)
+            If Det_use_Q = False Then
+                Pivot_det3.Enabled = True
+                Pivot_det3.Focus()
+            Else
+                Pivot_det3.Text = "File-Q"
+                Pivot_det3.Enabled = False
+            End If
             Pivot_det3.Focus()
         Else
             Select_Par_files = -1
@@ -9378,11 +9477,24 @@ pass_mat:   ' Only_Trace
     End Sub
 
     Private Sub Check_det4_CheckedChanged(sender As Object, e As EventArgs) Handles Check_det4.CheckedChanged
+        Dim Det_use_Q As Boolean
+
         If Check_det4.Checked = True Then
             Select_Par_files = 4
             Ext_Par_Trc = "*" & Check_det4.Text & ".par" '"*HE4*.par"
+            ComboBox_Type_F.Items.Add(Check_det4.Text)
             Maj_Par_Files_Trc(Par_det4, "det4")
             If hdf5_mode = False Then Maj_Files_Trc("det4", Check_det4.Text)
+
+            Det_use_Q = Det_one_use_charge(Check_det4.Text)
+
+            If Det_use_Q = False Then
+                Pivot_det4.Enabled = True
+                Pivot_det4.Focus()
+            Else
+                Pivot_det4.Text = "File-Q"
+                Pivot_det4.Enabled = False
+            End If
             Pivot_det4.Focus()
         Else
             Select_Par_files = Select_Par_files - 1
@@ -9392,11 +9504,23 @@ pass_mat:   ' Only_Trace
     End Sub
 
     Private Sub Check_det5_CheckedChanged(sender As Object, e As EventArgs) Handles Check_det5.CheckedChanged
+        Dim Det_use_Q As Boolean
+
         If Check_det5.Checked = True Then
             Select_Par_files = 5
             Ext_Par_Trc = "*" & Check_det5.Text & ".par" '"*HE10*.par"
+            ComboBox_Type_F.Items.Add(Check_det5.Text)
             Maj_Par_Files_Trc(Par_det5, "det5")
             If hdf5_mode = False Then Maj_Files_Trc("det5", Check_det5.Text)
+
+            Det_use_Q = Det_one_use_charge(Check_det5.Text)
+            If Det_use_Q = False Then
+                Pivot_det5.Enabled = True
+                Pivot_det5.Focus()
+            Else
+                Pivot_det5.Text = "File-Q"
+                Pivot_det5.Enabled = False
+            End If
             Pivot_det5.Focus()
         Else
             Select_Par_files = -1
@@ -9406,11 +9530,24 @@ pass_mat:   ' Only_Trace
     End Sub
 
     Private Sub Check_det6_CheckedChanged(sender As Object, e As EventArgs) Handles Check_det6.CheckedChanged
+        Dim Det_use_Q As Boolean
+
         If Check_det6.Checked = True Then
             Select_Par_files = 6
             Ext_Par_Trc = "*" & Check_det6.Text & ".par" '"*HE11*.par"
+            ComboBox_Type_F.Items.Add(Check_det6.Text)
             Maj_Par_Files_Trc(Par_det6, "det6")
             If hdf5_mode = False Then Maj_Files_Trc("det6", Check_det6.Text)
+
+            Det_use_Q = Det_one_use_charge(Check_det6.Text)
+            If Det_use_Q = False Then
+                Pivot_det6.Enabled = True
+                Pivot_det6.Focus()
+            Else
+                Pivot_det6.Text = "File-Q"
+                Pivot_det6.Enabled = False
+            End If
+
             Pivot_det6.Focus()
         Else
             Select_Par_files = -1
@@ -9420,11 +9557,24 @@ pass_mat:   ' Only_Trace
     End Sub
 
     Private Sub Check_det7_CheckedChanged(sender As Object, e As EventArgs) Handles Check_det7.CheckedChanged
+        Dim Det_use_Q As Boolean
+
         If Check_det7.Checked = True Then
             Select_Par_files = 7
             Ext_Par_Trc = "*" & Check_det7.Text & ".par" '"*HE12*.par"
+            ComboBox_Type_F.Items.Add(Check_det7.Text)
             Maj_Par_Files_Trc(Par_det7, "det7")
             If hdf5_mode = False Then Maj_Files_Trc("det7", Check_det7.Text)
+
+            Det_use_Q = Det_one_use_charge(Check_det7.Text)
+            If Det_use_Q = False Then
+                Pivot_det7.Enabled = True
+                Pivot_det7.Focus()
+            Else
+                Pivot_det7.Text = "File-Q"
+                Pivot_det7.Enabled = False
+            End If
+
             Pivot_det7.Focus()
         Else
             Select_Par_files = -1
@@ -9434,11 +9584,24 @@ pass_mat:   ' Only_Trace
     End Sub
 
     Private Sub Check_det8_CheckedChanged(sender As Object, e As EventArgs) Handles Check_det8.CheckedChanged
+        Dim Det_use_Q As Boolean
+
         If Check_det8.Checked = True Then
             Select_Par_files = 8
             Ext_Par_Trc = "*" & Check_det8.Text & ".par"
             Maj_Par_Files_Trc(Par_det8, "det8")
+            ComboBox_Type_F.Items.Add(Check_det8.Text)
             If hdf5_mode = False Then Maj_Files_Trc("det8", Check_det8.Text)
+
+            Det_use_Q = Det_one_use_charge(Check_det8.Text)
+            If Det_use_Q = False Then
+                Pivot_det8.Enabled = True
+                Pivot_det8.Focus()
+            Else
+                Pivot_det8.Text = "File-Q"
+                Pivot_det8.Enabled = False
+            End If
+
             Pivot_det8.Focus()
         Else
             Select_Par_files = -1
@@ -10727,21 +10890,36 @@ Myend:
     End Sub
 
     Private Sub Button7_Click(sender As Object, e As EventArgs) Handles Button7.Click
+        Dim Toto As String
+        Dim Toto1 As String
+        Dim Toto2 As String
+        Dim elem_valence As String
+        Dim oxyde_valence As String
+        Dim i As Integer
         Chemin_Data = "c:\Data"
         Dim Mypath = "c:\data\Test.xlsx"
+        Load_atomic_masse_csv()
+
+        Toto = "Sb2O5"
+        Toto1 = "Mo3O8"
+        Toto2 = "Fe"
+
+
+
         'Dim xlBook = New XLWorkbook("c:\data\Test.xlsx")
         'Dim xlBook1 = New XLWorkbook(Mypath)
-        xlBook = Excel_Open(0, "Test.xlsx")
+        'xlBook = Excel_Open(0, "Test.xlsx")
         Dim StartRow = 3
         Dim StartCol = 3
-        Dim i As Integer
+
         ReDim Val_Mat_Area_1(20, 20)
         Dim xlBook1 As XLWorkbook
         Dim xlSheet_gamma As IXLWorksheet
-        Dim Toto As String
+
         Dim g As Double
         Dim Filter_Step As Single
         Dim o
+
 
         Toto = Strings.Format(0, ".")
 
@@ -11186,6 +11364,18 @@ Myend:
 
     End Sub
 
+    Private Sub SkipPbMatrixToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SkipPbMatrixToolStripMenuItem.Click
+        SkipPbMatrixToolStripMenuItem.Checked = Not (SkipPbMatrixToolStripMenuItem.Checked)
+        skip_Pb_mtx = Not (skip_Pb_mtx)
+    End Sub
+
+    Private Sub GupixLODNWrite0ToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GupixLODNWrite0ToolStripMenuItem.Click
+
+    End Sub
+
+    Private Sub ComboBox_Type_F_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_Type_F.SelectedIndexChanged
+
+    End Sub
 
     Public Sub read_gamma_name_csv()
         Dim gamma_z, gamma_f
@@ -11449,6 +11639,33 @@ Okread:
         Next
 
     End Sub
+    Public Sub Load_atomic_masse_csv()
+        Dim Splitline() As String
+        Dim All_line
+
+        Try
+            All_line = IO.File.ReadAllLines(Environment.CurrentDirectory & "\atomic_mass.csv")
+        Catch ex As Exception
+            Exit Sub
+        End Try
+
+
+        i = 0
+        Try
+
+            Do '######### READ Filename / concentration
+                Splitline = Split(All_line(i + 1), ";")
+                atomic_info_name(i) = Splitline(0)
+                atomic_info_Z(i) = Splitline(1)
+                atomic_info_mass(i) = Single.Parse(Splitline(2), USACulture)
+                i += 1
+            Loop While Splitline(0) <> ""
+
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
 
 
     Public Sub Load_gamma_csv()
@@ -11505,10 +11722,18 @@ Okread:
         Dim nb_gamma_and_selected As Integer
 
         Dim nb_analyse_selected As Integer
+        Dim elem_valence As String
+        Dim oxyde_valence As String
+        Dim loc_name As String
+        Dim idx_z_in_file_mass As Integer
+
+
         ind_files_selec = 0
 
         nb_gamma_and_selected = 0
         nb_analyse_selected = 0
+        Load_atomic_masse_csv() ' Load valeur massa atomique 
+
         For i = 0 To LvFiles.SelectedItems.Count - 1
             TabFiles_selected_Items(i) = LvFiles.SelectedItems(i).Text
         Next
@@ -11538,123 +11763,157 @@ Okread:
 
 
                     Mo = 16 'Masse Oxygen
-                    Dim sameformula As Boolean
-                    sameformula = False
+                    Dim withoxide As Boolean
+                    withoxide = False
+                    elem_valence = 1
+                    oxyde_valence = 0
 
-                    Select Case CInt(info_gamma_z(j))
-
-                        Case 16 'SO3
-                            If UCase(info_gamma_name(j)) = "SO3" Then sameformula = True
-                            Ma = 32
-                            Va = 1
-                            Vo = 3
-                            calc_gamma_conc_oxide(Va, Ma, Vo, Mo, tmp_conc, nb_gamma_and_selected, j, sameformula)
-
-                        Case 56 'Na2O
-                            If UCase(info_gamma_name(j)) = "BAO" Then sameformula = True
-                            Ma = 137
-                            Va = 1
-                            Vo = 1
-                            calc_gamma_conc_oxide(Va, Ma, Vo, Mo, tmp_conc, nb_gamma_and_selected, j, sameformula)
-
-
-                        Case 82 'PbO
-                            If UCase(info_gamma_name(j)) = "PBO" Then sameformula = True
-                            Ma = 207
-                            Va = 1
-                            Vo = 1
-                            calc_gamma_conc_oxide(Va, Ma, Vo, Mo, tmp_conc, nb_gamma_and_selected, j, sameformula)
-
-
-                        Case 11 'Na2O
-                            If UCase(info_gamma_name(j)) = "NA2O" Then sameformula = True
-                            Ma = 23
-                            Va = 2
-                            Vo = 1
-                            calc_gamma_conc_oxide(Va, Ma, Vo, Mo, tmp_conc, nb_gamma_and_selected, j, sameformula)
-
-
-                        Case 9 'F
-                            gamma_conc_init(nb_gamma_and_selected, j) = CInt(tmp_conc)
-                            gamma_conc(nb_gamma_and_selected, j) = gamma_conc_init(nb_gamma_and_selected, j)
-                            gamma_conc_oxide(nb_gamma_and_selected, j) = 0
-                            sum_gamma_conc(nb_gamma_and_selected) += gamma_conc(nb_gamma_and_selected, j) ' Sum Gamma Elem without O
-                            sum_gamma_oxide(nb_gamma_and_selected) += gamma_conc_oxide(nb_gamma_and_selected, j) ' Sum Gamma O
-
-                        Case 3 ' Li2O
-                            If UCase(info_gamma_name(j)) = "LI2O" Then sameformula = True
-                            Ma = 7
-                            Va = 2
-                            Vo = 1
-                            calc_gamma_conc_oxide(Va, Ma, Vo, Mo, tmp_conc, nb_gamma_and_selected, j, sameformula)
-
-
-                        Case 1 ' H2O
-                            If UCase(info_gamma_name(j)) = "H2O" Then sameformula = True
-                            Ma = 1
-                            Va = 2
-                            Vo = 1
-                            calc_gamma_conc_oxide(Va, Ma, Vo, Mo, tmp_conc, nb_gamma_and_selected, j, sameformula)
-
-                        Case 4 ' BeO
-                            If UCase(info_gamma_name(j)) = "BEO" Then
-                                Ma = 9
-                                Va = 1
-                                Vo = 1
-                                rapport_x = (Va * Ma / (Va * Ma + Vo * Mo))
-                                rapport_y = (Vo * Mo / (Va * Ma + Vo * Mo))
-                                If tmp_conc <> "" Then
-                                    gamma_conc_init(nb_gamma_and_selected, j) = CInt(tmp_conc)
-                                Else
-                                    gamma_conc_init(nb_gamma_and_selected, j) = 0
-                                    tmp_conc = "0"
-                                End If
-
-                                gamma_conc(nb_gamma_and_selected, j) = CInt(CInt(tmp_conc) * rapport_x)
-                                gamma_conc_oxide(nb_gamma_and_selected, j) = CInt(CInt(tmp_conc) * rapport_y)
-                                sum_gamma_conc(nb_gamma_and_selected) += gamma_conc(nb_gamma_and_selected, j) ' Sum Gamma Elem without O
-                                sum_gamma_oxide(nb_gamma_and_selected) += gamma_conc_oxide(nb_gamma_and_selected, j) ' Sum Gamma O
+                    For i = 0 To info_gamma_name(j).Length - 1
+                        If IsNumeric(info_gamma_name(j)(i)) Then
+                            If info_gamma_name(j)(i - 1) <> "O" Then
+                                elem_valence = info_gamma_name(j)(i)
                             Else
-                                gamma_conc_init(nb_gamma_and_selected, j) = CInt(tmp_conc)
-                                gamma_conc(nb_gamma_and_selected, j) = gamma_conc_init(nb_gamma_and_selected, j)
-                                sum_gamma_conc(nb_gamma_and_selected) += gamma_conc_init(nb_gamma_and_selected, j)
-                                gamma_conc_oxide(nb_gamma_and_selected, j) = 0
+                                oxyde_valence = info_gamma_name(j)(i)
                             End If
-                        Case 5 ' B2O3
+                        ElseIf info_gamma_name(j)(i) = "O" Then
+                            oxyde_valence = "1"
+                        End If
+                    Next
 
-                            If UCase(info_gamma_name(j)) = "B2O3" Then sameformula = True
-                            Ma = 10.8
-                            Va = 2
-                            Vo = 3
-                            calc_gamma_conc_oxide(Va, Ma, Vo, Mo, tmp_conc, nb_gamma_and_selected, j, sameformula)
+                    idx_z_in_file_mass = Array.IndexOf(atomic_info_Z, info_gamma_z(j))
+                    Ma = atomic_info_mass(idx_z_in_file_mass)
+                    Va = CInt(elem_valence)
+                    Vo = CInt(oxyde_valence)
+                    If Vo <> 0 Then
+                        withoxide = True
 
-                        Case 6 ' CO2
-                            If UCase(info_gamma_name(j)) = "CO2" Then sameformula = True
-
-                            Ma = 12
-                            Va = 1
-                            Vo = 2
-                            calc_gamma_conc_oxide(Va, Ma, Vo, Mo, tmp_conc, nb_gamma_and_selected, j, sameformula)
-
-
-                        Case 7 ' NO2
-                            If UCase(info_gamma_name(j)) = "NO2" Then sameformula = True
-                            Ma = 14
-                            Va = 1
-                            Vo = 2
-                            calc_gamma_conc_oxide(Va, Ma, Vo, Mo, tmp_conc, nb_gamma_and_selected, j, sameformula)
-
-
-                        Case Else ' forme elementaire
-                            gamma_conc_init(nb_gamma_and_selected, j) = CInt(tmp_conc)
-                            gamma_conc(nb_gamma_and_selected, j) = gamma_conc_init(nb_gamma_and_selected, j)
-                            gamma_conc_oxide(nb_gamma_and_selected, j) = 0
-                            sum_gamma_conc(nb_gamma_and_selected) += gamma_conc(nb_gamma_and_selected, j) ' Sum Gamma Elem without O
-                            sum_gamma_oxide(nb_gamma_and_selected) += gamma_conc_oxide(nb_gamma_and_selected, j) ' Sum Gamma O
-                    End Select
-
+                    Else
+                        withoxide = False
+                    End If
+                    calc_gamma_conc_oxide(Va, Ma, Vo, Mo, tmp_conc, nb_gamma_and_selected, j, withoxide)
                     gamma_ok = True
                 Next j
+
+
+
+
+
+
+
+
+                'Select Case CInt(info_gamma_z(j))
+
+                '        Case 16 'SO3
+                '            If UCase(info_gamma_name(j)) = "SO3" Then sameformula = True
+                '            Ma = 32
+                '            Va = 1
+                '            Vo = 3
+                '            calc_gamma_conc_oxide(Va, Ma, Vo, Mo, tmp_conc, nb_gamma_and_selected, j, sameformula)
+
+                '        Case 56 'Na2O
+                '            If UCase(info_gamma_name(j)) = "BAO" Then sameformula = True
+                '            Ma = 137
+                '            Va = 1
+                '            Vo = 1
+                '            calc_gamma_conc_oxide(Va, Ma, Vo, Mo, tmp_conc, nb_gamma_and_selected, j, sameformula)
+
+
+                '        Case 82 'PbO
+                '            If UCase(info_gamma_name(j)) = "PBO" Then sameformula = True
+                '            Ma = 207
+                '            Va = 1
+                '            Vo = 1
+                '            calc_gamma_conc_oxide(Va, Ma, Vo, Mo, tmp_conc, nb_gamma_and_selected, j, sameformula)
+
+
+                '        Case 11 'Na2O
+                '            If UCase(info_gamma_name(j)) = "NA2O" Then sameformula = True
+                '            Ma = 23
+                '            Va = 2
+                '            Vo = 1
+                '            calc_gamma_conc_oxide(Va, Ma, Vo, Mo, tmp_conc, nb_gamma_and_selected, j, sameformula)
+
+
+                '        Case 9 'F
+                '            gamma_conc_init(nb_gamma_and_selected, j) = CInt(tmp_conc)
+                '            gamma_conc(nb_gamma_and_selected, j) = gamma_conc_init(nb_gamma_and_selected, j)
+                '            gamma_conc_oxide(nb_gamma_and_selected, j) = 0
+                '            sum_gamma_conc(nb_gamma_and_selected) += gamma_conc(nb_gamma_and_selected, j) ' Sum Gamma Elem without O
+                '            sum_gamma_oxide(nb_gamma_and_selected) += gamma_conc_oxide(nb_gamma_and_selected, j) ' Sum Gamma O
+
+                '        Case 3 ' Li2O
+                '            If UCase(info_gamma_name(j)) = "LI2O" Then sameformula = True
+                '            Ma = 7
+                '            Va = 2
+                '            Vo = 1
+                '            calc_gamma_conc_oxide(Va, Ma, Vo, Mo, tmp_conc, nb_gamma_and_selected, j, sameformula)
+
+
+                '        Case 1 ' H2O
+                '            If UCase(info_gamma_name(j)) = "H2O" Then sameformula = True
+                '            Ma = 1
+                '            Va = 2
+                '            Vo = 1
+                '            calc_gamma_conc_oxide(Va, Ma, Vo, Mo, tmp_conc, nb_gamma_and_selected, j, sameformula)
+
+                '        Case 4 ' BeO
+                '            If UCase(info_gamma_name(j)) = "BEO" Then
+                '                Ma = 9
+                '                Va = 1
+                '                Vo = 1
+                '                rapport_x = (Va * Ma / (Va * Ma + Vo * Mo))
+                '                rapport_y = (Vo * Mo / (Va * Ma + Vo * Mo))
+                '                If tmp_conc <> "" Then
+                '                    gamma_conc_init(nb_gamma_and_selected, j) = CInt(tmp_conc)
+                '                Else
+                '                    gamma_conc_init(nb_gamma_and_selected, j) = 0
+                '                    tmp_conc = "0"
+                '                End If
+
+                '                gamma_conc(nb_gamma_and_selected, j) = CInt(CInt(tmp_conc) * rapport_x)
+                '                gamma_conc_oxide(nb_gamma_and_selected, j) = CInt(CInt(tmp_conc) * rapport_y)
+                '                sum_gamma_conc(nb_gamma_and_selected) += gamma_conc(nb_gamma_and_selected, j) ' Sum Gamma Elem without O
+                '                sum_gamma_oxide(nb_gamma_and_selected) += gamma_conc_oxide(nb_gamma_and_selected, j) ' Sum Gamma O
+                '            Else
+                '                gamma_conc_init(nb_gamma_and_selected, j) = CInt(tmp_conc)
+                '                gamma_conc(nb_gamma_and_selected, j) = gamma_conc_init(nb_gamma_and_selected, j)
+                '                sum_gamma_conc(nb_gamma_and_selected) += gamma_conc_init(nb_gamma_and_selected, j)
+                '                gamma_conc_oxide(nb_gamma_and_selected, j) = 0
+                '            End If
+                '        Case 5 ' B2O3
+
+                '            If UCase(info_gamma_name(j)) = "B2O3" Then sameformula = True
+                '            Ma = 10.8
+                '            Va = 2
+                '            Vo = 3
+                '            calc_gamma_conc_oxide(Va, Ma, Vo, Mo, tmp_conc, nb_gamma_and_selected, j, sameformula)
+
+                '        Case 6 ' CO2
+                '            If UCase(info_gamma_name(j)) = "CO2" Then sameformula = True
+
+                '            Ma = 12
+                '            Va = 1
+                '            Vo = 2
+                '            calc_gamma_conc_oxide(Va, Ma, Vo, Mo, tmp_conc, nb_gamma_and_selected, j, sameformula)
+
+
+                '        Case 7 ' NO2
+                '            If UCase(info_gamma_name(j)) = "NO2" Then sameformula = True
+                '            Ma = 14
+                '            Va = 1
+                '            Vo = 2
+                '            calc_gamma_conc_oxide(Va, Ma, Vo, Mo, tmp_conc, nb_gamma_and_selected, j, sameformula)
+
+
+                'Case Else ' forme elementaire
+                '            gamma_conc_init(nb_gamma_and_selected, j) = CInt(tmp_conc)
+                '            gamma_conc(nb_gamma_and_selected, j) = gamma_conc_init(nb_gamma_and_selected, j)
+                '            gamma_conc_oxide(nb_gamma_and_selected, j) = 0
+                '            sum_gamma_conc(nb_gamma_and_selected) += gamma_conc(nb_gamma_and_selected, j) ' Sum Gamma Elem without O
+                '            sum_gamma_oxide(nb_gamma_and_selected) += gamma_conc_oxide(nb_gamma_and_selected, j) ' Sum Gamma O
+                '    End Select
+
+
 
                 nb_gamma_and_selected += 1
                 nb_analyse_selected += 1
@@ -12055,6 +12314,7 @@ Okread:
                                     End If
 
                                 Case 82 'PbO
+
                                     If UCase(info_gamma_name(j)) = "PBO" Then
                                         Ma = 207
                                         Va = 1
@@ -12246,8 +12506,9 @@ Okread:
         End Select
 
     End Sub
-    Public Sub calc_gamma_conc_oxide(Va As Integer, Ma As Integer, Vo As Integer, Mo As Integer, tmp_conc As Integer, i As Integer, j As Integer, sameformula As Boolean)
-        If sameformula = True Then
+    Public Sub calc_gamma_conc_oxide(Va As Integer, Ma As Double, Vo As Integer, Mo As Integer, tmp_conc As Integer, i As Integer, j As Integer, withoxide As Boolean)
+
+        If withoxide = True Then
             Dim rapport_x = (Va * Ma / (Va * Ma + Vo * Mo))
             Dim rapport_y = (Vo * Mo / (Va * Ma + Vo * Mo))
             gamma_conc_init(i, j) = CInt(tmp_conc)

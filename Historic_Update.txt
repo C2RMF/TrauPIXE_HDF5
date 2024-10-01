@@ -1,0 +1,88 @@
+####################### Version 25.08 #######################
+10/2024
+1- Ajout d'une option dans le menu Setup 
+	"Skip Pb Matrix"
+	->Fnct "calcul_best_conc"
+	  Cela permet de ne pas prendre en compte la conc. du Pb dans le detecteur Matrix (Valeur incorrect dans cas verre au Pb)
+
+2 - Modification du seuil de conc. pour les valeurs "?" 
+	Dans le cas mode metal (Projet Cymbals) le Pb est "?" et > 1% mais on veut garder la valeur
+	Seuil modifier de 1% à 5%
+	-> Si conc = "?" et < 5% alors on garde la valeur de conc. pour le tableau final des feuilles "S_xxxxxx"
+
+3- Ajout du fichier de "atomic_mass.csv" et  fnct de calcul de masse atomique
+
+Cela permet de définir tout élément chimique dans le fichier "external_conc.csv" (Z = 1 à Z = 118)
+Recherche de la valence dans la formule fourni par l'utilisateur. 
+Attention Oxygène doit être en majuscule -> "O" les autres 'Co, Mo' -> "o" doivent être en minuscule 
+
+
+	
+
+
+####################### Version 25.07 #######################
+09/2024
+- Optimisation de la fonction "Calcul_best_conc_Thread" 
+ Ne parcoure que les Z présents dans tout les detecteurs
+ Creation de multi thread pour execution en parallele de la fonction
+
+- Ajout de PbO (82) comme élément possible dans le fichier "External_conc.csv"
+ 
+- Ajout de la lecture de la charge via le fichier "charge-exp.csv"
+Example :
+
+FILENAME;Q X0;Q X10
+20240521_0110_OBJ_PRJ_IBA;0,0366;0,0371
+20240521_0110_OBJ_PRJ_IBA;0,0319;0,0335
+ 
+ ####################### Version 25.01 #######################
+ 2023
+ - Prise en compte de concentration exterieur via un fichier csv "External_conc.csv"
+
+example: 
+
+Z;11;3;6;12;4
+Formula;Na2O;Li;B;MgO;CO2
+Type;PIGE;PIGE;EXT;STD;STD
+20220825_0003_std_VERRE_IBA;60155;4903;500000;1452;
+20220825_0004_std_VERRE_IBA;75000;0;500000;;7500
+...
+
+####################### Version 20.03 #######################
+01/2022
+1 - Introducing two New Excel Sheet "S_Conc. & Err. "
+This two new sheet show the concentration in ppm or in pourcentage with the calculated error on the adjacent cell
+	- Special Sheet  «S_Conc. & Err. 100% » Conc. 100% looping concentration expressed in % follow by its error expressed in %
+	- Special Sheet  «S_Conc. & Err. ppm » conc. 100% looping, concentration expressed in ppm follow by its error expressed in %
+2 - Element tagged 'Y' Determine the best value only with FIT ERROR and PIVOT_ERROR
+	After contacting Iain Campbell it seems that the Stat Error output is a old and none adapted error to take in concideration.
+	It was a mistake to add the 2 error Fit and Stat. They do not represent two different error but to way of processing the error into GUPIX (See section 13C Gupix manual)
+	- The Sheet "Stat_Error" is not anymore created in the excel file
+	- The "Stat_Error" value is not included into the algorythm of best value determination
+		--> Matrix Error(%) = FIT_Error
+		--> Pivot Error(%) =  sqrt(Pivot_Error_Mat^2 + FIT_Error_Trc^2), only for the Pivot element present in both spectra
+		--> Trace Error(%) = sqrt(Pivot_Error^2 + FIT_Error ^2) 
+
+3 - Best element with '?' is not anymore selected with the lowest LOD but with the lowest Error
+4 - Best element with 'N' is selected with the lowest LOD
+5 - Icon 'T' added
+
+####################### Version 20.xx #######################
+10/2021
+1 - Introducing four New Excel Sheet so called "Special" (Under developement)
+	- Special Sheet « Conc. S 100 % » concentration loop to 100% including the concentration of trace elements value expressed in % 
+	- Special Sheet  « Conc. S ppm » concentration loop to 100%  including the conc of trace elements, value expressed in ppm
+	- Special Sheet « Conc. S ppm (RED) » 100% looping including the conc of trace elements but also the conc. <LOQ and> LOD ( '?' In Gupix) whose concentration is less than 1%. 
+		value expressed in ppm (01/29/21, under development…) 
+	- Special Sheet  « Best Det. » 	Indicate from which detector the algo. retained the best value
+
+2- Element 'Y' Selection of the best value with the lowest error calculated on the base of the quadratic sum of Fit and stat error as :
+	--> Matrix Error(%) = sqrt(STAT_Error^2 + FIT_Error ^2)
+	--> Pivot Error(%) = sqrt(STAT_Error^2 + FIT_Error ^2) only for the Pivot element present in both spectra
+	--> Trace Error(%) = sqrt(Pivot_Error^2 + STAT_Error^2 + FIT_Error ^2) 
+
+3 - Best element with '?' is selected with the lowest LOD 
+4 - Best element with 'N' is selected with the lowest LOD
+
+
+

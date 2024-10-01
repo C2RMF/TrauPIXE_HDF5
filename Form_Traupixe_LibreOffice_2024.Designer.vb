@@ -70,6 +70,7 @@ Partial Class Form_Traupixe_H5_2024
         Me.GupixLODNWrite0ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.WriteAllValuesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RoundConcentrationToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SkipPbMatrixToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.Pivot_det0 = New System.Windows.Forms.TextBox()
         Me.Pivot_det1 = New System.Windows.Forms.TextBox()
         Me.Pivot_det2 = New System.Windows.Forms.TextBox()
@@ -508,7 +509,7 @@ Partial Class Form_Traupixe_H5_2024
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Padding = New System.Windows.Forms.Padding(7, 2, 0, 2)
-        Me.MenuStrip1.Size = New System.Drawing.Size(1053, 24)
+        Me.MenuStrip1.Size = New System.Drawing.Size(1054, 24)
         Me.MenuStrip1.TabIndex = 50
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -535,10 +536,10 @@ Partial Class Form_Traupixe_H5_2024
         '
         'LODToolStripMenuItem
         '
-        Me.LODToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GupixLODNWrite0ToolStripMenuItem, Me.WriteAllValuesToolStripMenuItem, Me.RoundConcentrationToolStripMenuItem})
+        Me.LODToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GupixLODNWrite0ToolStripMenuItem, Me.WriteAllValuesToolStripMenuItem, Me.RoundConcentrationToolStripMenuItem, Me.SkipPbMatrixToolStripMenuItem})
         Me.LODToolStripMenuItem.Name = "LODToolStripMenuItem"
-        Me.LODToolStripMenuItem.Size = New System.Drawing.Size(42, 20)
-        Me.LODToolStripMenuItem.Text = "LOD"
+        Me.LODToolStripMenuItem.Size = New System.Drawing.Size(49, 20)
+        Me.LODToolStripMenuItem.Text = "Setup"
         '
         'GupixLODNWrite0ToolStripMenuItem
         '
@@ -561,6 +562,14 @@ Partial Class Form_Traupixe_H5_2024
         Me.RoundConcentrationToolStripMenuItem.Name = "RoundConcentrationToolStripMenuItem"
         Me.RoundConcentrationToolStripMenuItem.Size = New System.Drawing.Size(192, 22)
         Me.RoundConcentrationToolStripMenuItem.Text = "Round Concentration"
+        '
+        'SkipPbMatrixToolStripMenuItem
+        '
+        Me.SkipPbMatrixToolStripMenuItem.Checked = True
+        Me.SkipPbMatrixToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.SkipPbMatrixToolStripMenuItem.Name = "SkipPbMatrixToolStripMenuItem"
+        Me.SkipPbMatrixToolStripMenuItem.Size = New System.Drawing.Size(192, 22)
+        Me.SkipPbMatrixToolStripMenuItem.Text = "Skip Pb Matrix"
         '
         'Pivot_det0
         '
@@ -740,7 +749,7 @@ Partial Class Form_Traupixe_H5_2024
         Me.StatusStrip1.Location = New System.Drawing.Point(0, 550)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Padding = New System.Windows.Forms.Padding(1, 0, 16, 0)
-        Me.StatusStrip1.Size = New System.Drawing.Size(1053, 22)
+        Me.StatusStrip1.Size = New System.Drawing.Size(1054, 22)
         Me.StatusStrip1.TabIndex = 80
         Me.StatusStrip1.Text = "StatusStrip1"
         '
@@ -941,14 +950,12 @@ Partial Class Form_Traupixe_H5_2024
         'ComboBox_Type_F
         '
         Me.ComboBox_Type_F.FormattingEnabled = True
-        Me.ComboBox_Type_F.Items.AddRange(New Object() {"Matrix", "Trace"})
         Me.ComboBox_Type_F.Location = New System.Drawing.Point(16, 10)
         Me.ComboBox_Type_F.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.ComboBox_Type_F.Name = "ComboBox_Type_F"
         Me.ComboBox_Type_F.Size = New System.Drawing.Size(80, 23)
         Me.ComboBox_Type_F.TabIndex = 10
         Me.ComboBox_Type_F.TabStop = False
-        Me.ComboBox_Type_F.Text = "Matrix"
         '
         'TextF_From
         '
@@ -965,7 +972,7 @@ Partial Class Form_Traupixe_H5_2024
         Me.TabPage1.Controls.Add(Me.Button_Extract)
         Me.TabPage1.Location = New System.Drawing.Point(4, 27)
         Me.TabPage1.Name = "TabPage1"
-        Me.TabPage1.Padding = New System.Windows.Forms.Padding(3, 3, 3, 3)
+        Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
         Me.TabPage1.Size = New System.Drawing.Size(342, 121)
         Me.TabPage1.TabIndex = 2
         Me.TabPage1.Text = "Extract spectra"
@@ -1136,7 +1143,7 @@ Partial Class Form_Traupixe_H5_2024
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1053, 572)
+        Me.ClientSize = New System.Drawing.Size(1054, 572)
         Me.Controls.Add(Me.TextProcessIf)
         Me.Controls.Add(Me.Button_Run2)
         Me.Controls.Add(Me.Label1)
@@ -1170,7 +1177,7 @@ Partial Class Form_Traupixe_H5_2024
         Me.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.MaximizeBox = False
         Me.Name = "Form_Traupixe_H5_2024"
-        Me.Text = "TrauPIXE 25.07 - C2RMF"
+        Me.Text = "TrauPIXE 25.08 - C2RMF"
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()
         Me.StatusStrip1.ResumeLayout(False)
@@ -1247,6 +1254,7 @@ Partial Class Form_Traupixe_H5_2024
             Dim ind1 = 0
             Dim str_hdf5 As String
             Dim h5_analyses_location As String
+            Me.skip_Pb_mtx = True
 
             For Each Str As String In SplitText
                 str_hdf5 = Str
@@ -1371,6 +1379,7 @@ Partial Class Form_Traupixe_H5_2024
 
         End Try
         Me.CbDetMat.Text = Me.Ext_Mat
+        ComboBox_Type_F.Items.Insert(0, Me.CbDetMat.Text)
         Dim factor
         Dim screenwidth As Integer = My.Computer.Screen.Bounds.Width
         'screenwidth on my computer is 1600. The controls have been designed for that width.
@@ -1476,4 +1485,5 @@ Partial Class Form_Traupixe_H5_2024
     Friend WithEvents Panel2 As Panel
     Friend WithEvents Button_Run2 As Button
     Friend WithEvents TextProcessIf As TextBox
+    Public WithEvents SkipPbMatrixToolStripMenuItem As ToolStripMenuItem
 End Class
