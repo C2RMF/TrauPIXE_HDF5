@@ -1,5 +1,7 @@
 ####################### Version 25.08 #######################
 10/2024
+0 - La fonction "Adjust Absorbers" fonctionne pour tout les détecteurs et tout type de filtres.
+
 1- Ajout d'une option dans le menu Setup 
 	"Skip Pb Matrix"
 	->Fnct "calcul_best_conc"
@@ -17,7 +19,6 @@ Recherche de la valence dans la formule fourni par l'utilisateur.
 Attention Oxygène doit être en majuscule -> "O" les autres 'Co, Mo' -> "o" doivent être en minuscule 
 
 
-	
 
 
 ####################### Version 25.07 #######################

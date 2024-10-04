@@ -96,6 +96,7 @@ Partial Class Form_Traupixe_H5_2024
         Me.Adjust_Filter = New System.Windows.Forms.Button()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.Calcul = New System.Windows.Forms.TabPage()
+        Me.chk_external_ok = New System.Windows.Forms.CheckBox()
         Me.Text_gamma = New System.Windows.Forms.TextBox()
         Me.Tab_Adjust = New System.Windows.Forms.TabPage()
         Me.Label10 = New System.Windows.Forms.Label()
@@ -721,7 +722,7 @@ Partial Class Form_Traupixe_H5_2024
         'Ck_AllAsOxy
         '
         Me.Ck_AllAsOxy.AutoSize = True
-        Me.Ck_AllAsOxy.Location = New System.Drawing.Point(110, 8)
+        Me.Ck_AllAsOxy.Location = New System.Drawing.Point(129, 8)
         Me.Ck_AllAsOxy.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Ck_AllAsOxy.Name = "Ck_AllAsOxy"
         Me.Ck_AllAsOxy.Size = New System.Drawing.Size(90, 19)
@@ -806,6 +807,7 @@ Partial Class Form_Traupixe_H5_2024
         '
         'Calcul
         '
+        Me.Calcul.Controls.Add(Me.chk_external_ok)
         Me.Calcul.Controls.Add(Me.Text_gamma)
         Me.Calcul.Controls.Add(Me.Button2)
         Me.Calcul.Controls.Add(Me.Nb_Proc)
@@ -825,12 +827,26 @@ Partial Class Form_Traupixe_H5_2024
         Me.Calcul.Text = "Process Spectra"
         Me.Calcul.UseVisualStyleBackColor = True
         '
+        'chk_external_ok
+        '
+        Me.chk_external_ok.AutoSize = True
+        Me.chk_external_ok.Checked = True
+        Me.chk_external_ok.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chk_external_ok.Location = New System.Drawing.Point(296, 54)
+        Me.chk_external_ok.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.chk_external_ok.Name = "chk_external_ok"
+        Me.chk_external_ok.Size = New System.Drawing.Size(43, 19)
+        Me.chk_external_ok.TabIndex = 77
+        Me.chk_external_ok.Text = "ON"
+        Me.chk_external_ok.UseVisualStyleBackColor = True
+        Me.chk_external_ok.Visible = False
+        '
         'Text_gamma
         '
         Me.Text_gamma.Location = New System.Drawing.Point(10, 51)
         Me.Text_gamma.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Text_gamma.Name = "Text_gamma"
-        Me.Text_gamma.Size = New System.Drawing.Size(323, 23)
+        Me.Text_gamma.Size = New System.Drawing.Size(278, 23)
         Me.Text_gamma.TabIndex = 82
         Me.Text_gamma.Text = "File ""external-conc.csv"" not found"
         '
@@ -1177,7 +1193,7 @@ Partial Class Form_Traupixe_H5_2024
         Me.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.MaximizeBox = False
         Me.Name = "Form_Traupixe_H5_2024"
-        Me.Text = "TrauPIXE 25.08 - C2RMF"
+        Me.Text = "TrauPIXE 25.09 - C2RMF"
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()
         Me.StatusStrip1.ResumeLayout(False)
@@ -1379,7 +1395,6 @@ Partial Class Form_Traupixe_H5_2024
 
         End Try
         Me.CbDetMat.Text = Me.Ext_Mat
-        ComboBox_Type_F.Items.Insert(0, Me.CbDetMat.Text)
         Dim factor
         Dim screenwidth As Integer = My.Computer.Screen.Bounds.Width
         'screenwidth on my computer is 1600. The controls have been designed for that width.
@@ -1486,4 +1501,5 @@ Partial Class Form_Traupixe_H5_2024
     Friend WithEvents Button_Run2 As Button
     Friend WithEvents TextProcessIf As TextBox
     Public WithEvents SkipPbMatrixToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents chk_external_ok As CheckBox
 End Class
