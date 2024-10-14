@@ -44,7 +44,7 @@ Public Class Form_Traupixe_H5_2024
     'Dim worksheet As Excel.Worksheet
     'Dim workbook As Excel.Workbook
     ' Dim Fs_Log As Object
-    Dim skip_Pb_mtx As Boolean
+    Dim B_skip_elem_mtx As Boolean
     Dim nb_process_custom As Boolean
     Dim Global_Nb_Swap As Integer
     Dim K_Name_HED_Mat As String
@@ -82,7 +82,7 @@ Public Class Form_Traupixe_H5_2024
     Dim Process_Abort(10) As Boolean
     Dim Charge_Exp(1, 1) As String
     Dim Det_name_with_charge(10) As String
-
+    Dim skip_z_mtx(10) As String
 
 
     Dim gamma_filename(1000) As String
@@ -843,12 +843,10 @@ Public Class Form_Traupixe_H5_2024
                 str_filter = "*" & Box_txtFiltre.Text & "*." & ext_trc
             End If
 
-
         Else
             str_filter = "*" & ext_trc & "*"   'Cas ou le mot clef n'est pas l'extention mais un vrai mot clef (ex: ROMA)
             Box_txtFiltre.Text = "*"
         End If
-
 
         If Not folder Is Nothing AndAlso Directory.Exists(folder) Then
 
@@ -1440,8 +1438,14 @@ Public Class Form_Traupixe_H5_2024
         Dim SubItemIndex As Integer
         Dim Ind1 As Integer
         Dim SplitText() As String
+        Dim loc_str As String
         Dim folder As String = CStr(trvFolders.SelectedNode.Tag)
         limite_conc_red_ok = 50000 'utlisé dans "calcul_best_conc" si conc. < 5% on prend la valeur RED
+
+        chb_skip_elem.Checked = False
+        chb_skip_elem.Visible = False
+        B_skip_elem_mtx = False
+        txt_skip_elem.Visible = False
 
         If Not folder Is Nothing AndAlso Directory.Exists(folder) Then
 
@@ -1465,6 +1469,14 @@ Public Class Form_Traupixe_H5_2024
                         Select Case UCase(Str1)
                             Case "[TRACE-OXIDE]"
                                 Text_Lst_Ox_Trc.Text = SplitText(Ind1 + 1)
+                            Case "[SKIP-MATRIX-ELEMENT]"
+                                loc_str = SplitText(Ind1 + 1)
+                                skip_z_mtx = Split(loc_str, ",")
+                                SkipPbMatrixToolStripMenuItem.Checked = True
+                                chb_skip_elem.Checked = True
+                                chb_skip_elem.Visible = True
+                                txt_skip_elem.Visible = True
+                                txt_skip_elem.Text = loc_str
                         End Select
                         Ind1 += 1
                     Next
@@ -1761,6 +1773,7 @@ Public Class Form_Traupixe_H5_2024
         Dim File_Text1
         Dim SplitText() As String
         Dim Ret1 As Boolean
+        Dim loc_txt_config_exp As String
 
         Fatal_Error = False
         First_Init = False ' Permet lecture Absorbers 
@@ -1879,20 +1892,32 @@ Public Class Form_Traupixe_H5_2024
         ToolStripStatusLabel1.Text = "Update/Create Config-exp.ini"
         Traupixe_Init = File.Exists(Chemin_Data & "\config-exp.ini")
 
-        If Text_Lst_Ox_Trc.Text = "" Or Text_Lst_Ox_Trc.Text = "No oxide" Then Check_Trc_As_Oxy.Checked = False
+        If Text_Lst_Ox_Trc.Text = "" Or UCase(Text_Lst_Ox_Trc.Text) = "NO OXIDE" Then Check_Trc_As_Oxy.Checked = False
 
         'If Check_Trc_As_Oxy.Checked = True Or Ck_AllAsOxy.Checked = True Then
-        If Traupixe_Init = False Then
-            File.WriteAllText(Chemin_Data & "\config-exp.ini", "[Trace-oxide]" & vbCrLf & Text_Lst_Ox_Trc.Text)
-        Else
-            File_Text1 = File.ReadAllText(Chemin_Data & "\config-exp.ini")
+        'If Traupixe_Init = False Then
+        '    loc_txt_config_exp = "[Trace-oxide]" & vbCrLf & Text_Lst_Ox_Trc.Text & vbCrLf
+        '    If B_skip_elem_mtx = True Then
+        '        loc_txt_config_exp += "[SKIP-MATRIX-ELEMENT]" & vbCrLf & txt_skip_elem.Text & vbCrLf
+        '    End If
+
+        '    File.WriteAllText(Chemin_Data & "\config-exp.ini", loc_txt_config_exp)
+        'Else
+        '    File_Text1 = File.ReadAllText(Chemin_Data & "\config-exp.ini")
+        'End If
+
+        'If Text_Lst_Ox_Trc.Text <> "" Then
+        loc_txt_config_exp = "[TRACE-OXIDE]" & vbCrLf & Text_Lst_Ox_Trc.Text & vbCrLf
+        If B_skip_elem_mtx = True And txt_skip_elem.Text <> "" Then
+            loc_txt_config_exp += "[SKIP-MATRIX-ELEMENT]" & vbCrLf & txt_skip_elem.Text & vbCrLf
+            skip_z_mtx = Split(txt_skip_elem.Text, ",")
         End If
 
-        If Text_Lst_Ox_Trc.Text <> "" Then
-            File.WriteAllText(Chemin_Data & "\config-exp.ini", "[Trace-oxide]" & vbCrLf & Text_Lst_Ox_Trc.Text)
-        Else
-            File.WriteAllText(Chemin_Data & "\config-exp.ini", "[Trace-oxide]" & vbCrLf & "NO OXIDE")
-        End If
+        File.WriteAllText(Chemin_Data & "\config-exp.ini", loc_txt_config_exp)
+        '    File.WriteAllText(Chemin_Data & "\config-exp.ini", "[Trace-oxide]" & vbCrLf & Text_Lst_Ox_Trc.Text)
+        '   Else
+        '  File.WriteAllText(Chemin_Data & "\config-exp.ini", "[Trace-oxide]" & vbCrLf & "NO OXIDE")
+        '  End If
 
         '########################################## TRACE AS oxide IN EXCEL SHEET 100% ,ppm , S_100 et S_ppm
         If Nb_Trc > 0 Then
@@ -4684,8 +4709,6 @@ Public Class Form_Traupixe_H5_2024
         Dim SR As StreamReader
         Dim All_line
         Dim indx_1 As Integer
-
-
 
 
         ToolStripStatusLabel1.Text = "Read Trace PAR File " & CStr(Num_Trc) & ",Part:" & CStr(partie)
@@ -8242,14 +8265,24 @@ OpenWorkbook_OK:
                 Case "pixe_mode"
                     indx_mat = Array.IndexOf(Tab_Info_Mat.Z, Z)
 
+                    If B_skip_elem_mtx = True And Array.IndexOf(skip_z_mtx, CStr(Z)) <> -1 Then
+                        Best_Stat_0 = 1000000 'Permet pour le Pb de prendre la valeur en HE quelque soit sont l'erreur Total (Fit+Stat
+                        Y_N_Q_Prev = "N" ' Ajout 29/09/2024
+                        indx_mat = -1
+                    End If
+
                     Do While indx_mat <> -1
                         i = indx_mat
 
-                        If Array.IndexOf(All_Z_Trc, Z) <> -1 Then
-                            If Array.IndexOf(Tab_Trc_as_Oxy, Z) <> -1 Then
-                                conc_in_oxide = True
+                        If Check_Trc_As_Oxy.Checked = True And Ck_AllAsOxy.Checked = False Then
+                            If Array.IndexOf(All_Z_Trc, Z) <> -1 Then
+                                If Array.IndexOf(Tab_Trc_as_Oxy, Z) <> -1 Then
+                                    conc_in_oxide = True
+                                Else
+                                    conc_in_oxide = False
+                                End If
                             Else
-                                conc_in_oxide = False
+                                conc_in_oxide = True
                             End If
                         Else
                             conc_in_oxide = True
@@ -8316,10 +8349,7 @@ pass_mat:   ' Only_Trace
                     Indice_Trc_0 = -1
                     Indice_Trc_1 = -1
 
-                    If Z = 82 And skip_Pb_mtx = True Then
-                        Best_Stat_0 = 1000000 'Permet pour le Pb de prendre la valeur en HE quelque soit sont l'erreur Total (Fit+Stat
-                        Y_N_Q_Prev = "N" ' Ajout 29/09/2024
-                    End If
+
                     indx_trc = Array.IndexOf(All_Z_Trc, Z) 'Search Z in All_Z_Trc
 
                     Do While indx_trc <> -1
@@ -8588,10 +8618,16 @@ pass_mat:   ' Only_Trace
                         Best_LOD_mat_current = -1
                     End If
 
-                    If Z = 82 And skip_Pb_mtx = True Then
-                        Z = 82
+                    'If Z = 82 And B_skip_elem_mtx = True Then
+                    '    Z = 82
+                    '    indx_mat = -1
+                    '    Y_N_Q_Prev = "N"
+                    'End If
+
+                    If B_skip_elem_mtx = True And Array.IndexOf(skip_z_mtx, CStr(Z)) <> -1 Then
+                        Best_Stat_0 = 1000000 'Permet pour le Pb de prendre la valeur en HE quelque soit sont l'erreur Total (Fit+Stat
+                        Y_N_Q_Prev = "N" ' Ajout 29/09/2024
                         indx_mat = -1
-                        Y_N_Q_Prev = "N"
                     End If
 
                     If Z = 29 Then
@@ -8603,8 +8639,8 @@ pass_mat:   ' Only_Trace
                         'i = indx_mat
                         Y_N_Q = Val_Mat_Y_N_Q(Num_Proc, indx_mat)
 
-                        If Array.IndexOf(All_Z_Trc, Z) <> -1 Then
-                            If Array.IndexOf(Tab_Trc_as_Oxy, Z) <> -1 Then
+                        If Check_Trc_As_Oxy.Checked = True And Ck_AllAsOxy.Checked = False Then
+                            If Array.IndexOf(Tab_Trc_as_Oxy, Z) <> -1 And Array.IndexOf(All_Z_Trc, Z) <> -1 Then
                                 conc_in_oxide = True
                             Else
                                 conc_in_oxide = False
@@ -8783,24 +8819,24 @@ pass_mat:   ' Only_Trace
                             'If Z_Trc > Z and Then Exit For
                             Y_N_Q = All_Y_N_Q(indx_trc)
                             Z_Trc = All_Z_Trc(indx_trc)
-                            If Z = 82 Then
-                                Z = 82
+                            If Z = 20 Then
+                                Z = 20
                             End If
                             'If Z_Trc = Z Then
 
-                            If Val_Trc_Best_Yes(Num_Proc, indx_trc) <> 0 Then
-                                format_return = Format_Str(Val_Trc_Best_Yes(Num_Proc, indx_trc))
+                            If Val_Trc_Best_Yes(Num_proc, indx_trc) <> 0 Then
+                                format_return = Format_Str(Val_Trc_Best_Yes(Num_proc, indx_trc))
                                 Str_Prec = format_return(0)
                                 Nb_Dig = CInt(format_return(1))
                                 Y_N_Q_Prev = Y_N_Q
                                 ' Y_N_Q_Prev = Y_N_Q
-                                Val_Trc_Conc100(Num_Proc, indx_trc) = Strings.Format((Math.Round(Val_Trc_Best_Yes(Num_Proc, indx_trc) / 10000, Nb_Dig)), Str_Prec)
-                                Val_Trc_Conc_ppm(Num_Proc, indx_trc) = Strings.Format(Val_Trc_Best_Yes(Num_Proc, indx_trc), 0)
-                                Val_Conc_S_RED_ppm(Num_Proc, Ind_Z_100) = Strings.Format(Val_Trc_Best_Yes_RED(Num_Proc, indx_trc), 0)
-                                Val_Conc_S_RED100(Num_Proc, Ind_Z_100) = Strings.Format((Math.Round(Val_Trc_Best_Yes_RED(Num_Proc, indx_trc) / 10000, Nb_Dig)), Str_Prec)
-                                Val_Conc_S_100(Num_Proc, Ind_Z_100) = Strings.Format((Math.Round(Val_Trc_Best_Yes(Num_Proc, indx_trc) / 10000, Nb_Dig)), Str_Prec)
-                                Val_Conc_S_ppm(Num_Proc, Ind_Z_100) = Strings.Format(Val_Trc_Best_Yes(Num_Proc, indx_trc), 0)
-                                Val_YNQ_Final(Num_Proc, Ind_Z_100) = "Y"
+                                Val_Trc_Conc100(Num_proc, indx_trc) = Strings.Format((Math.Round(Val_Trc_Best_Yes(Num_proc, indx_trc) / 10000, Nb_Dig)), Str_Prec)
+                                Val_Trc_Conc_ppm(Num_proc, indx_trc) = Strings.Format(Val_Trc_Best_Yes(Num_proc, indx_trc), 0)
+                                Val_Conc_S_RED_ppm(Num_proc, Ind_Z_100) = Strings.Format(Val_Trc_Best_Yes_RED(Num_proc, indx_trc), 0)
+                                Val_Conc_S_RED100(Num_proc, Ind_Z_100) = Strings.Format((Math.Round(Val_Trc_Best_Yes_RED(Num_proc, indx_trc) / 10000, Nb_Dig)), Str_Prec)
+                                Val_Conc_S_100(Num_proc, Ind_Z_100) = Strings.Format((Math.Round(Val_Trc_Best_Yes(Num_proc, indx_trc) / 10000, Nb_Dig)), Str_Prec)
+                                Val_Conc_S_ppm(Num_proc, Ind_Z_100) = Strings.Format(Val_Trc_Best_Yes(Num_proc, indx_trc), 0)
+                                Val_YNQ_Final(Num_proc, Ind_Z_100) = "Y"
                                 ''''BEFORE 12/01/2022
                                 'Val_Error_S(Num_Proc, Ind_Z_100) = Math.Round(Math.Sqrt(Val_Trc_Pivot_Error(Num_Proc, T) ^ 2 + (Math.Sqrt(Val_Trc_Fit_Error(Num_Proc, j) ^ 2 + Val_Trc_Stat_Error(Num_Proc, j) ^ 2) ^ 2)), 2) 'Strings.Format(Val_Trc_Error_Pivot(Num_Proc, j), "0.00")
 
@@ -8816,12 +8852,12 @@ pass_mat:   ' Only_Trace
                                 Next t
 
                                 If Indice_Mat_0 <> -1 Then
-                                    Str_Mat_Conc_100(Num_Proc, Indice_Mat_0) = ""
-                                    Val_Mat_Conc_ppm(Num_Proc, Indice_Mat_0) = ""
+                                    Str_Mat_Conc_100(Num_proc, Indice_Mat_0) = ""
+                                    Val_Mat_Conc_ppm(Num_proc, Indice_Mat_0) = ""
                                     Indice_Mat_0 = -1
                                 ElseIf Indice_Trc_0 <> -1 Then
-                                    Val_Trc_Conc100(Num_Proc, Indice_Trc_0) = ""
-                                    Val_Trc_Conc_ppm(Num_Proc, Indice_Trc_0) = ""
+                                    Val_Trc_Conc100(Num_proc, Indice_Trc_0) = ""
+                                    Val_Trc_Conc_ppm(Num_proc, Indice_Trc_0) = ""
                                     ' Val_Trc_Conc_RED(Num_Proc, Indice_Trc_0) = ""
                                     Indice_Trc_0 = Indice_Trc_1
                                 End If
@@ -8945,7 +8981,7 @@ pass_mat:   ' Only_Trace
                         Nb_Dig = CInt(format_return(1))
                         Str_Mat_Conc_100(Num_proc, Ind_Z_100) = Strings.Format(Math.Round((Val_Mat_Best_Yes(Num_proc, indx_mat) / 10000), Nb_Dig), Str_Prec)
                         Val_Mat_Conc_ppm(Num_proc, Ind_Z_100) = Strings.Format(Val_Mat_Best_Yes(Num_proc, indx_mat), 0)
-                        Val_Conc_S_RED_ppm(Num_Proc, Ind_Z_100) = Strings.Format(Val_Mat_Best_Yes_RED(Num_Proc, i), 0)
+                        Val_Conc_S_RED_ppm(Num_proc, Ind_Z_100) = Strings.Format(Val_Mat_Best_Yes_RED(Num_proc, indx_mat), 0)
                         Val_Conc_S_RED100(Num_proc, Ind_Z_100) = Strings.Format(Math.Round((Val_Mat_Best_Yes_RED(Num_proc, indx_mat) / 10000), Nb_Dig), Str_Prec)
                         Val_Conc_S_100(Num_proc, Ind_Z_100) = Strings.Format(Math.Round((Val_Mat_Best_Yes(Num_proc, indx_mat) / 10000), Nb_Dig), Str_Prec)
                         Val_Conc_S_ppm(Num_proc, Ind_Z_100) = Strings.Format(Val_Mat_Best_Yes(Num_proc, indx_mat), 0)
@@ -11279,11 +11315,24 @@ Myend:
 
     Private Sub SkipPbMatrixToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SkipPbMatrixToolStripMenuItem.Click
         SkipPbMatrixToolStripMenuItem.Checked = Not (SkipPbMatrixToolStripMenuItem.Checked)
-        skip_Pb_mtx = Not (skip_Pb_mtx)
+        invert_skip_z_status_1(SkipPbMatrixToolStripMenuItem.Checked)
+    End Sub
+    Public Sub invert_skip_z_status_1(status As Boolean)
+        chb_skip_elem.Checked = status
+        chb_skip_elem.Visible = status
+        txt_skip_elem.Visible = status
+        B_skip_elem_mtx = status
     End Sub
 
-    Private Sub GupixLODNWrite0ToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GupixLODNWrite0ToolStripMenuItem.Click
+    Private Sub chb_skip_elem_CheckedChanged(sender As Object, e As EventArgs) Handles chb_skip_elem.CheckedChanged
+        SkipPbMatrixToolStripMenuItem.Checked = chb_skip_elem.Checked
+        invert_skip_z_status_2(SkipPbMatrixToolStripMenuItem.Checked)
 
+    End Sub
+
+    Public Sub invert_skip_z_status_2(status As Boolean)
+        SkipPbMatrixToolStripMenuItem.Checked = status
+        B_skip_elem_mtx = status
     End Sub
 
     Private Sub ComboBox_Type_F_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_Type_F.SelectedIndexChanged
@@ -11322,6 +11371,8 @@ Myend:
         End Select
         Adjust_Filter.Enabled = True
     End Sub
+
+
 
     Private Sub chk_external_ok_CheckedChanged(sender As Object, e As EventArgs) Handles chk_external_ok.CheckedChanged
 

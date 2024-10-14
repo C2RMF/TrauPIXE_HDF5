@@ -96,6 +96,8 @@ Partial Class Form_Traupixe_H5_2024
         Me.Adjust_Filter = New System.Windows.Forms.Button()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.Calcul = New System.Windows.Forms.TabPage()
+        Me.chb_skip_elem = New System.Windows.Forms.CheckBox()
+        Me.txt_skip_elem = New System.Windows.Forms.TextBox()
         Me.chk_external_ok = New System.Windows.Forms.CheckBox()
         Me.Text_gamma = New System.Windows.Forms.TextBox()
         Me.Tab_Adjust = New System.Windows.Forms.TabPage()
@@ -395,7 +397,7 @@ Partial Class Form_Traupixe_H5_2024
         'Button2
         '
         Me.Button2.Font = New System.Drawing.Font("Calibri", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.Button2.Location = New System.Drawing.Point(10, 74)
+        Me.Button2.Location = New System.Drawing.Point(8, 86)
         Me.Button2.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(102, 38)
@@ -431,7 +433,7 @@ Partial Class Form_Traupixe_H5_2024
         'Nb_Proc
         '
         Me.Nb_Proc.Font = New System.Drawing.Font("Calibri", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.Nb_Proc.Location = New System.Drawing.Point(293, 133)
+        Me.Nb_Proc.Location = New System.Drawing.Point(307, 128)
         Me.Nb_Proc.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Nb_Proc.Name = "Nb_Proc"
         Me.Nb_Proc.Size = New System.Drawing.Size(20, 21)
@@ -463,7 +465,7 @@ Partial Class Form_Traupixe_H5_2024
         '
         Me.Progress.Enabled = False
         Me.Progress.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.Progress.Location = New System.Drawing.Point(133, 81)
+        Me.Progress.Location = New System.Drawing.Point(131, 92)
         Me.Progress.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Progress.Name = "Progress"
         Me.Progress.Size = New System.Drawing.Size(74, 29)
@@ -473,7 +475,7 @@ Partial Class Form_Traupixe_H5_2024
         '
         'Tps_Calc
         '
-        Me.Tps_Calc.Location = New System.Drawing.Point(244, 7)
+        Me.Tps_Calc.Location = New System.Drawing.Point(125, 125)
         Me.Tps_Calc.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Tps_Calc.Name = "Tps_Calc"
         Me.Tps_Calc.Size = New System.Drawing.Size(88, 23)
@@ -485,7 +487,7 @@ Partial Class Form_Traupixe_H5_2024
         'MyPause
         '
         Me.MyPause.Font = New System.Drawing.Font("Calibri", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.MyPause.Location = New System.Drawing.Point(230, 74)
+        Me.MyPause.Location = New System.Drawing.Point(228, 86)
         Me.MyPause.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.MyPause.Name = "MyPause"
         Me.MyPause.Size = New System.Drawing.Size(102, 38)
@@ -495,7 +497,7 @@ Partial Class Form_Traupixe_H5_2024
         '
         'Text_Status
         '
-        Me.Text_Status.Location = New System.Drawing.Point(116, 591)
+        Me.Text_Status.Location = New System.Drawing.Point(116, 633)
         Me.Text_Status.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Text_Status.Name = "Text_Status"
         Me.Text_Status.Size = New System.Drawing.Size(578, 23)
@@ -510,7 +512,7 @@ Partial Class Form_Traupixe_H5_2024
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Padding = New System.Windows.Forms.Padding(7, 2, 0, 2)
-        Me.MenuStrip1.Size = New System.Drawing.Size(1054, 24)
+        Me.MenuStrip1.Size = New System.Drawing.Size(1055, 24)
         Me.MenuStrip1.TabIndex = 50
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -566,11 +568,9 @@ Partial Class Form_Traupixe_H5_2024
         '
         'SkipPbMatrixToolStripMenuItem
         '
-        Me.SkipPbMatrixToolStripMenuItem.Checked = True
-        Me.SkipPbMatrixToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked
         Me.SkipPbMatrixToolStripMenuItem.Name = "SkipPbMatrixToolStripMenuItem"
         Me.SkipPbMatrixToolStripMenuItem.Size = New System.Drawing.Size(192, 22)
-        Me.SkipPbMatrixToolStripMenuItem.Text = "Skip Pb Matrix"
+        Me.SkipPbMatrixToolStripMenuItem.Text = "Skip element in matrix"
         '
         'Pivot_det0
         '
@@ -705,9 +705,9 @@ Partial Class Form_Traupixe_H5_2024
         Me.Check_Trc_As_Oxy.Location = New System.Drawing.Point(13, 8)
         Me.Check_Trc_As_Oxy.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Check_Trc_As_Oxy.Name = "Check_Trc_As_Oxy"
-        Me.Check_Trc_As_Oxy.Size = New System.Drawing.Size(104, 19)
+        Me.Check_Trc_As_Oxy.Size = New System.Drawing.Size(81, 19)
         Me.Check_Trc_As_Oxy.TabIndex = 74
-        Me.Check_Trc_As_Oxy.Text = "Elem. as oxide"
+        Me.Check_Trc_As_Oxy.Text = "Z as oxide"
         Me.Check_Trc_As_Oxy.UseVisualStyleBackColor = True
         '
         'Text_Lst_Ox_Trc
@@ -715,19 +715,19 @@ Partial Class Form_Traupixe_H5_2024
         Me.Text_Lst_Ox_Trc.Location = New System.Drawing.Point(9, 28)
         Me.Text_Lst_Ox_Trc.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Text_Lst_Ox_Trc.Name = "Text_Lst_Ox_Trc"
-        Me.Text_Lst_Ox_Trc.Size = New System.Drawing.Size(324, 23)
+        Me.Text_Lst_Ox_Trc.Size = New System.Drawing.Size(182, 23)
         Me.Text_Lst_Ox_Trc.TabIndex = 75
         Me.Text_Lst_Ox_Trc.Text = "19,20,25,26,29,82"
         '
         'Ck_AllAsOxy
         '
         Me.Ck_AllAsOxy.AutoSize = True
-        Me.Ck_AllAsOxy.Location = New System.Drawing.Point(129, 8)
+        Me.Ck_AllAsOxy.Location = New System.Drawing.Point(102, 8)
         Me.Ck_AllAsOxy.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Ck_AllAsOxy.Name = "Ck_AllAsOxy"
-        Me.Ck_AllAsOxy.Size = New System.Drawing.Size(90, 19)
+        Me.Ck_AllAsOxy.Size = New System.Drawing.Size(99, 19)
         Me.Ck_AllAsOxy.TabIndex = 76
-        Me.Ck_AllAsOxy.Text = "All as oxide"
+        Me.Ck_AllAsOxy.Text = "All Z as oxide"
         Me.Ck_AllAsOxy.UseVisualStyleBackColor = True
         '
         'ListFileInit
@@ -747,10 +747,10 @@ Partial Class Form_Traupixe_H5_2024
         '
         Me.StatusStrip1.ImageScalingSize = New System.Drawing.Size(24, 24)
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripStatusLabel2, Me.ToolStripStatusLabel1})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 550)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 561)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Padding = New System.Windows.Forms.Padding(1, 0, 16, 0)
-        Me.StatusStrip1.Size = New System.Drawing.Size(1054, 22)
+        Me.StatusStrip1.Size = New System.Drawing.Size(1055, 22)
         Me.StatusStrip1.TabIndex = 80
         Me.StatusStrip1.Text = "StatusStrip1"
         '
@@ -772,7 +772,7 @@ Partial Class Form_Traupixe_H5_2024
         Me.Chk_RoundValue.AutoSize = True
         Me.Chk_RoundValue.Checked = True
         Me.Chk_RoundValue.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.Chk_RoundValue.Location = New System.Drawing.Point(10, 135)
+        Me.Chk_RoundValue.Location = New System.Drawing.Point(8, 126)
         Me.Chk_RoundValue.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Chk_RoundValue.Name = "Chk_RoundValue"
         Me.Chk_RoundValue.Size = New System.Drawing.Size(100, 19)
@@ -798,15 +798,17 @@ Partial Class Form_Traupixe_H5_2024
         Me.TabControl1.Controls.Add(Me.Tab_Adjust)
         Me.TabControl1.Controls.Add(Me.TabPage1)
         Me.TabControl1.Font = New System.Drawing.Font("Calibri", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.TabControl1.Location = New System.Drawing.Point(700, 406)
+        Me.TabControl1.Location = New System.Drawing.Point(700, 394)
         Me.TabControl1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(350, 152)
+        Me.TabControl1.Size = New System.Drawing.Size(350, 183)
         Me.TabControl1.TabIndex = 83
         '
         'Calcul
         '
+        Me.Calcul.Controls.Add(Me.chb_skip_elem)
+        Me.Calcul.Controls.Add(Me.txt_skip_elem)
         Me.Calcul.Controls.Add(Me.chk_external_ok)
         Me.Calcul.Controls.Add(Me.Text_gamma)
         Me.Calcul.Controls.Add(Me.Button2)
@@ -822,17 +824,39 @@ Partial Class Form_Traupixe_H5_2024
         Me.Calcul.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Calcul.Name = "Calcul"
         Me.Calcul.Padding = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.Calcul.Size = New System.Drawing.Size(342, 121)
+        Me.Calcul.Size = New System.Drawing.Size(342, 152)
         Me.Calcul.TabIndex = 0
         Me.Calcul.Text = "Process Spectra"
         Me.Calcul.UseVisualStyleBackColor = True
+        '
+        'chb_skip_elem
+        '
+        Me.chb_skip_elem.AutoSize = True
+        Me.chb_skip_elem.Location = New System.Drawing.Point(242, 8)
+        Me.chb_skip_elem.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.chb_skip_elem.Name = "chb_skip_elem"
+        Me.chb_skip_elem.Size = New System.Drawing.Size(81, 19)
+        Me.chb_skip_elem.TabIndex = 84
+        Me.chb_skip_elem.Text = "skip Z mtx"
+        Me.chb_skip_elem.UseVisualStyleBackColor = True
+        Me.chb_skip_elem.Visible = False
+        '
+        'txt_skip_elem
+        '
+        Me.txt_skip_elem.Location = New System.Drawing.Point(242, 28)
+        Me.txt_skip_elem.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.txt_skip_elem.Name = "txt_skip_elem"
+        Me.txt_skip_elem.Size = New System.Drawing.Size(77, 23)
+        Me.txt_skip_elem.TabIndex = 83
+        Me.txt_skip_elem.Text = "82"
+        Me.txt_skip_elem.Visible = False
         '
         'chk_external_ok
         '
         Me.chk_external_ok.AutoSize = True
         Me.chk_external_ok.Checked = True
         Me.chk_external_ok.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chk_external_ok.Location = New System.Drawing.Point(296, 54)
+        Me.chk_external_ok.Location = New System.Drawing.Point(294, 60)
         Me.chk_external_ok.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.chk_external_ok.Name = "chk_external_ok"
         Me.chk_external_ok.Size = New System.Drawing.Size(43, 19)
@@ -843,7 +867,7 @@ Partial Class Form_Traupixe_H5_2024
         '
         'Text_gamma
         '
-        Me.Text_gamma.Location = New System.Drawing.Point(10, 51)
+        Me.Text_gamma.Location = New System.Drawing.Point(8, 57)
         Me.Text_gamma.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Text_gamma.Name = "Text_gamma"
         Me.Text_gamma.Size = New System.Drawing.Size(278, 23)
@@ -868,7 +892,7 @@ Partial Class Form_Traupixe_H5_2024
         Me.Tab_Adjust.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Tab_Adjust.Name = "Tab_Adjust"
         Me.Tab_Adjust.Padding = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.Tab_Adjust.Size = New System.Drawing.Size(342, 121)
+        Me.Tab_Adjust.Size = New System.Drawing.Size(342, 152)
         Me.Tab_Adjust.TabIndex = 1
         Me.Tab_Adjust.Text = "Adjust Absorbers"
         Me.Tab_Adjust.UseVisualStyleBackColor = True
@@ -989,7 +1013,7 @@ Partial Class Form_Traupixe_H5_2024
         Me.TabPage1.Location = New System.Drawing.Point(4, 27)
         Me.TabPage1.Name = "TabPage1"
         Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(342, 121)
+        Me.TabPage1.Size = New System.Drawing.Size(342, 152)
         Me.TabPage1.TabIndex = 2
         Me.TabPage1.Text = "Extract spectra"
         Me.TabPage1.UseVisualStyleBackColor = True
@@ -1120,7 +1144,7 @@ Partial Class Form_Traupixe_H5_2024
         Me.Panel1.Font = New System.Drawing.Font("Calibri", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
         Me.Panel1.Location = New System.Drawing.Point(700, 140)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(350, 260)
+        Me.Panel1.Size = New System.Drawing.Size(350, 246)
         Me.Panel1.TabIndex = 92
         '
         'Panel2
@@ -1159,7 +1183,7 @@ Partial Class Form_Traupixe_H5_2024
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1054, 572)
+        Me.ClientSize = New System.Drawing.Size(1055, 583)
         Me.Controls.Add(Me.TextProcessIf)
         Me.Controls.Add(Me.Button_Run2)
         Me.Controls.Add(Me.Label1)
@@ -1193,7 +1217,7 @@ Partial Class Form_Traupixe_H5_2024
         Me.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.MaximizeBox = False
         Me.Name = "Form_Traupixe_H5_2024"
-        Me.Text = "TrauPIXE 25.09 - C2RMF"
+        Me.Text = "TrauPIXE 25.10 - C2RMF"
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()
         Me.StatusStrip1.ResumeLayout(False)
@@ -1270,7 +1294,10 @@ Partial Class Form_Traupixe_H5_2024
             Dim ind1 = 0
             Dim str_hdf5 As String
             Dim h5_analyses_location As String
-            Me.skip_Pb_mtx = True
+
+            Me.chb_skip_elem.Checked = False
+            Me.chb_skip_elem.Visible = False
+            Me.B_skip_elem_mtx = False
 
             For Each Str As String In SplitText
                 str_hdf5 = Str
@@ -1502,4 +1529,6 @@ Partial Class Form_Traupixe_H5_2024
     Friend WithEvents TextProcessIf As TextBox
     Public WithEvents SkipPbMatrixToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents chk_external_ok As CheckBox
+    Friend WithEvents chb_skip_elem As CheckBox
+    Friend WithEvents txt_skip_elem As TextBox
 End Class
