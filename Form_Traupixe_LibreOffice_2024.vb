@@ -2336,6 +2336,7 @@ Public Class Form_Traupixe_H5_2024
             'Function_Excel_Format_Italic(Parametres_All_Thread)
             ' Next
             Excel_Legend(Nb_Process, True, False)
+            Excel_Legend_LOD(Nb_Process, True, False)
             Excel_Save(J)
 
 
@@ -2651,6 +2652,7 @@ Public Class Form_Traupixe_H5_2024
             MyErase = False
             If J = 1 And Offset_Excel > 0 Then MyErase = True
             Excel_Legend(Nb_file, legend, MyErase)
+            Excel_Legend_LOD(Nb_file, legend, MyErase)
             'CLOSEDXML      Excel_Legend(Nb_file, legend, MyErase)
             Excel_Save(-1)
 
@@ -2719,7 +2721,6 @@ Public Class Form_Traupixe_H5_2024
         Excel_Save(-1)
 
         'CLOSEDXML xlApp.visible = True
-
         'Fermer_Gupix (hConsole)
         Second = (Tps_1_Loop / 1000) * nb_loop
         Minutes = Int((Second Mod 3600) / 60)
@@ -6942,24 +6943,24 @@ OpenWorkbook_OK:
         If MyErase = True Then
             '##################### EFFACE LEGENDE PRECEDENTE
 
-            For j = 0 To 3
+            For j = 0 To 5
 
                 For Each ws In Tab_Ref_Woorksheet
-                    ws.Cell(5 + Offset_Excel + j, 6 + i).Value = ""
-                    ws.Cell(5 + Offset_Excel + j, 6 + i).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 255, 255)
+                    ws.Cell(5 + Offset_Excel + j, 14 + i).Value = ""
+                    ws.Cell(5 + Offset_Excel + j, 14 + i).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 255, 255)
                 Next
 
                 For Each ws In Tab_Ref_Woorksheet_Error
-                    ws.Cell(5 + Offset_Excel + j, 6 + i).Value = ""
-                    ws.Cell(5 + Offset_Excel + j, 6 + i).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 255, 255)
+                    ws.Cell(5 + Offset_Excel + j, 14 + i).Value = ""
+                    ws.Cell(5 + Offset_Excel + j, 14 + i).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 255, 255)
                 Next
             Next j
 
             For t = 0 To Nb_Trc - 1
 
                 For Each ws In Tab_Ref_Woorksheet
-                    ws.Cell(7 + Offset_Excel, 7 + t).Value = ""
-                    ws.Cell(7 + Offset_Excel, 7 + t).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 255, 255) 'XLColor.FromArgb(255, 255, 255) ' Mat sans fond
+                    ws.Cell(7 + Offset_Excel, 15 + t).Value = ""
+                    ws.Cell(7 + Offset_Excel, 15 + t).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 255, 255) 'XLColor.FromArgb(255, 255, 255) ' Mat sans fond
                 Next
             Next
         End If
@@ -6968,19 +6969,19 @@ OpenWorkbook_OK:
         If legend = True Then
 
             For Each ws In Tab_Ref_Woorksheet
-                ws.Cell(Nb_file + 6 + Offset_Excel, 6).Value = "Color code for Detector"
-                ws.Cell(Nb_file + 6 + Offset_Excel, 6).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 255, 255)
+                ws.Cell(Nb_file + 6 + Offset_Excel, 14).Value = "Color code for Detector"
+                ws.Cell(Nb_file + 6 + Offset_Excel, 14).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 255, 255)
             Next
 
             For Each ws In Tab_Ref_Woorksheet
-                ws.Cell(Nb_file + 7 + Offset_Excel, 6).Value = CbDetMat.Text
-                ws.Cell(Nb_file + 7 + Offset_Excel, 6).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 255, 255) ' Mat sans fond
+                ws.Cell(Nb_file + 7 + Offset_Excel, 14).Value = CbDetMat.Text
+                ws.Cell(Nb_file + 7 + Offset_Excel, 14).Style.Fill.BackgroundColor = XLColor.FromArgb(255, 255, 255) ' Mat sans fond
             Next
 
 
             For Each ws In Tab_Ref_Woorksheet_Error
-                ws.Cell(Nb_file + 8 + Offset_Excel, 6).Value = "--> Matrix Error(%) = Fit_Error " & " --> Trace Error(%) = sqrt(Pivot_Error^2 + Fit_Error ^2) (Section 13C Gupix manuel)"
-
+                ws.Cell(Nb_file + 8 + Offset_Excel, 14).Value = "Matrix Unc.(%) : Gupix fit error "
+                ws.Cell(Nb_file + 9 + Offset_Excel, 14).Value = "Trace Unc.(%) : sqrt(Pivot_Error^2 + Gupix fit Error ^2) (See Traupixe manuel)"
             Next
 
             For t = 0 To Nb_Trc - 1
@@ -7009,13 +7010,62 @@ OpenWorkbook_OK:
                 End Select
 
                 For Each ws In Tab_Ref_Woorksheet
-                    ws.Cell(Nb_file + 7 + Offset_Excel, 7 + t).Value = NomDet_Trc(t)
-                    ws.Cell(Nb_file + 7 + Offset_Excel, 7 + t).Style.Fill.BackgroundColor = MyColor 'XLColor.FromArgb(255, 255, 255) ' Mat sans fond
+                    ws.Cell(Nb_file + 7 + Offset_Excel, 15 + t).Value = NomDet_Trc(t)
+                    ws.Cell(Nb_file + 7 + Offset_Excel, 15 + t).Style.Fill.BackgroundColor = MyColor 'XLColor.FromArgb(255, 255, 255) ' Mat sans fond
                 Next
 
                 i = i + 1
 
             Next t
+        End If
+
+    End Sub
+
+    Sub Excel_Legend_LOD(Nb_file As Integer, legend As Boolean, MyErase As Boolean)
+        Dim i As Integer
+        Dim j As Integer
+        Dim Tab_Ref_Woorksheet(10) As Object
+
+        Tab_Ref_Woorksheet(0) = xlSheet_S_Conc_ppm_RED
+        Tab_Ref_Woorksheet(1) = xlSheet_S_Conc_100
+        Tab_Ref_Woorksheet(2) = xlSheet_S_Conc_ppm
+        Tab_Ref_Woorksheet(3) = xlSheet_Conc
+        Tab_Ref_Woorksheet(4) = xlSheet_S_Conc_100_RED
+        Tab_Ref_Woorksheet(5) = xlSheet_S_Conc_Error_ppm
+        Tab_Ref_Woorksheet(6) = xlSheet_S_Conc_Error_100
+        Tab_Ref_Woorksheet(7) = xlSheet_S_Conc_ppm_RED
+        Tab_Ref_Woorksheet(8) = xlSheet_Total_Error
+        Tab_Ref_Woorksheet(9) = xlSheet_Oxyde
+        Tab_Ref_Woorksheet(10) = xlSheet_LOD
+
+        If MyErase = True Then
+            '##################### EFFACE LEGENDE PRECEDENTE
+
+            For j = 0 To 5
+                For Each ws In Tab_Ref_Woorksheet
+                    ws.Cell(6 + Offset_Excel + j, 6).Value = ""
+                    ws.Cell(6 + Offset_Excel + j, 6).Style.Font.FontColor = XLColor.FromArgb(255, 255, 255)
+                Next
+            Next j
+        End If
+        i = 0
+
+        If legend = True Then
+
+            For Each ws In Tab_Ref_Woorksheet
+                ws.Cell(Nb_file + 7 + Offset_Excel, 6).Value = "Legend Font"
+                ws.Cell(Nb_file + 7 + Offset_Excel, 6).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0)
+
+                ws.Cell(Nb_file + 8 + Offset_Excel, 6).Value = "BLACK (Y): concentration > LOD"
+                ws.Cell(Nb_file + 8 + Offset_Excel, 6).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0) ' Mat sans fond
+
+                ws.Cell(Nb_file + 9 + Offset_Excel, 6).Value = "RED & BOLD (?): LOD < concentration < 3.3 x LOD"
+                ws.Cell(Nb_file + 9 + Offset_Excel, 6).Style.Font.FontColor = XLColor.FromArgb(255, 0, 0) ' Mat sans fond
+
+                ws.Cell(Nb_file + 10 + Offset_Excel, 6).Value = "LIGHT BLUE & ITALIC (N): concentration < LOD"
+                ws.Cell(Nb_file + 10 + Offset_Excel, 6).Style.Font.FontColor = XLColor.FromArgb(0, 0, 255) ' Mat sans fond
+            Next
+
         End If
 
     End Sub
