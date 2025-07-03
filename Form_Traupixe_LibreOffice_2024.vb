@@ -4,7 +4,8 @@ Imports System.Windows.Forms.VisualStyles.VisualStyleElement
 Imports ClosedXML.Excel
 Imports ClosedXML.Excel.Ranges
 Imports DocumentFormat.OpenXml.Drawing
-
+Imports DocumentFormat.OpenXml.VariantTypes
+Imports System.Runtime.InteropServices
 
 
 Public Class Form_Traupixe_H5_2024
@@ -24,6 +25,15 @@ Public Class Form_Traupixe_H5_2024
     Private Const SE_ERR_OOM = 8                ' out of memory
     Private Const SE_ERR_SHARE = 26
 
+    <DllImport(".\FiTtoPNG_2025_DLL.dll", EntryPoint:="FiTtoPNG_DLL_LV2016_2025", CallingConvention:=CallingConvention.Cdecl)>
+    Public Shared Function FiTtoPNG_LV16_2025(
+        ByVal Pause As Integer,
+        ByVal CheminSource As String,
+        ByVal CheminDest As String,
+        ByVal Nom As String,
+        ByVal Folder As String
+    ) As Integer
+    End Function
 
 
     Private Declare Function ShellExecute Lib "shell32.dll" Alias "ShellExecuteA" _
@@ -34,8 +44,11 @@ Public Class Form_Traupixe_H5_2024
     Public Declare Sub FITtoPNG_XPV8_visible1 Lib "c:\windows\system32\FITtoPNG_XPV8_V.dll" _
     Alias "FITtoPNG_XPV8_V" (ByVal cheminSource As String, ByVal CheminDest As String, ByVal nom As String, ByVal pause As Long)
 
-    Public Declare Sub FiTtoPNG_LV16 Lib ".\FiTtoPNG_2023_DLL.dll" _
-        Alias "FiTtoPNG_DLL_LV2016_2023" (ByVal Pause As Integer, ByVal CheminSource As String, ByVal CheminDest As String, ByVal Nom As String, ByVal Folder As String)
+    'Public Declare Sub FiTtoPNG_LV16 Lib ".\FiTtoPNG_2023_DLL.dll" _
+    '    Alias "FiTtoPNG_DLL_LV2016_2023" (ByVal CheminSource As String, ByVal CheminDest As String, ByVal Nom As String, ByVal Folder As String, ByVal Pause As Integer)
+
+    'Private Declare Sub FiTtoPNG_2025 Lib "C:\Dev\Labview_NewAGLAE\Builds\FitToPNG_2025\FiTtoPNG_2025_DLL.dll" _
+    '    Alias "FiTtoPNG_DLL_LV2016_2025" (ByVal Pause As Integer, ByVal CheminSource As String, ByVal CheminDest As String, ByVal Nom As String, ByVal Folder As String)
 
     Private Declare Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
     Private Declare Function GetVersion Lib "kernel32" () As Long
@@ -102,6 +115,7 @@ Public Class Form_Traupixe_H5_2024
     Dim tab_rapport_oxide_gamma(100) As Single
     Dim nb_gamma As Integer
     Dim tab_select_file_indices() As Integer
+    Dim tab_const_metadata As String() = {"analyse description", "acquisition time (sec.)", "ref. analyse", "spectra sum", "institution", "acq. duration"}
     Public Structure MyMat
         Public Z As String
         Public conc As Double
@@ -150,16 +164,24 @@ Public Class Form_Traupixe_H5_2024
 
 
     '  ######## HDF5 
-    Dim Ref_DataSet_ToRead(10) As String
+    Dim Ref_trc_DataSet_ToRead(10) As String
+    Dim Ref_mat_DataSet_ToRead As String
     Dim Chemin_hdf5 As String
-    Dim AllSpectres_hdf5(10, 20, 2048) As String
-    Dim Attrib_Spectrum(10, 10, 10) As String
+    Dim AllSpectres_trc_hdf5(10, 10, 2048) As String 'nb file, nb det, nb channels
+    Dim AllSpectres_mat_hdf5(20, 2048) As String
+    Dim Attrib_Trc_hdf5(10, 10, 10) As String
+    Dim Attrib_mat_hdf5(10, 10) As String
     Dim hdf5_mode As Boolean
+    Dim hdf5_is_map As Boolean
     Dim glob_gamma_mode As Boolean
     Dim path_gamma As String
+    Dim nb_pixel_x_map As Integer
+    Dim nb_pixel_y_map As Integer
 
 
     Dim Nom_Projet As String
+    Dim Date_Projet As String
+    Dim type_data As String
     Dim NomOrdi As String
     Dim Dir_EDF As String
     Dim Nb_Spectres_EDF As Integer
@@ -261,6 +283,7 @@ Public Class Form_Traupixe_H5_2024
     Dim SwapDrive As String
     Dim Dir_Calc As String
     Dim Tab_Pivot(10, 10) As Integer
+    Dim Tab_Pivot_plus(10, 10) As Integer
     Dim Tab_Val_Mat(50) As Val_Elem
     Dim Tab_Val_Trc(1, 1) As Val_Elem
     Dim Tab_Info_Mat As Info_Elem
@@ -292,7 +315,7 @@ Public Class Form_Traupixe_H5_2024
     Dim Fact_Correctif As Single = 1
     Dim Pivot As Integer
     Dim Str_Version_Os As String
-    Dim IntNb_File As Integer
+    Dim IntNb_File_selected As Integer
     Dim Ext_Images_Mat As String
     Dim Ext_Images_Trc As String
     Dim Piv As String
@@ -686,7 +709,7 @@ Public Class Form_Traupixe_H5_2024
         Dim ext_trc_is_ext As Boolean = False
         Dim pos1 As Integer
         Dim str_filter As String
-        IntNb_File = 0
+        IntNb_File_selected = 0
 
         Try
             folder = CStr(trvFolders.SelectedNode.Tag) 'Folder Name
@@ -875,6 +898,9 @@ Public Class Form_Traupixe_H5_2024
                                 Lst_Files_Det7(SubItemIndex) = System.IO.Path.GetFileName(file)
                             Case "det8"
                                 Lst_Files_Det8(SubItemIndex) = System.IO.Path.GetFileName(file)
+
+
+
 
                             Case Else
                                 Exit Select
@@ -1515,6 +1541,7 @@ Public Class Form_Traupixe_H5_2024
         Dim Filter_To As Single
         Dim Filter_Step As Single
         Dim pos_coma As Integer
+        Dim pos_plus As Integer
         Dim Text_Pivot As String
 
         Fatal_Error = False
@@ -1638,7 +1665,11 @@ Public Class Form_Traupixe_H5_2024
                     Dim Nb_pivot = 0
                     Do
                         pos_coma = InStr(pos_coma + 1, Text_Pivot, ",", vbTextCompare)
+                        pos_plus = InStr(pos_coma + 1, Text_Pivot, "+", vbTextCompare)
                         If pos_coma > 0 Then
+                            Nb_pivot = Nb_pivot + 1
+                            Tab_Pivot(t, Nb_pivot) = CInt(Mid(Text_Pivot, pos_coma + 1, 2)) 'Len(Pivot1(J).Text) - Pos_Coma))
+                        ElseIf pos_plus > 0 Then
                             Nb_pivot = Nb_pivot + 1
                             Tab_Pivot(t, Nb_pivot) = CInt(Mid(Text_Pivot, pos_coma + 1, 2)) 'Len(Pivot1(J).Text) - Pos_Coma))
                         Else
@@ -1728,52 +1759,58 @@ Public Class Form_Traupixe_H5_2024
     Private Sub Run_Calcul_Ponctual()
         Dim Nb_file As Integer
         Dim I As Integer
-        IntNb_File = LvFiles.SelectedItems.Count
+        Dim ext As String
+        Dim Nb_Rep As Integer
+        Dim pos_coma As Integer
+        Dim pos_plus As Integer
+        Dim Text_Pivot As String
+        Dim Traupixe_Init As Boolean
+        Dim SplitText() As String
+        Dim code_retour As Integer
+        Dim loc_txt_config_exp As String
 
 
-        If IntNb_File = 0 Then
-            Try
-                For I = 0 To LvFiles.Items.Count - 1
-                    LvFiles.Items(I).Selected = True 'change to false to uncheck them
-                Next I
-                IntNb_File = LvFiles.SelectedItems.Count
-            Catch ex As Exception
-                MsgBox("Selected point to process", MsgBoxStyle.MsgBoxHelp, "Error")
-                ToolStripStatusLabel1.Text = "Please select spectra first.."
-                Exit Sub
-            End Try
 
-            'can be like this too
 
+        If hdf5_is_map = True Then
+            IntNb_File_selected = nb_pixel_x_map
+
+        Else
+            IntNb_File_selected = LvFiles.SelectedItems.Count
+            If IntNb_File_selected = 0 Then
+                Try
+                    For I = 0 To LvFiles.Items.Count - 1
+                        LvFiles.Items(I).Selected = True 'change to false to uncheck them
+                    Next I
+                    IntNb_File_selected = LvFiles.SelectedItems.Count
+                Catch ex As Exception
+                    MsgBox("Selected point to process", MsgBoxStyle.MsgBoxHelp, "Error")
+                    ToolStripStatusLabel1.Text = "Please select spectra first.."
+                    Exit Sub
+                End Try
+
+                'can be like this too
+
+            End If
         End If
 
-        ReDim Fichier_Matrix(LvFiles.SelectedItems.Count)
-        ReDim Fichier_Trace(LvFiles.SelectedItems.Count)
-        ReDim Fichier_Trace0(LvFiles.SelectedItems.Count)
-        ReDim Fichier_Trace1(LvFiles.SelectedItems.Count)
-        ReDim Fichier_Trace2(LvFiles.SelectedItems.Count)
-        ReDim Fichier_Trace3(LvFiles.SelectedItems.Count)
-        ReDim Fichier_Trace4(LvFiles.SelectedItems.Count)
-        ReDim Fichier_Trace5(LvFiles.SelectedItems.Count)
-        ReDim Fichier_Trace6(LvFiles.SelectedItems.Count)
-        ReDim Fichier_Trace7(LvFiles.SelectedItems.Count)
-        ReDim Fichier_Trace8(LvFiles.SelectedItems.Count)
+        ReDim Fichier_Matrix(IntNb_File_selected)
+        ReDim Fichier_Trace(IntNb_File_selected)
+        ReDim Fichier_Trace0(IntNb_File_selected)
+        ReDim Fichier_Trace1(IntNb_File_selected)
+        ReDim Fichier_Trace2(IntNb_File_selected)
+        ReDim Fichier_Trace3(IntNb_File_selected)
+        ReDim Fichier_Trace4(IntNb_File_selected)
+        ReDim Fichier_Trace5(IntNb_File_selected)
+        ReDim Fichier_Trace6(IntNb_File_selected)
+        ReDim Fichier_Trace7(IntNb_File_selected)
+        ReDim Fichier_Trace8(IntNb_File_selected)
         ReDim Tab_Info_Mat.Z(50)
         ReDim Tab_Info_Mat.Elem(50)
         ReDim Tab_Info_Mat.Raie(50)
         ReDim Tab_Info_Mat.Inv(50)
         ReDim Tab_Info_Mat.Nom_V2(50)
 
-
-        Dim ext As String
-        Dim Nb_Rep As Integer
-        Dim pos_coma As Integer
-        Dim Text_Pivot As String
-        Dim Traupixe_Init As Boolean
-        Dim File_Text1
-        Dim SplitText() As String
-        Dim Ret1 As Boolean
-        Dim loc_txt_config_exp As String
 
         Fatal_Error = False
         First_Init = False ' Permet lecture Absorbers 
@@ -1789,10 +1826,8 @@ Public Class Form_Traupixe_H5_2024
         xlApp = Nothing
         If Nb_Trc > 0 Then Calcul_With_Trc = True
         ReDim NomDet_Trc(Nb_Trc - 1)
-        IntNb_File = LvFiles.SelectedItems.Count
+        IntNb_File_selected = LvFiles.SelectedItems.Count
         ToolStripStatusLabel1.Text = "Start Process"
-
-        hdf5_mode = True 'Mode hdf5 par default
 
 
         Det_use_charge()
@@ -1808,8 +1843,7 @@ Public Class Form_Traupixe_H5_2024
 
         If Par_Mat.Text = "" Then OnlyTrace = True
 
-        If IntNb_File > 0 Then
-
+        If IntNb_File_selected > 0 Then
             For I = 0 To Nb_Trc - 1
 
                 Select Case Tab_Num_Trc(I)
@@ -1862,6 +1896,9 @@ Public Class Form_Traupixe_H5_2024
                         If pos_coma > 0 Then
                             Nb_pivot = Nb_pivot + 1
                             Tab_Pivot(I, Nb_pivot) = CInt(Mid(Text_Pivot, pos_coma + 1, 2)) 'Len(Pivot1(J).Text) - Pos_Coma))
+                        ElseIf pos_plus > 0 Then
+                            Nb_pivot = Nb_pivot + 1
+                            Tab_Pivot_plus(I, Nb_pivot) = CInt(Mid(Text_Pivot, pos_plus + 1, 2))
                         Else
                             Try
                                 Tab_Pivot(I, 0) = CInt(Mid(Text_Pivot, 1, 2))
@@ -1949,22 +1986,31 @@ Public Class Form_Traupixe_H5_2024
 
         ext = Strings.Right(Ext_Mat, Len(Ext_Mat) - 1)
         ReDim tab_select_file_indices(LvFiles.SelectedItems.Count)
-        For I = 0 To LvFiles.SelectedItems.Count - 1
-            'Fichier_Matrix(Nb_file) = LvFiles.SelectedItems(I).Text + Ext_file_Mat '######## BEOFRE NOV 2023
-            Fichier_Matrix(Nb_file) = LvFiles.SelectedItems(I).Text + Ext_det_mat
-            If Check_det0.Checked = True Then Fichier_Trace0(Nb_file) = Lst_Files_Det0(LvFiles.SelectedIndices(I))
-            If Check_det1.Checked = True Then Fichier_Trace1(Nb_file) = Lst_Files_Det1(LvFiles.SelectedIndices(I))
-            If Check_det2.Checked = True Then Fichier_Trace2(Nb_file) = Lst_Files_Det2(LvFiles.SelectedIndices(I))
-            If Check_det3.Checked = True Then Fichier_Trace3(Nb_file) = Lst_Files_Det3(LvFiles.SelectedIndices(I))
-            If Check_det4.Checked = True Then Fichier_Trace4(Nb_file) = Lst_Files_Det4(LvFiles.SelectedIndices(I))
-            If Check_det5.Checked = True Then Fichier_Trace5(Nb_file) = Lst_Files_Det5(LvFiles.SelectedIndices(I))
-            If Check_det6.Checked = True Then Fichier_Trace6(Nb_file) = Lst_Files_Det6(LvFiles.SelectedIndices(I))
-            If Check_det7.Checked = True Then Fichier_Trace7(Nb_file) = Lst_Files_Det7(LvFiles.SelectedIndices(I))
-            If Check_det8.Checked = True Then Fichier_Trace8(Nb_file) = Lst_Files_Det8(LvFiles.SelectedIndices(I)) 'LvFiles.SelectedItems(I).Text + ".x13"
-            tab_select_file_indices(I) = LvFiles.SelectedIndices(I)
-            Nb_file = Nb_file + 1
-        Next I
-        ReDim Preserve tab_select_file_indices(Nb_file)
+
+        If hdf5_mode = False And hdf5_is_map = False Then
+            ReDim tab_select_file_indices(LvFiles.SelectedItems.Count)
+
+            For I = 0 To LvFiles.SelectedItems.Count - 1
+                'Fichier_Matrix(Nb_file) = LvFiles.SelectedItems(I).Text + Ext_file_Mat '######## BEOFRE NOV 2023
+                Fichier_Matrix(Nb_file) = LvFiles.SelectedItems(I).Text + Ext_det_mat
+                If Check_det0.Checked = True Then Fichier_Trace0(Nb_file) = Lst_Files_Det0(LvFiles.SelectedIndices(I))
+                If Check_det1.Checked = True Then Fichier_Trace1(Nb_file) = Lst_Files_Det1(LvFiles.SelectedIndices(I))
+                If Check_det2.Checked = True Then Fichier_Trace2(Nb_file) = Lst_Files_Det2(LvFiles.SelectedIndices(I))
+                If Check_det3.Checked = True Then Fichier_Trace3(Nb_file) = Lst_Files_Det3(LvFiles.SelectedIndices(I))
+                If Check_det4.Checked = True Then Fichier_Trace4(Nb_file) = Lst_Files_Det4(LvFiles.SelectedIndices(I))
+                If Check_det5.Checked = True Then Fichier_Trace5(Nb_file) = Lst_Files_Det5(LvFiles.SelectedIndices(I))
+                If Check_det6.Checked = True Then Fichier_Trace6(Nb_file) = Lst_Files_Det6(LvFiles.SelectedIndices(I))
+                If Check_det7.Checked = True Then Fichier_Trace7(Nb_file) = Lst_Files_Det7(LvFiles.SelectedIndices(I))
+                If Check_det8.Checked = True Then Fichier_Trace8(Nb_file) = Lst_Files_Det8(LvFiles.SelectedIndices(I)) 'LvFiles.SelectedItems(I).Text + ".x13"
+                tab_select_file_indices(I) = LvFiles.SelectedIndices(I)
+                Nb_file = Nb_file + 1
+            Next I
+            ReDim Preserve tab_select_file_indices(Nb_file)
+        ElseIf hdf5_mode = True Then
+            Nb_file = LvFiles.SelectedItems.Count
+        ElseIf hdf5_is_map = True Then
+            Nb_file = nb_pixel_x_map
+        End If
 
 
         If Check_det0.Checked = False Then ReDim Fichier_Trace0(0)
@@ -1979,14 +2025,6 @@ Public Class Form_Traupixe_H5_2024
 
 
         If Nb_file = 0 Then Exit Sub
-
-        If LvFiles.SelectedItems.Count > Environment.ProcessorCount + 1 Then
-            Nb_Process = Environment.ProcessorCount  '25
-            Nb_Proc.Text = CStr(Nb_Process)
-        Else
-            Nb_Process = LvFiles.SelectedItems.Count
-            Nb_Proc.Text = CStr(Nb_Process)
-        End If
 
         ReDim Val_Charge_Trc(Nb_Process)
         ReDim Chemin_GupixWin_Multi(Nb_file) 'As String
@@ -2016,23 +2054,24 @@ Public Class Form_Traupixe_H5_2024
         Nb_Rep = Nb_Process
 
         'Nb_Swap = List_Create_Swap()
-        IntNb_File = Nb_file
+        IntNb_File_selected = Nb_file
         'If (Depouillement(IntNb_File) = True) Then
         If Fatal_Error = True Then
             MsgBox("Fatal Error, please check spectra file And parameter file are present into the data folder", MsgBoxStyle.Information, "Fatal Error")
             Exit Sub
         End If
-        Ret1 = Main_Process_Ponctual(IntNb_File)
+        code_retour = Main_Process_Ponctual(IntNb_File_selected)
 
-        If Ret1 = True Then
+        If code_retour = 0 Then
             '  Excel_Save(-1)
             Excel_Close()
             LvFiles.Enabled = True
             ''''''''''''''''''''''''''''''MsgBox("Excel file saved in folder   " + vbCrLf + trvFolders.SelectedNode.Tag + "\", vbInformation)
         ElseIf Fatal_Error = True Then
             Exit Sub
-        Else
-
+        ElseIf code_retour = -1 Then
+            'Error sur format fichier parametre msgbox déjà affiché
+        ElseIf code_retour = -2 Then
             MsgBox("Please,you must close the Excel file", MsgBoxStyle.Information, "Error Excel file already open")
             Exit Sub
         End If '
@@ -2041,7 +2080,7 @@ Public Class Form_Traupixe_H5_2024
             Try
                 Kill(Chemin_GupixWin_Multi(I) & "\*.*")
                 RmDir(Chemin_GupixWin_Multi(I)) '& "\gupix"
-                IntNb_File = Nb_file
+                IntNb_File_selected = Nb_file
             Catch ex As Exception
 
             End Try
@@ -2060,6 +2099,319 @@ Public Class Form_Traupixe_H5_2024
         Button2.Enabled = True
     End Sub
 
+    Private Sub hdf5_to_ascii()
+
+    End Sub
+
+    Private Sub run_Calcul_map_hdf5()
+        Dim Nb_file As Integer
+        Dim I As Integer
+        Dim ext As String
+        Dim Nb_Rep As Integer
+        Dim pos_coma As Integer
+        Dim pos_plus As Integer
+        Dim Text_Pivot As String
+        Dim Traupixe_Init As Boolean
+        Dim SplitText() As String
+        Dim code_retour As Integer
+        Dim loc_txt_config_exp As String
+
+
+
+
+
+        IntNb_File_selected = nb_pixel_x_map
+
+
+        ReDim Fichier_Matrix(IntNb_File_selected)
+        ReDim Fichier_Trace(IntNb_File_selected)
+        ReDim Fichier_Trace0(IntNb_File_selected)
+        ReDim Fichier_Trace1(IntNb_File_selected)
+        ReDim Fichier_Trace2(IntNb_File_selected)
+        ReDim Fichier_Trace3(IntNb_File_selected)
+        ReDim Fichier_Trace4(IntNb_File_selected)
+        ReDim Fichier_Trace5(IntNb_File_selected)
+        ReDim Fichier_Trace6(IntNb_File_selected)
+        ReDim Fichier_Trace7(IntNb_File_selected)
+        ReDim Fichier_Trace8(IntNb_File_selected)
+        ReDim Tab_Info_Mat.Z(50)
+        ReDim Tab_Info_Mat.Elem(50)
+        ReDim Tab_Info_Mat.Raie(50)
+        ReDim Tab_Info_Mat.Inv(50)
+        ReDim Tab_Info_Mat.Nom_V2(50)
+
+
+
+
+
+        Fatal_Error = False
+        First_Init = False ' Permet lecture Absorbers 
+        ReDim First_Init_Trc(10) 'Permet lecture Absorbers, remets tout False 
+
+        TextXLS.Text = ""
+        Creer_tab_trc()
+        Text_Pivot = ""
+        Chemin_Rapport = ""
+        Adjust_Filter_B = False
+        Calcul_With_Trc = False
+        OnlyTrace = False
+        xlApp = Nothing
+        If Nb_Trc > 0 Then Calcul_With_Trc = True
+        ReDim NomDet_Trc(Nb_Trc - 1)
+        IntNb_File_selected = LvFiles.SelectedItems.Count
+        ToolStripStatusLabel1.Text = "Start Process"
+
+
+        Det_use_charge()
+
+        If glob_gamma_mode = True Then
+            'Read_gamma_xls()
+            Load_gamma_csv()
+        End If
+
+        If TxtBox_HDF5_File.Text = "" Then
+            hdf5_mode = False
+        End If
+
+        If Par_Mat.Text = "" Then OnlyTrace = True
+
+        If IntNb_File_selected > 0 Then
+            For I = 0 To Nb_Trc - 1
+
+                Select Case Tab_Num_Trc(I)
+                    Case 0
+                        If Par_det0.Text = "" Then Exit Sub
+                        Text_Pivot = Pivot_det0.Text
+                        NomDet_Trc(I) = Check_det0.Text '"BE0"
+                    Case 1
+                        If Par_det1.Text = "" Then Exit Sub
+                        Text_Pivot = Pivot_det1.Text
+                        NomDet_Trc(I) = Check_det1.Text '"HE1"
+                    Case 2
+                        If Par_det2.Text = "" Then Exit Sub
+                        Text_Pivot = Pivot_det2.Text
+                        NomDet_Trc(I) = Check_det2.Text '"HE2"
+                    Case 3
+                        If Par_det3.Text = "" Then Exit Sub
+                        Text_Pivot = Pivot_det3.Text
+                        NomDet_Trc(I) = Check_det3.Text '"HE3"
+                    Case 4
+                        If Par_det4.Text = "" Then Exit Sub
+                        Text_Pivot = Pivot_det4.Text
+                        NomDet_Trc(I) = Check_det4.Text '"HE4"
+                    Case 5 ' 1+2
+                        If Par_det5.Text = "" Then Exit Sub
+                        Text_Pivot = Pivot_det5.Text
+                        NomDet_Trc(I) = Check_det5.Text '"HE11"
+                    Case 6 ' All
+                        If Par_det6.Text = "" Then Exit Sub
+                        Text_Pivot = Pivot_det6.Text
+                        NomDet_Trc(I) = Check_det6.Text '"HE10"
+                    Case 7 '2+3
+                        If Par_det7.Text = "" Then Exit Sub
+                        Text_Pivot = Pivot_det7.Text
+                        NomDet_Trc(I) = Check_det7.Text '"HE12"
+                    Case 8
+                        If Par_det8.Text = "" Then Exit Sub
+                        Text_Pivot = Pivot_det8.Text
+                        NomDet_Trc(I) = Check_det8.Text '"HE13"
+
+                End Select
+
+                Dim J = Tab_Num_Trc(I)
+                pos_coma = 0
+
+                If Text_Pivot <> "" And Text_Pivot <> "Q-File" Then
+                    Dim Nb_pivot = 0
+                    Do
+                        pos_coma = InStr(pos_coma + 1, Text_Pivot, ",", vbTextCompare)
+                        If pos_coma > 0 Then
+                            Nb_pivot = Nb_pivot + 1
+                            Tab_Pivot(I, Nb_pivot) = CInt(Mid(Text_Pivot, pos_coma + 1, 2)) 'Len(Pivot1(J).Text) - Pos_Coma))
+                        ElseIf pos_plus > 0 Then
+                            Nb_pivot = Nb_pivot + 1
+                            Tab_Pivot_plus(I, Nb_pivot) = CInt(Mid(Text_Pivot, pos_plus + 1, 2))
+                        Else
+                            Try
+                                Tab_Pivot(I, 0) = CInt(Mid(Text_Pivot, 1, 2))
+                                Nb_pivot = Nb_pivot + 1
+
+                            Catch ex As Exception
+                                MsgBox("Pivot definition error must be Z number (e.g. ""26"") ", MsgBoxStyle.MsgBoxHelp, "Error")
+                                ToolStripStatusLabel1.Text = "Pivot definition error must be Z number (e.g. ""26"") "
+                                Exit Sub
+                            End Try
+
+                        End If
+                    Loop While pos_coma > 0
+                End If
+
+            Next I
+        End If
+
+        If Par_Mat.Text <> "" Then
+            NomDet_Mat = CStr(CbDetMat.SelectedIndex)
+        ElseIf Nb_Trc > 0 Then
+            OnlyTrace = True
+        Else
+            MsgBox("No paramater file selected !", MsgBoxStyle.MsgBoxHelp, "Error")
+            ToolStripStatusLabel1.Text = "No paramater file selected !"
+            Exit Sub
+        End If
+        ToolStripStatusLabel1.Text = "Update/Create Config-exp.ini"
+        Traupixe_Init = File.Exists(Chemin_Data & "\config-exp.ini")
+
+        If Text_Lst_Ox_Trc.Text = "" Or UCase(Text_Lst_Ox_Trc.Text) = "NO OXIDE" Then Check_Trc_As_Oxy.Checked = False
+
+        loc_txt_config_exp = "[TRACE-OXIDE]" & vbCrLf & Text_Lst_Ox_Trc.Text & vbCrLf
+        If B_skip_elem_mtx = True And txt_skip_elem.Text <> "" Then
+            loc_txt_config_exp += "[SKIP-MATRIX-ELEMENT]" & vbCrLf & txt_skip_elem.Text & vbCrLf
+            skip_z_mtx = Split(txt_skip_elem.Text, ",")
+        End If
+
+        File.WriteAllText(Chemin_Data & "\config-exp.ini", loc_txt_config_exp)
+
+        '########################################## TRACE AS oxide IN EXCEL SHEET 100% ,ppm , S_100 et S_ppm
+        If Nb_Trc > 0 Then
+            If Check_Trc_As_Oxy.Checked = True And Ck_AllAsOxy.Checked = True Then
+                Nom_Excel_Trx_O = "_All-Trc-as-oxide" '& Strings.Replace(Text_Lst_Ox_Trc.Text, ",", "_")
+                Lecture_Fichier_Par_Trc(2, 0)
+            ElseIf UCase(Text_Lst_Ox_Trc.Text) <> "NO OXIDE" Then
+
+                Nom_Excel_Trx_O = "_Elem-Ox_" & Strings.Replace(Text_Lst_Ox_Trc.Text, ",", "_")
+                SplitText = Split(Text_Lst_Ox_Trc.Text, ",")
+                ReDim Tab_Trc_as_Oxy(UBound(SplitText))
+
+                For I = 0 To UBound(SplitText)
+                    Try
+                        Tab_Trc_as_Oxy(I) = CInt(SplitText(I))
+                    Catch ex As Exception
+
+                    End Try
+
+                Next
+            End If
+        Else
+            Nom_Excel_Trx_O = ""
+        End If
+        Nb_file = 0
+
+
+        If Ext_Mat = "" Then Ext_Mat = "*.x0" ' Case Only Trace a=, on doir rajouter une ext pour autre fonction
+
+        ext = Strings.Right(Ext_Mat, Len(Ext_Mat) - 1)
+        ReDim tab_select_file_indices(LvFiles.SelectedItems.Count)
+
+        If hdf5_mode = False And hdf5_is_map = False Then
+            ReDim tab_select_file_indices(LvFiles.SelectedItems.Count)
+
+            For I = 0 To LvFiles.SelectedItems.Count - 1
+                'Fichier_Matrix(Nb_file) = LvFiles.SelectedItems(I).Text + Ext_file_Mat '######## BEOFRE NOV 2023
+                Fichier_Matrix(Nb_file) = LvFiles.SelectedItems(I).Text + Ext_det_mat
+                If Check_det0.Checked = True Then Fichier_Trace0(Nb_file) = Lst_Files_Det0(LvFiles.SelectedIndices(I))
+                If Check_det1.Checked = True Then Fichier_Trace1(Nb_file) = Lst_Files_Det1(LvFiles.SelectedIndices(I))
+                If Check_det2.Checked = True Then Fichier_Trace2(Nb_file) = Lst_Files_Det2(LvFiles.SelectedIndices(I))
+                If Check_det3.Checked = True Then Fichier_Trace3(Nb_file) = Lst_Files_Det3(LvFiles.SelectedIndices(I))
+                If Check_det4.Checked = True Then Fichier_Trace4(Nb_file) = Lst_Files_Det4(LvFiles.SelectedIndices(I))
+                If Check_det5.Checked = True Then Fichier_Trace5(Nb_file) = Lst_Files_Det5(LvFiles.SelectedIndices(I))
+                If Check_det6.Checked = True Then Fichier_Trace6(Nb_file) = Lst_Files_Det6(LvFiles.SelectedIndices(I))
+                If Check_det7.Checked = True Then Fichier_Trace7(Nb_file) = Lst_Files_Det7(LvFiles.SelectedIndices(I))
+                If Check_det8.Checked = True Then Fichier_Trace8(Nb_file) = Lst_Files_Det8(LvFiles.SelectedIndices(I)) 'LvFiles.SelectedItems(I).Text + ".x13"
+                tab_select_file_indices(I) = LvFiles.SelectedIndices(I)
+                Nb_file = Nb_file + 1
+            Next I
+            ReDim Preserve tab_select_file_indices(Nb_file)
+        ElseIf hdf5_mode = True Then
+            Nb_file = LvFiles.SelectedItems.Count
+        ElseIf hdf5_is_map = True Then
+            Nb_file = nb_pixel_x_map
+        End If
+
+
+        If Check_det0.Checked = False Then ReDim Fichier_Trace0(0)
+        If Check_det1.Checked = False Then ReDim Fichier_Trace1(0)
+        If Check_det2.Checked = False Then ReDim Fichier_Trace2(0)
+        If Check_det3.Checked = False Then ReDim Fichier_Trace3(0)
+        If Check_det4.Checked = False Then ReDim Fichier_Trace4(0)
+        If Check_det5.Checked = False Then ReDim Fichier_Trace5(0)
+        If Check_det6.Checked = False Then ReDim Fichier_Trace6(0)
+        If Check_det7.Checked = False Then ReDim Fichier_Trace7(0)
+        If Check_det8.Checked = False Then ReDim Fichier_Trace8(0)
+
+
+        If Nb_file = 0 Then Exit Sub
+
+
+
+
+        ReDim Val_Charge_Trc(Nb_Process)
+        ReDim Chemin_GupixWin_Multi(Nb_file) 'As String
+
+        '###########   Mat + (Trc) + Excel*4
+        ProgressBar1.Maximum = Nb_file + (Nb_file * Nb_Trc * 3) + Nb_file * 3
+        ProgressBar1.Value = 0
+        Dim ComputerName As String
+        ComputerName = System.Net.Dns.GetHostName
+
+        If ComputerName = "server-aglae" Then
+            Dim myDocuPath = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+            Chemin_GupixWin = myDocuPath & "\gupixwin\gupix"
+        Else
+            ' Chemin_GupixWin = "c\gupixwin\gupix"
+            '########### Lue dans fichier de config 
+        End If
+
+        LvFiles.Enabled = False
+        If Nb_file < Nb_Process Then
+            Nb_Process = Nb_file
+        End If
+        Nb_Rep = Nb_Process
+
+        'Nb_Swap = List_Create_Swap()
+        IntNb_File_selected = Nb_file
+        'If (Depouillement(IntNb_File) = True) Then
+        If Fatal_Error = True Then
+            MsgBox("Fatal Error, please check spectra file And parameter file are present into the data folder", MsgBoxStyle.Information, "Fatal Error")
+            Exit Sub
+        End If
+        code_retour = Main_Process_Ponctual(IntNb_File_selected)
+
+        If code_retour = 0 Then
+            '  Excel_Save(-1)
+            Excel_Close()
+            LvFiles.Enabled = True
+            ''''''''''''''''''''''''''''''MsgBox("Excel file saved in folder   " + vbCrLf + trvFolders.SelectedNode.Tag + "\", vbInformation)
+        ElseIf Fatal_Error = True Then
+            Exit Sub
+        ElseIf code_retour = -1 Then
+            'Error sur format fichier parametre msgbox déjà affiché
+        ElseIf code_retour = -2 Then
+            MsgBox("Please,you must close the Excel file", MsgBoxStyle.Information, "Error Excel file already open")
+            Exit Sub
+        End If '
+
+        For I = 0 To Nb_Rep - 1
+            Try
+                Kill(Chemin_GupixWin_Multi(I) & "\*.*")
+                RmDir(Chemin_GupixWin_Multi(I)) '& "\gupix"
+                IntNb_File_selected = Nb_file
+            Catch ex As Exception
+
+            End Try
+
+        Next I
+
+        For I = 0 To Global_Nb_Swap - 1
+            Try
+                RmDir(Tab_Swap(I)) '& "\gupix"
+            Catch ex As Exception
+
+            End Try
+
+        Next
+
+        Button2.Enabled = True
+    End Sub
 
     Public Function Main_Process_Adjust_Filter(nb_file As Integer, Nb_Process As Integer) As Boolean
         Dim i As Integer
@@ -2073,11 +2425,12 @@ Public Class Form_Traupixe_H5_2024
         Dim Parametres_All_Thread As Struct_Parametres_Thread
         Dim nb_process_main As Integer
         Dim nb_elem As Integer
+        Dim mode_calcul_error As Integer
 
 
         Nb_Oxyde_X2 = 0
         Nb_Oxyde_Mat = 0
-        IntNb_File = nb_file
+        IntNb_File_selected = nb_file
         ProgressBar1.Visible = True
         fs = CreateObject("Scripting.FileSystemObject")
 
@@ -2122,8 +2475,12 @@ Public Class Form_Traupixe_H5_2024
 
         End If
 
-        Lecture_Fichier_Par_Mat()
+        mode_calcul_error = Lecture_Fichier_Par_Mat()
 
+        If mode_calcul_error = 1 Then
+            MsgBox("Error the selected parameter file MATRIX is a TRACE parameter file")
+            Exit Function
+        End If
         Progress.Text = Trim$(Str$(0)) & "/" & Trim$(Str$(nb_file))
         start_calc = My.Computer.Clock.TickCount
         If Fatal_Error = True Then
@@ -2347,7 +2704,7 @@ Public Class Form_Traupixe_H5_2024
 
 
 
-    Public Function Main_Process_Ponctual(Nb_file As Integer) As Boolean
+    Public Function Main_Process_Ponctual(Nb_file As Integer) As Integer
         Dim i As Integer
         Dim Num_Fichier As Integer
         Dim J, Reste
@@ -2367,6 +2724,7 @@ Public Class Form_Traupixe_H5_2024
         Dim Tab_Thread_best_conc_Alive(100) As Boolean
         Dim Set_Finish(Nb_Process) As Boolean
         Dim Format_Range_1 As Boolean
+        Dim mode_calcul_error As Integer
 
         Format_Range_1 = False
         Nb_Oxyde_X2 = 0
@@ -2416,7 +2774,28 @@ Public Class Form_Traupixe_H5_2024
 
 
         Nb_Process = CInt(Nb_Proc.Text)
-        If OnlyTrace = False Then Lecture_Fichier_Par_Mat()
+        If OnlyTrace = False Then
+            Ref_mat_DataSet_ToRead = CbDetMat.Text
+            mode_calcul_error = Lecture_Fichier_Par_Mat()
+            If mode_calcul_error = -1 Then
+                MsgBox("Error the selected parameter file MATRIX is a TRACE parameter file")
+                Return -1
+                Exit Function
+            End If
+        End If
+
+        If Nb_Trc > 0 Then
+            For i = 0 To Nb_Trc - 1
+                mode_calcul_error = Lecture_Fichier_Par_Trc(4, i)
+                If mode_calcul_error = -1 Then
+                    MsgBox("Error the selected parameter file TRACE N°" & CStr(i + 1) & " is a MATRIX parameter file")
+                    Return -1
+                    Exit Function
+                End If
+            Next i
+        End If
+
+
         List_Create_Swap()
         ' Nb_Elements_Mat = Nb_Elements_Mat - 1
 
@@ -2426,7 +2805,7 @@ Public Class Form_Traupixe_H5_2024
             nb_loop = nb_loop + 1
         End If
 
-        Progress.Text = Trim$(Str$(0)) & "/" & Trim$(Str$(IntNb_File))
+        Progress.Text = Trim$(Str$(0)) & "/" & Trim$(Str$(IntNb_File_selected))
         start_calc = My.Computer.Clock.TickCount
 
         ReDim Tab_IsPonctuel_1(Nb_Process - 1)
@@ -2438,20 +2817,24 @@ Public Class Form_Traupixe_H5_2024
 
         Try
             If xlBook.Author = Nothing Then
-                Main_Process_Ponctual = False
+                Return -2
                 Exit Function
             End If
             Chemin_Rapport = ""
 
         Catch ex As Exception
-            Main_Process_Ponctual = False
+            Return -2
             Exit Function
         End Try
 
 
         '################### READ ALL SPECTRA DATASET AND ATTRIB IN HDF5 FILE HERE
 
-        If hdf5_mode = True Then hdf5_Read_Dataset_Attrib()
+        If hdf5_mode = True Then
+            hdf5_trc_Read_Dataset_Attrib()
+            hdf5_mat_Read_Dataset_Attrib()
+
+        End If
         For i = 0 To Nb_Trc - 1
             copy_par_file_trc(i)
             Lecture_par_trc_HED_NbElem(i)
@@ -2524,10 +2907,12 @@ Public Class Form_Traupixe_H5_2024
                 If Use_HED_Mat = True Then
                     Create_Fichier_Par_Mat_HED()
                 End If
-                Sequence_Matrix_Multi_Thread(Num_Fichier, IntNb_File, Nb_Process)
+                Sequence_Matrix_Multi_Thread(Num_Fichier, IntNb_File_selected, Nb_Process)
             End If
 
-            If Fatal_Error = True Then Exit Function
+            If Fatal_Error = True Then
+                Return -3
+            End If
 
             Nb_Trc_Total = 0
 
@@ -2566,12 +2951,14 @@ Public Class Form_Traupixe_H5_2024
 
 
             For i = 0 To Nb_Trc - 1
-                Sequence_Trace_Multi_Thread(Num_Fichier, IntNb_File, i)
+                Sequence_Trace_Multi_Thread(Num_Fichier, IntNb_File_selected, i)
             Next i
 
-            If Fatal_Error = True Then Exit Function
+            If Fatal_Error = True Then
+                Return -3
+            End If
 
-            Progress.Text = Trim$(Str$(Num_Fichier + Nb_Process)) & "/" & Trim$(Str$(IntNb_File))
+            Progress.Text = Trim$(Str$(Num_Fichier + Nb_Process)) & "/" & Trim$(Str$(IntNb_File_selected))
 
             System.Threading.Thread.Sleep(100) : Application.DoEvents()
 
@@ -2589,7 +2976,10 @@ Public Class Form_Traupixe_H5_2024
 
             Entete_100()
             ReDim thread_tab_best_conc(Nb_Process)
-            If Fatal_Error = True Then Exit Function
+            If Fatal_Error = True Then
+                Return -3
+                Exit Function
+            End If
             Dim para_best_C As parametres_best_conc_Thread
             For l = 0 To Nb_Process - 1
                 thread_tab_best_conc(l) = New System.Threading.Thread(AddressOf Calcul_Final_Best_Conc_New_Thread)
@@ -2732,13 +3122,15 @@ Public Class Form_Traupixe_H5_2024
         Tps_Calc.Text = "??:??:??" ' MyH
         '  Fs_Log.Close()
 
-        Main_Process_Ponctual = True
+
+
         '    Quitter.Visible = False
         MyPause.Visible = False
         ProgressBar1.Visible = False
 
 
         ToolStripStatusLabel1.Text = "Calcul Finished"
+        Return 0
 
     End Function
 
@@ -2790,11 +3182,8 @@ Public Class Form_Traupixe_H5_2024
         End Try
 
         Try
-            ' Application.DoEvents()
-            ' FITtoPNG_XPV8_Hide1(Chemin_GupixWin_Multi(Num_Proc) & "\PIXTABLE" & CStr(Num_Proc + LNum_File) & "_" & CStr(Num_voie) & ".OUT", Chemin_Processed_Data, File_Name, 0) 'CLng(Sec_Delay.Text))
-            '2023''''''''''''''''''''''  FITto
             Chemin_source = Chemin_GupixWin_Multi(Num_Proc) & "\PIXTABLE" & CStr(Num_Proc + LNum_File) & "_" & CStr(Num_voie) & ".OUT" 'PNG_2023_Hide(File_Name, Chemin_Processed_Data, Chemin_GupixWin_Multi(Num_Proc) & "\PIXTABLE" & CStr(Num_Proc + LNum_File) & "_" & CStr(Num_voie) & ".OUT", "Toto") 'CLng(Sec_Delay.Text))
-            FiTtoPNG_LV16(0, Chemin_source, Chemin_Processed_Data, File_Name, Nom_Projet)
+            FiTtoPNG_LV16_2025(0, Chemin_source, Chemin_Processed_Data, File_Name, Nom_Projet)
         Catch ex As Exception
 
         End Try
@@ -2898,6 +3287,8 @@ Public Class Form_Traupixe_H5_2024
         Dim SR As StreamReader
         Dim Somme As String
         Dim gupix_end As String
+        Dim full_gupix_header As String
+        Dim gupix_header_ok As Boolean
 
         Lect_Depth = True
 
@@ -2905,36 +3296,30 @@ Public Class Form_Traupixe_H5_2024
         ToolStripStatusLabel1.Text = "Matrix processing"
         '  Fs_Log.writeline("Calculate MATRIX" & CStr(Num_Fichier))
         data = ""
-        For v = 0 To 10
 
-
-        Next
         For i = 0 To nb_process_loc - 1
 
             '********************************************************* Ecriture ENTETE DATE COMMENTAIRE SUR GUPIXWIN.PAR *******************
-
-            If hdf5_mode = True Then '######################################### HDF5 #### 05/2023
-                MyYear = Attrib_Spectrum(Num_Fichier + i, 0, 4)
-                MyDate = "'" & Attrib_Spectrum(Num_Fichier + i, 0, 4) & "-" & Attrib_Spectrum(Num_Fichier + i, 0, 3) & "-01'"
-
-                Second = Attrib_Spectrum(Num_Fichier + i, 0, 2)
-                Heure_Temp = Int(Second / 3600)
-                Minute_Temp = Int((Second Mod 3600) / 60)
-                Second_Temp = Second Mod 3600 - Minute_Temp * 60
-                MyHeures = IIf(Heure_Temp < 10, String.Format(Heure_Temp, "0#"), LTrim(Str(Heure_Temp))) & ":" & String.Format(Minute_Temp, "0#") & ":" & String.Format(Second_Temp, "0#")
-                tps_cps = Attrib_Spectrum(Num_Fichier + i, 0, 1) 'ACQ TIME
-                commentaire = " " & Attrib_Spectrum(Num_Fichier + i, 0, 5)
-                Tab_Comment(i) = commentaire
-
+            If hdf5_mode = True Then
+                gupix_header_ok = False
                 data = "2048 1" & vbCrLf
-                data = data & MyDate & " '" & MyHeures & "' " & tps_cps & "    " & Attrib_Spectrum(Num_Fichier + i, 0, 2) & " ' ' " & vbCrLf
+                If Len(Attrib_mat_hdf5(Num_Fichier + i, 3)) > 0 Then gupix_header_ok = True
+                If gupix_header_ok = True Then
+                    commentaire = " " & Attrib_mat_hdf5(Num_Fichier + i, 2)
+                    Tab_Comment(i) = commentaire
+                    data = data & Attrib_mat_hdf5(Num_Fichier + i, 3) & "  '" & commentaire & " ' " & vbCrLf ' FOR SPECTRA FILE'######################################### HDF5 #### 05/2023
+                Else
+                    data = data & "2025 05 58731 65 465872" & " ' ' " & vbCrLf
+                End If
+
+
+                'data = data & MyDate & " '" & MyHeures & "' " & tps_cps & "    " & Attrib_Spectrum(Num_Fichier + i, 0, 2) & " ' ' " & vbCrLf
 
                 For canaux = 0 To 2047
-                    data = data & AllSpectres_hdf5(Num_Fichier + i, 0, canaux) & vbCrLf ' Nb_file, Num_det, canaux
+                    data = data & AllSpectres_mat_hdf5(Num_Fichier + i, canaux) & vbCrLf ' Nb_file, Num_det, canaux
                 Next
 
             Else '############################## FICHIER ASCII AVANT HDF5 #####################
-
                 If Adjust_Filter_B = True Then
                     SR = File.OpenText(Chemin_Data + "\" + Fichier_Matrix(0))
                 Else
@@ -2945,7 +3330,6 @@ Public Class Form_Traupixe_H5_2024
                         Fatal_Error = True
                         Exit Sub
                     End Try
-
                 End If
 
                 data = SR.ReadLine
@@ -2992,11 +3376,9 @@ Public Class Form_Traupixe_H5_2024
                     'commentaire = " '" & Mid(Str_Entete, pos1, Len(Str_Entete) + 1 - pos1) & "'"
 
                     If Adjust_Filter_B = False Then 'Empêche remplacement epaisseur Filtre déja dans Tab_Comment() si Adjust Filter fonction
-
                         Try
                             commentaire = SplitText(1)
                             SplitText1 = Split(commentaire, ",")
-
                             If UBound(SplitText1) > 8 Then ' La ligne commentaire est de format " DrN,1000,1000,50,50,Proton,3000keV,......"
                                 Tab_Comment(i) = SplitText1(0)
                                 commentaire = SplitText1(0)
@@ -3007,7 +3389,6 @@ Public Class Form_Traupixe_H5_2024
                             commentaire = "---"
                             Tab_Comment(i) = commentaire
                         End Try
-
                     End If
 
                     If Mid(commentaire, 2, 2) <> " '" Then
@@ -3050,9 +3431,6 @@ Public Class Form_Traupixe_H5_2024
             Kill(Chemin_GupixWin_Multi(i) & "\*.out")
             Kill(Chemin_GupixWin_Multi(i) & "\*.csv")
 
-
-
-
             If Adjust_Filter_B = True And ComboBox_Type_F.Text = CbDetMat.Text Then
                 If Use_ext_charge_Mat = True Then Txt_Fichier_PAR_Mat_Filter(i) = Insert_Charge_in_Par_File(Txt_Fichier_PAR_Mat_Filter(i), i + Num_Fichier, num_column_charge_csv_MAT) '0 = Matrix 
                 File.WriteAllText(Chemin_GupixWin_Multi(i) & "\gupixwin.par", Txt_Fichier_PAR_Mat_Filter(i) & vbCrLf & data & vbCrLf & "--------------------------------------------------" & vbCrLf)
@@ -3077,7 +3455,7 @@ Public Class Form_Traupixe_H5_2024
         For i = 0 To nb_process_loc - 1
 
             If hdf5_mode = True Then
-                If Attrib_Spectrum(Num_Fichier + i, 0, 7) > 0 Then ret = Shell(Chemin_GupixWin_Multi(i) & "\pixwin.bat", vbHide)
+                If Attrib_mat_hdf5(Num_Fichier + i, 7) > 0 Then ret = Shell(Chemin_GupixWin_Multi(i) & "\pixwin.bat", vbHide)
             Else
                 ret = Shell(Chemin_GupixWin_Multi(i) & "\pixwin.bat", vbHide)
             End If
@@ -3099,7 +3477,6 @@ Public Class Form_Traupixe_H5_2024
 
             Tab_Inc_Recup_Filter_Done(i) = False
             Tab_Thread_Recup_Filter_Alive(i) = True
-
             Tab_Inc_Done(i) = False
             Tab_Thread_Lit_Element_Alive(i) = True
             Tab_Thread_FitToPNG_Alive(i) = False
@@ -3114,7 +3491,7 @@ Public Class Form_Traupixe_H5_2024
             For i = 0 To nb_process_loc - 1
 
                 If hdf5_mode = True Then
-                    If Attrib_Spectrum(Num_Fichier + i, 0, 7) = 0 And Tab_Data_Lue(i) = False Then ' CAS SPECTRE = 0 
+                    If Attrib_mat_hdf5(Num_Fichier + i, 7) = 0 And Tab_Data_Lue(i) = False Then ' CAS SPECTRE = 0 
                         Tab_Data_Lue(i) = True
                         Nb_Calcul = Nb_Calcul + 1
                     End If
@@ -3139,10 +3516,14 @@ Public Class Form_Traupixe_H5_2024
                         Parametres_All_Thread.Num_Trc = 0
                         Parametres_All_Thread.Fact_Correct = 1
 
-                        If Adjust_Filter_B = True Then
-                            Parametres_All_Thread.File_Name = Fichier_Matrix(0)
+                        If hdf5_mode = True Then
+                            Parametres_All_Thread.File_Name = Attrib_mat_hdf5(i + Num_Fichier, 4) & "." & CbDetMat.Text 'ajoute extension pour FitToPng
                         Else
-                            Parametres_All_Thread.File_Name = Fichier_Matrix(Num_Fichier + i)
+                            If Adjust_Filter_B = True Then
+                                Parametres_All_Thread.File_Name = Fichier_Matrix(0)
+                            Else
+                                Parametres_All_Thread.File_Name = Fichier_Matrix(Num_Fichier + i)
+                            End If
                         End If
 
                         thread_tab_Element(i).Start(Parametres_All_Thread)
@@ -3296,6 +3677,7 @@ Public Class Form_Traupixe_H5_2024
         Dim Tab_Run_Done(100) As Boolean
         Dim Tab_Thread_FitToPNG_Alive(100) As Boolean
         Dim SR As StreamReader
+        Dim gupix_header_ok As Boolean
         Charge = 1
         t = 0
         Lect_Depth = True
@@ -3341,59 +3723,65 @@ Public Class Form_Traupixe_H5_2024
                 Else
                     Num_File_final = i + Num_Fichier
                 End If
+                File_Trc = get_trc_filename(Num_Trc, Num_File_final)
 
-                Select Case Tab_Num_Trc(Num_Trc)
-                    Case 0
-                        File_Trc = Fichier_Trace0(Num_File_final)
-                    Case 1
-                        File_Trc = Fichier_Trace1(Num_File_final)
-                    Case 2
-                        File_Trc = Fichier_Trace2(Num_File_final)
-                    Case 3
-                        File_Trc = Fichier_Trace3(Num_File_final)
-                    Case 4
-                        File_Trc = Fichier_Trace4(Num_File_final)
-                    Case 5 ' 1+2
-                        File_Trc = Fichier_Trace5(Num_File_final)
-                    Case 6 ' All
-                        File_Trc = Fichier_Trace6(Num_File_final)
-                    Case 7 '2+3
-                        File_Trc = Fichier_Trace7(Num_File_final)
-                    Case 8
-                        File_Trc = Fichier_Trace8(Num_File_final)
-                    Case Else
-                        File_Trc = Fichier_Trace0(Num_File_final)
-                End Select
+                'If hdf5_mode = True Then
+                '    File_Trc = Attrib_Trc_hdf5(Num_File_final, Num_Trc, 4) & "." & Attrib_Trc_hdf5(Num_File_final, Num_Trc, 5) 'Inutile pour le moment
+
+                'Else
+                '    Select Case Tab_Num_Trc(Num_Trc)
+                '        Case 0
+                '            File_Trc = Fichier_Trace0(Num_File_final)
+                '        Case 1
+                '            File_Trc = Fichier_Trace1(Num_File_final)
+                '        Case 2
+                '            File_Trc = Fichier_Trace2(Num_File_final)
+                '        Case 3
+                '            File_Trc = Fichier_Trace3(Num_File_final)
+                '        Case 4
+                '            File_Trc = Fichier_Trace4(Num_File_final)
+                '        Case 5 ' 1+2
+                '            File_Trc = Fichier_Trace5(Num_File_final)
+                '        Case 6 ' All
+                '            File_Trc = Fichier_Trace6(Num_File_final)
+                '        Case 7 '2+3
+                '            File_Trc = Fichier_Trace7(Num_File_final)
+                '        Case 8
+                '            File_Trc = Fichier_Trace8(Num_File_final)
+                '        Case Else
+                '            File_Trc = Fichier_Trace0(Num_File_final)
+                '    End Select
+                'End If
 
                 ToolStripStatusLabel1.Text = "Trace Calculation " & File_Trc
                 My.Application.DoEvents()
 
 
                 If hdf5_mode = True Then
-
-                    '********************************************************* Ecriture ENTETE DATE COMMENTAIRE SUR GUPIXWIN.PAR *******************
-                    MyYear = Attrib_Spectrum(Num_Fichier, Num_Trc + 1, 4)
-                    MyDate = "'" & Attrib_Spectrum(Num_Fichier, Num_Trc + 1, 4) & "-" & Attrib_Spectrum(Num_Fichier, Num_Trc, 3) & "-01'"
-                    Second = Attrib_Spectrum(Num_Fichier, Num_Trc + 1, 2)
-                    Heure_Temp = Int(Second / 3600)
-                    Minute_Temp = Int((Second Mod 3600) / 60)
-                    Second_Temp = Second Mod 3600 - Minute_Temp * 60
-                    MyHeures = IIf(Heure_Temp < 10, String.Format(Heure_Temp, "0#"), LTrim(CStr(Heure_Temp))) & ":" & String.Format(Minute_Temp, "0#") & ":" & String.Format(Second_Temp, "0#")
-                    tps_cps = Attrib_Spectrum(Num_Fichier, Num_Trc + 1, 1) 'ACQ TIME
-                    commentaire = " " & Attrib_Spectrum(Num_Fichier, Num_Trc + 1, 5)
-
+                    gupix_header_ok = False
                     data = "2048 1" & vbCrLf
-                    data = data & MyDate & " '" & MyHeures & "' " & tps_cps & "    " & Attrib_Spectrum(Num_Fichier, 0, 2) & " ' ' " & vbCrLf
+                    If Len(Attrib_Trc_hdf5(Num_File_final, Num_Trc, 3)) > 0 Then gupix_header_ok = True
+                    If gupix_header_ok = True Then
+                        commentaire = " " & Attrib_mat_hdf5(Num_File_final, 2)
+                        Tab_Comment(i) = commentaire
+                        data = data & Attrib_mat_hdf5(Num_File_final, 3) & "  '" & commentaire & " ' " & vbCrLf ' FOR SPECTRA FILE'######################################### HDF5 #### 05/2023
+                    Else
+                        data = data & "2025 05 58731 65 465872" & " ' ' " & vbCrLf
+                    End If
+
+
+                    'data = data & MyDate & " '" & MyHeures & "' " & tps_cps & "    " & Attrib_Spectrum(Num_Fichier + i, 0, 2) & " ' ' " & vbCrLf
 
                     For canaux = 0 To 2047
-                        data = data & AllSpectres_hdf5(Num_Fichier, Num_Trc + 1, canaux) & vbCrLf ' Nb_file, Num_det, canaux
+                        data = data & AllSpectres_trc_hdf5(Num_File_final, Num_Trc, canaux) & vbCrLf ' Nb_file, Num_det, canaux
                     Next
+
                 Else
 
                     Try
                         SR = File.OpenText(Chemin_Data + "\" + File_Trc)
                     Catch ex As Exception
-                        MsgBox("Fatal Error, check spectra file for trace N°" & Tab_Num_Trc(Num_Trc) & " or " & Ref_DataSet_ToRead(Num_Trc) & " are present into the data folder ", MsgBoxStyle.Information, "Error reading file trace")
+                        MsgBox("Fatal Error, check spectra file for trace N°" & Tab_Num_Trc(Num_Trc) & " or " & Ref_trc_DataSet_ToRead(Num_Trc) & " are present into the data folder ", MsgBoxStyle.Information, "Error reading file trace")
                         Error_Trace(i, Num_Trc) = True 'Fatal_Error = True
                     End Try
 
@@ -3505,29 +3893,36 @@ Public Class Form_Traupixe_H5_2024
 
                 For i = 0 To Nb_Process - 1
 
+                    Num_File_final = Num_Fichier + i
                     If Error_Matrix(i) = False And Error_Trace(i, Num_Trc) = False Then
-                        Select Case Tab_Num_Trc(Num_Trc)
-                            Case 0
-                                File_Trc = Fichier_Trace0(i + Num_Fichier)
-                            Case 1
-                                File_Trc = Fichier_Trace1(i + Num_Fichier)
-                            Case 2
-                                File_Trc = Fichier_Trace2(i + Num_Fichier)
-                            Case 3
-                                File_Trc = Fichier_Trace3(i + Num_Fichier)
-                            Case 4
-                                File_Trc = Fichier_Trace4(i + Num_Fichier)
-                            Case 5 ' 1+2
-                                File_Trc = Fichier_Trace5(i + Num_Fichier)
-                            Case 6 ' All
-                                File_Trc = Fichier_Trace6(i + Num_Fichier)
-                            Case 7 '2+3
-                                File_Trc = Fichier_Trace7(i + Num_Fichier)
-                            Case 8
-                                File_Trc = Fichier_Trace8(i + Num_Fichier)
+                        File_Trc = get_trc_filename(Num_Trc, Num_File_final)
 
-                        End Select
-
+                        'If hdf5_mode = True Then
+                        '    File_Trc = Attrib_Trc_hdf5(Num_File_final, Num_Trc, 4) & "." & Attrib_Trc_hdf5(Num_File_final, Num_Trc, 5) 'nom virtuel du fichier pour FitToPNG
+                        'Else
+                        '    Select Case Tab_Num_Trc(Num_Trc)
+                        '        Case 0
+                        '            File_Trc = Fichier_Trace0(Num_File_final)
+                        '        Case 1
+                        '            File_Trc = Fichier_Trace1(Num_File_final)
+                        '        Case 2
+                        '            File_Trc = Fichier_Trace2(Num_File_final)
+                        '        Case 3
+                        '            File_Trc = Fichier_Trace3(Num_File_final)
+                        '        Case 4
+                        '            File_Trc = Fichier_Trace4(Num_File_final)
+                        '        Case 5 ' 1+2
+                        '            File_Trc = Fichier_Trace5(Num_File_final)
+                        '        Case 6 ' All
+                        '            File_Trc = Fichier_Trace6(Num_File_final)
+                        '        Case 7 '2+3
+                        '            File_Trc = Fichier_Trace7(Num_File_final)
+                        '        Case 8
+                        '            File_Trc = Fichier_Trace8(Num_File_final)
+                        '        Case Else
+                        '            File_Trc = Fichier_Trace0(Num_File_final)
+                        '    End Select
+                        'End If
 
                         My.Application.DoEvents() : System.Threading.Thread.Sleep(20)
                         Tab_PixWin_END(i) = File.Exists(Chemin_GupixWin_Multi(i) & "\pixwin.end")
@@ -3596,6 +3991,8 @@ Public Class Form_Traupixe_H5_2024
                             End Try
                             Tab_Inc_Done(i) = True
                         End If
+                    Else
+                        nb_data_read = nb_data_read + 1
                     End If
 
                 Next i
@@ -3622,7 +4019,6 @@ Public Class Form_Traupixe_H5_2024
             thread_tab_Recup_Filter(i) = New System.Threading.Thread(AddressOf Recup_Cps_Charge_Filters_Trc_Thread)
 
         Next
-
 
 
         Do ' SECOND CALCUL TRACE
@@ -3657,30 +4053,31 @@ Public Class Form_Traupixe_H5_2024
 
 
                     If Tab_Thread_Calcul_Ecriture_Charge_Alive(i) = False And Tab_Run_Done(i) = False Then
+                        File_Trc = get_trc_filename(Num_Trc, Num_File_final)
 
-                        Select Case Tab_Num_Trc(Num_Trc)
-                            Case 0
-                                File_Trc = Fichier_Trace0(i + Num_Fichier)
-                            Case 1
-                                File_Trc = Fichier_Trace1(i + Num_Fichier)
-                            Case 2
-                                File_Trc = Fichier_Trace2(i + Num_Fichier)
-                            Case 3
-                                File_Trc = Fichier_Trace3(i + Num_Fichier)
-                            Case 4
-                                File_Trc = Fichier_Trace4(i + Num_Fichier)
-                            Case 5 ' 1+2
-                                File_Trc = Fichier_Trace5(i + Num_Fichier)
-                            Case 6 ' All
-                                File_Trc = Fichier_Trace6(i + Num_Fichier)
-                            Case 7 '2+3
-                                File_Trc = Fichier_Trace7(i + Num_Fichier)
-                            Case 8
-                                File_Trc = Fichier_Trace8(i + Num_Fichier)
-                            Case Else
-                                File_Trc = "Fichier n° " & CStr(i + Num_Fichier)
+                        'Select Case Tab_Num_Trc(Num_Trc)
+                        '    Case 0
+                        '        File_Trc = Fichier_Trace0(i + Num_Fichier)
+                        '    Case 1
+                        '        File_Trc = Fichier_Trace1(i + Num_Fichier)
+                        '    Case 2
+                        '        File_Trc = Fichier_Trace2(i + Num_Fichier)
+                        '    Case 3
+                        '        File_Trc = Fichier_Trace3(i + Num_Fichier)
+                        '    Case 4
+                        '        File_Trc = Fichier_Trace4(i + Num_Fichier)
+                        '    Case 5 ' 1+2
+                        '        File_Trc = Fichier_Trace5(i + Num_Fichier)
+                        '    Case 6 ' All
+                        '        File_Trc = Fichier_Trace6(i + Num_Fichier)
+                        '    Case 7 '2+3
+                        '        File_Trc = Fichier_Trace7(i + Num_Fichier)
+                        '    Case 8
+                        '        File_Trc = Fichier_Trace8(i + Num_Fichier)
+                        '    Case Else
+                        '        File_Trc = "Fichier n° " & CStr(i + Num_Fichier)
 
-                        End Select
+                        'End Select
 
                         Parametres_All_Thread.File_Name = File_Trc
 
@@ -3706,28 +4103,29 @@ Public Class Form_Traupixe_H5_2024
                             Nb_Oxyde_X2 = 0
                         End If
 
-                        Select Case Tab_Num_Trc(Num_Trc)
-                            Case 0
-                                File_Trc = Fichier_Trace0(i + Num_Fichier)
-                            Case 1
-                                File_Trc = Fichier_Trace1(i + Num_Fichier)
-                            Case 2
-                                File_Trc = Fichier_Trace2(i + Num_Fichier)
-                            Case 3
-                                File_Trc = Fichier_Trace3(i + Num_Fichier)
-                            Case 4
-                                File_Trc = Fichier_Trace4(i + Num_Fichier)
-                            Case 5 ' 1+2
-                                File_Trc = Fichier_Trace5(i + Num_Fichier)
-                            Case 6 ' All
-                                File_Trc = Fichier_Trace6(i + Num_Fichier)
-                            Case 7 '2+3
-                                File_Trc = Fichier_Trace7(i + Num_Fichier)
-                            Case 8
-                                File_Trc = Fichier_Trace8(i + Num_Fichier)
-                            Case Else
-                                File_Trc = "Fichier n° " & CStr(i + Num_Fichier)
-                        End Select
+                        File_Trc = get_trc_filename(Num_Trc, Num_File_final)
+                        'Select Case Tab_Num_Trc(Num_Trc)
+                        '    Case 0
+                        '        File_Trc = Fichier_Trace0(i + Num_Fichier)
+                        '    Case 1
+                        '        File_Trc = Fichier_Trace1(i + Num_Fichier)
+                        '    Case 2
+                        '        File_Trc = Fichier_Trace2(i + Num_Fichier)
+                        '    Case 3
+                        '        File_Trc = Fichier_Trace3(i + Num_Fichier)
+                        '    Case 4
+                        '        File_Trc = Fichier_Trace4(i + Num_Fichier)
+                        '    Case 5 ' 1+2
+                        '        File_Trc = Fichier_Trace5(i + Num_Fichier)
+                        '    Case 6 ' All
+                        '        File_Trc = Fichier_Trace6(i + Num_Fichier)
+                        '    Case 7 '2+3
+                        '        File_Trc = Fichier_Trace7(i + Num_Fichier)
+                        '    Case 8
+                        '        File_Trc = Fichier_Trace8(i + Num_Fichier)
+                        '    Case Else
+                        '        File_Trc = "Fichier n° " & CStr(i + Num_Fichier)
+                        'End Select
 
                         'FitToPNG(File_Trc, I)
                         If Lect_Depth = True Then
@@ -3781,7 +4179,36 @@ Public Class Form_Traupixe_H5_2024
     '****************************** SEQUENCE TRC ****************************************************
     '***********************************************************************************************
 
-
+    Function get_trc_filename(num_Trc, num_file_final) As String
+        Dim file_trc As String
+        If hdf5_mode = True Then
+            file_trc = Attrib_Trc_hdf5(num_file_final, num_Trc, 4) & "." & Attrib_Trc_hdf5(num_file_final, num_Trc, 5) 'nom virtuel du fichier pour FitToPNG
+        Else
+            Select Case Tab_Num_Trc(num_Trc)
+                Case 0
+                    file_trc = Fichier_Trace0(num_file_final)
+                Case 1
+                    file_trc = Fichier_Trace1(num_file_final)
+                Case 2
+                    file_trc = Fichier_Trace2(num_file_final)
+                Case 3
+                    file_trc = Fichier_Trace3(num_file_final)
+                Case 4
+                    file_trc = Fichier_Trace4(num_file_final)
+                Case 5 ' 1+2
+                    file_trc = Fichier_Trace5(num_file_final)
+                Case 6 ' All
+                    file_trc = Fichier_Trace6(num_file_final)
+                Case 7 '2+3
+                    file_trc = Fichier_Trace7(num_file_final)
+                Case 8
+                    file_trc = Fichier_Trace8(num_file_final)
+                Case Else
+                    file_trc = "Fichier n° " & CStr(num_file_final)
+            End Select
+        End If
+        Return file_trc
+    End Function
     '###################################### COUNTS / SEC.  CHARGE FILTERS TRACE   ###################################
     Sub Recup_Cps_Charge_Filters_Trc_Thread(Parametres As Struct_Parametres_Thread)
         Dim Pos_Cps As Integer
@@ -4093,7 +4520,7 @@ Public Class Form_Traupixe_H5_2024
     End Sub
 
 
-    Sub Lecture_Fichier_Par_Mat()
+    Function Lecture_Fichier_Par_Mat() As Integer
         Dim i As Integer
         Dim Str As String
         Dim Pos_Coma As Integer
@@ -4112,6 +4539,8 @@ Public Class Form_Traupixe_H5_2024
         Dim split_HED_K() As String
         Dim split_HED_L() As String
         Dim split_HED_M() As String
+        Dim mode_calcul As String
+
 
 
 
@@ -4179,7 +4608,12 @@ Public Class Form_Traupixe_H5_2024
         For i = indx_1 + 1 To indx_1 + 7
             Txt_Fichier_PAR_Mat = Txt_Fichier_PAR_Mat + All_line(i) + vbCrLf
         Next
+        mode_calcul = CInt(Strings.Left(All_line(5), 1))
+        If mode_calcul = 3 Then ' Error c'est le mode trace
+            Return -1
+            Exit Function
 
+        End If
         For i = indx_1 + 8 To indx_1 + 8 + Nb_Elem_local - 1
             Str = All_line(i) 'SR.ReadLine()
             Txt_Fichier_PAR_Mat = Txt_Fichier_PAR_Mat + Str + vbCrLf
@@ -4236,8 +4670,8 @@ Public Class Form_Traupixe_H5_2024
             indx_1 += 1
         Loop While Str <> "----------Spectral Data-----------"
 
-
-    End Sub
+        Return 0
+    End Function
 
     Sub Create_Fichier_Par_Mat_HED()
         Dim i As Integer
@@ -4388,10 +4822,11 @@ Public Class Form_Traupixe_H5_2024
 
         Nb_Trc = 0
 
+
         If Check_det0.Checked = True And Par_det0.Text <> "" Then
             Tab_Num_Trc(Nb_Trc) = 0
             Tab_File_Par_Trc(Nb_Trc) = Par_det0.Text
-            Ref_DataSet_ToRead(Nb_Trc) = Ext_Trc0 'Par_det0.Text 'Ext_Trc0
+            Ref_trc_DataSet_ToRead(Nb_Trc) = Ext_Trc0 'Par_det0.Text 'Ext_Trc0
             Nb_Trc = Nb_Trc + 1
 
         Else
@@ -4402,7 +4837,7 @@ Public Class Form_Traupixe_H5_2024
         If Check_det1.Checked = True And Par_det1.Text <> "" Then
             Tab_Num_Trc(Nb_Trc) = 1
             Tab_File_Par_Trc(Nb_Trc) = Par_det1.Text
-            Ref_DataSet_ToRead(Nb_Trc) = Ext_Trc1 'Par_det1.Text 'Ext_Trc1 '"x1"
+            Ref_trc_DataSet_ToRead(Nb_Trc) = Ext_Trc1 'Par_det1.Text 'Ext_Trc1 '"x1"
             Nb_Trc = Nb_Trc + 1
         Else
             Tab_File_Par_Trc(Nb_Trc) = ""
@@ -4412,7 +4847,7 @@ Public Class Form_Traupixe_H5_2024
         If Check_det2.Checked = True And Par_det2.Text <> "" Then
             Tab_Num_Trc(Nb_Trc) = 2
             Tab_File_Par_Trc(Nb_Trc) = Par_det2.Text
-            Ref_DataSet_ToRead(Nb_Trc) = Ext_Trc2
+            Ref_trc_DataSet_ToRead(Nb_Trc) = Ext_Trc2
             Nb_Trc = Nb_Trc + 1 '"x2"
         Else
             Tab_File_Par_Trc(Nb_Trc) = ""
@@ -4422,7 +4857,7 @@ Public Class Form_Traupixe_H5_2024
         If Check_det3.Checked = True And Par_det3.Text <> "" Then
             Tab_Num_Trc(Nb_Trc) = 3
             Tab_File_Par_Trc(Nb_Trc) = Par_det3.Text
-            Ref_DataSet_ToRead(Nb_Trc) = Ext_Trc3 '"x3"
+            Ref_trc_DataSet_ToRead(Nb_Trc) = Ext_Trc3 '"x3"
             Nb_Trc = Nb_Trc + 1
 
         Else
@@ -4433,7 +4868,7 @@ Public Class Form_Traupixe_H5_2024
         If Check_det4.Checked = True And Par_det4.Text <> "" Then
             Tab_Num_Trc(Nb_Trc) = 4
             Tab_File_Par_Trc(Nb_Trc) = Par_det4.Text
-            Ref_DataSet_ToRead(Nb_Trc) = Ext_Trc4 ' "x4"
+            Ref_trc_DataSet_ToRead(Nb_Trc) = Ext_Trc4 ' "x4"
             Nb_Trc = Nb_Trc + 1
         Else
             Tab_File_Par_Trc(Nb_Trc) = ""
@@ -4443,7 +4878,7 @@ Public Class Form_Traupixe_H5_2024
         If Check_det5.Checked = True And Par_det5.Text <> "" Then
             Tab_Num_Trc(Nb_Trc) = 5
             Tab_File_Par_Trc(Nb_Trc) = Par_det5.Text
-            Ref_DataSet_ToRead(Nb_Trc) = Ext_Trc5 '"x10"
+            Ref_trc_DataSet_ToRead(Nb_Trc) = Ext_Trc5 '"x10"
             Nb_Trc = Nb_Trc + 1
         Else
             Tab_File_Par_Trc(Nb_Trc) = ""
@@ -4453,7 +4888,7 @@ Public Class Form_Traupixe_H5_2024
         If Check_det6.Checked = True And Par_det6.Text <> "" Then
             Tab_Num_Trc(Nb_Trc) = 6
             Tab_File_Par_Trc(Nb_Trc) = Par_det6.Text
-            Ref_DataSet_ToRead(Nb_Trc) = Ext_Trc6 '"x11"
+            Ref_trc_DataSet_ToRead(Nb_Trc) = Ext_Trc6 '"x11"
             Nb_Trc = Nb_Trc + 1
         Else
             Tab_File_Par_Trc(Nb_Trc) = ""
@@ -4463,7 +4898,7 @@ Public Class Form_Traupixe_H5_2024
         If Check_det7.Checked = True And Par_det7.Text <> "" Then
             Tab_Num_Trc(Nb_Trc) = 7
             Tab_File_Par_Trc(Nb_Trc) = Par_det7.Text
-            Ref_DataSet_ToRead(Nb_Trc) = Ext_Trc7 '7"x12"
+            Ref_trc_DataSet_ToRead(Nb_Trc) = Ext_Trc7 '7"x12"
             Nb_Trc = Nb_Trc + 1
         Else
             Tab_File_Par_Trc(Nb_Trc) = ""
@@ -4473,7 +4908,7 @@ Public Class Form_Traupixe_H5_2024
         If Check_det8.Checked = True And Par_det8.Text <> "" Then
             Tab_Num_Trc(Nb_Trc) = 8
             Tab_File_Par_Trc(Nb_Trc) = Par_det8.Text
-            Ref_DataSet_ToRead(Nb_Trc) = Ext_Trc8 '"x13"
+            Ref_trc_DataSet_ToRead(Nb_Trc) = Ext_Trc8 '"x13"
             Nb_Trc = Nb_Trc + 1
         Else
             Tab_File_Par_Trc(Nb_Trc) = ""
@@ -4703,13 +5138,14 @@ Public Class Form_Traupixe_H5_2024
 
     End Sub
 
-    Sub Lecture_Fichier_Par_Trc(partie As Integer, Num_Trc As Integer)
+    Function Lecture_Fichier_Par_Trc(partie As Integer, Num_Trc As Integer) As Integer
 
         Dim Str As String
         Dim MyInStr As Integer
         Dim SR As StreamReader
         Dim All_line
         Dim indx_1 As Integer
+        Dim mode_calcul As Integer
 
 
         ToolStripStatusLabel1.Text = "Read Trace PAR File " & CStr(Num_Trc) & ",Part:" & CStr(partie)
@@ -4718,7 +5154,6 @@ Public Class Form_Traupixe_H5_2024
         Nb_Ligne_Trc = 0
 
         All_line = IO.File.ReadAllLines(Chemin_Data + "\" + Tab_File_Par_Trc(Num_Trc))
-
 
         Select Case partie
 
@@ -4763,11 +5198,17 @@ Public Class Form_Traupixe_H5_2024
                     My.Application.DoEvents()
                 Loop While Str <> "----------Spectral Data-----------"
                 Txt_Fichier_PAR_Trc = Txt_Fichier_PAR_Trc + "----------Spectral Data-----------" '+ vbCrLf
-
+            Case 4
+                mode_calcul = CInt(Strings.Left(All_line(5), 1))
+                If mode_calcul = 5 Then ' Error c'est le mode trace
+                    Return -1
+                    Exit Function
+                End If
         End Select
 
         SR.Close()
-    End Sub
+        Return 0
+    End Function
 
 
 
@@ -4801,6 +5242,7 @@ Public Class Form_Traupixe_H5_2024
         Dim posStar As Integer
         Dim PivotInMat As Boolean
         Dim PivotInTrc As Boolean
+        Dim Pivotplus As Boolean
 
 
         Num_Proc = Parametres.Num_Proc
@@ -4817,6 +5259,16 @@ Public Class Form_Traupixe_H5_2024
             R = Tab_Pivot(Num_Trc, J)
             If R > 0 Then
                 Nb_Temp_Pivot = Nb_Temp_Pivot + 1
+            Else
+                Exit For
+            End If
+        Next J
+
+        For J = 0 To 10
+            R = Tab_Pivot_plus(Num_Trc, J)
+            If R > 0 Then
+                Nb_Temp_Pivot = Nb_Temp_Pivot + 1
+                Pivotplus = True
             Else
                 Exit For
             End If
@@ -4890,19 +5342,38 @@ Public Class Form_Traupixe_H5_2024
         Pivot_Trc = Indice_Pivot_trc(Num_Trc, 0)
         Indice_Z = 0
 
-        For K = 0 To Nb_Temp_Pivot - 2
-            Error_1 = Val_Mat_Total_Error(Num_Proc, K)
-            Somme_1 = Math.Sqrt(Total_Error_Mat(Indice_Z) ^ 2 + Total_Error_Trc(Indice_Z) ^ 2)
-            Somme_2 = Math.Sqrt(Total_Error_Mat(K + 1) ^ 2 + Total_Error_Trc(K + 1) ^ 2)
+        If Pivotplus = True Then 'Recherche si la somme des deux pivots show a best uncertainty
 
-            If Somme_2 < Somme_1 Then 'And Total_Error_Trc(K + 1) < Total_Error_Trc(Indice_Z) Then
-                Pivot_Mat = Indice_Pivot_Mat(K + 1)
-                Pivot_Trc = Indice_Pivot_trc(Num_Trc, K + 1)
-                Indice_Z = K + 1
-            End If
-            'Conc_Mat = Spectrum_Mat(0)
-        Next K
+            For K = 0 To Nb_Temp_Pivot - 2
+                Error_1 = Val_Mat_Total_Error(Num_Proc, K)
+                Somme_1 = Math.Sqrt(Total_Error_Mat(Indice_Z) ^ 2 + Total_Error_Trc(Indice_Z) ^ 2)
+                Somme_2 = Math.Sqrt(Total_Error_Mat(K + 1) ^ 2 + Total_Error_Trc(K + 1) ^ 2)
 
+                If Somme_2 < Somme_1 Then 'And Total_Error_Trc(K + 1) < Total_Error_Trc(Indice_Z) Then
+                    Pivot_Mat = Indice_Pivot_Mat(K + 1)
+                    Pivot_Trc = Indice_Pivot_trc(Num_Trc, K + 1)
+                    Indice_Z = K + 1
+                End If
+                'Conc_Mat = Spectrum_Mat(0)
+            Next K
+
+
+        Else
+
+
+            For K = 0 To Nb_Temp_Pivot - 2
+                Error_1 = Val_Mat_Total_Error(Num_Proc, K)
+                Somme_1 = Math.Sqrt(Total_Error_Mat(Indice_Z) ^ 2 + Total_Error_Trc(Indice_Z) ^ 2)
+                Somme_2 = Math.Sqrt(Total_Error_Mat(K + 1) ^ 2 + Total_Error_Trc(K + 1) ^ 2)
+
+                If Somme_2 < Somme_1 Then 'And Total_Error_Trc(K + 1) < Total_Error_Trc(Indice_Z) Then
+                    Pivot_Mat = Indice_Pivot_Mat(K + 1)
+                    Pivot_Trc = Indice_Pivot_trc(Num_Trc, K + 1)
+                    Indice_Z = K + 1
+                End If
+                'Conc_Mat = Spectrum_Mat(0)
+            Next K
+        End If
 
         If Pivot_Trc <> -1 Then ' TROUVER UN PIVOT
             Conc_Mat = Val_Mat_Conc(Num_Proc, Pivot_Mat)
@@ -4950,6 +5421,20 @@ Public Class Form_Traupixe_H5_2024
 
     End Sub
 
+    Sub GenerateCombinations(ByVal elements As Single(), ByVal combinationSize As Integer, ByVal currentCombination As List(Of Single), ByVal startIndex As Integer, ByRef combinations As List(Of List(Of Single)))
+        ' Si la taille de la combinaison est atteinte, l'ajouter à la liste
+        If currentCombination.Count = combinationSize Then
+            combinations.Add(New List(Of Single)(currentCombination)) ' Ajouter une copie de la combinaison actuelle
+            Exit Sub
+        End If
+
+        ' Parcourir les éléments restants pour générer les combinaisons
+        For i As Integer = startIndex To elements.Length - 1
+            currentCombination.Add(elements(i)) ' Ajouter l'élément courant à la combinaison
+            GenerateCombinations(elements, combinationSize, currentCombination, i + 1, combinations) ' Appel récursif
+            currentCombination.RemoveAt(currentCombination.Count - 1) ' Retirer l'élément après le traitement
+        Next
+    End Sub
 
     Private Sub Calcul_Charge_Multi_Pivot(Mycharge As Single, Num_file As Integer, Nb_Calcul As Integer, Num_Trc As Integer, num_data As Integer)  ', Num_Pix As Integer)
         Dim Conc_Mat, Conc_Trc As Single
@@ -6094,26 +6579,35 @@ suite:
                 Nom_Projet = "PRJ"
 
                 Try
-                    Nom_Projet = SplitText(2)
+                    Date_Projet = SplitText(0)
+                    Nom_Projet = SplitText(1)
+                    type_data = SplitText(2)
                 Catch ex As Exception
                     Nom_Projet = "PRJ"
+                    Date_Projet = "20000101"
+                    type_data = "STD"
                 End Try
             Else
                 SplitText = Split(Fichier_Matrix(0), "_")
 
                 Try
+                    Date_Projet = SplitText(0)
                     Nom_Projet = SplitText(3)
                 Catch ex As Exception
                     Nom_Projet = "PRJ"
+                    Date_Projet = "20000101"
                 End Try
             End If
 
             If Adjust_Filter_B = True Then
-                Nom_Rapport = Nom_Projet & "_Filter"
+                Nom_Rapport = Date_Projet & "-" & Nom_Projet & "_Filter"
             Else
-                Nom_Rapport = Nom_Projet
+                If hdf5_mode = True Then
+                    Nom_Rapport = Date_Projet & "-" & type_data & "-" & Nom_Projet
+                Else
+                    Nom_Rapport = Date_Projet & "-" & Nom_Projet
+                End If
             End If
-
 
             If OnlyTrace = False And Calcul_With_Trc = True Then
                 Comm1 = "_MAT-" & CbDetMat.Text
@@ -6329,16 +6823,12 @@ OpenWorkbook_OK:
         ' Dim T As Integer
         Dim Tst1 As String
         Tst1 = ""
-
         N = 1
         ToolStripStatusLabel1.Text = "Save Excel"
         On Error Resume Next
-
         '  Do
         num_rapport = Str(N)
         Err.Number = 1
-
-
 
         If Num_Fichier = 1 And Offset_Excel = 0 Then
             xlBook.SaveAs(Chemin_Rapport) ', xlExcel8) ', xlExcel7) 'genere Err.number
@@ -6347,8 +6837,6 @@ OpenWorkbook_OK:
         Else
             xlBook.Save()
             ToolStripStatusLabel1.Text = "Excel Save"
-
-
         End If
 
         Excel_Save = 0
@@ -6858,7 +7346,7 @@ OpenWorkbook_OK:
         Dim StartRow, StartCol
         Dim i As Integer
         Dim Pos_Ext As Integer
-        Dim Filter_String As String
+        ToolStripStatusLabel1.Text = "Write filename & comment in Excel"
         ToolStripStatusLabel1.Text = "Write filename & comment in Excel"
         Application.DoEvents()
         Dim Tab_Ref_Woorksheet() As Object
@@ -6875,9 +7363,15 @@ OpenWorkbook_OK:
         Next
         ' Adjust_Filter_B = True
 
+
+
         For i = 0 To Nb_Process - 1
-            Pos_Ext = InStr(1, Fichier_Matrix(i + Num_Fichier), ".", vbTextCompare)
-            Tab_Name_File(i) = Mid(Fichier_Matrix(i + Num_Fichier), 1, Pos_Ext - 1)
+            If hdf5_mode = True Then
+                Tab_Name_File(i) = Attrib_mat_hdf5(i + Num_Fichier, 4)
+            Else
+                Pos_Ext = InStr(1, Fichier_Matrix(i + Num_Fichier), ".", vbTextCompare)
+                Tab_Name_File(i) = Mid(Fichier_Matrix(i + Num_Fichier), 1, Pos_Ext - 1)
+            End If
         Next
 
         If Adjust_Filter_B = True Then
@@ -7035,8 +7529,13 @@ OpenWorkbook_OK:
         Tab_Ref_Woorksheet(6) = xlSheet_S_Conc_Error_100
         Tab_Ref_Woorksheet(7) = xlSheet_S_Conc_ppm_RED
         Tab_Ref_Woorksheet(8) = xlSheet_Total_Error
-        Tab_Ref_Woorksheet(9) = xlSheet_Oxyde
-        Tab_Ref_Woorksheet(10) = xlSheet_LOD
+        Tab_Ref_Woorksheet(9) = xlSheet_LOD
+
+        If mnuOxydeOUI.Checked = True Then
+            Tab_Ref_Woorksheet(10) = xlSheet_Oxyde
+        Else
+            ReDim Preserve Tab_Ref_Woorksheet(9)
+        End If
 
         If MyErase = True Then
             '##################### EFFACE LEGENDE PRECEDENTE
@@ -8101,6 +8600,14 @@ OpenWorkbook_OK:
         Return tab_all_z
     End Function
     'Sub Calcul_Final_Best_Conc_New_Thread(Num_File As Integer, Num_Proc As Integer, Nb_Trc As Integer) ', nb_data_read As Integer)
+
+    ' Fonction pour calculer l'incertitude combinée
+    Function calculate_uncertainty(val1 As Single, val2 As Single) As Single
+
+        Return Math.Sqrt(val1 ^ 2 + val1 ^ 2)
+    End Function
+
+
     Sub Calcul_Final_Best_Conc_New_Thread(Parametres As parametres_best_conc_Thread) ', nb_data_read As Integer)
 
         Dim Num_proc As Integer
@@ -8339,53 +8846,63 @@ OpenWorkbook_OK:
                         End If
 
 
-
+                        ' Initialisation de la variable Z_Mat avec la valeur de Z
                         Z_Mat = Z 'Tab_Info_Mat.Z(i)
                         Y_N_Q = Val_Mat_Y_N_Q(Num_proc, indx_mat)
 
-                        If Y_N_Q <> "N" And Info_Mat_Raie(Num_proc, indx_mat) = False Then
+                        ' Vérification si Y_N_Q n'est pas "N" et si Info_Mat_Raie est faux
+                        If Y_N_Q <> "N" AndAlso Not Info_Mat_Raie(Num_proc, indx_mat) Then
                             Best_Done = True
                             Y_N_Q_Prev = Y_N_Q
 
-                            If Indice_Mat_0 = -1 Then ' 1 er valeur 
+                            ' Si c'est la première valeur trouvée
+                            If Indice_Mat_0 = -1 Then
                                 Indice_Mat_0 = indx_mat
                                 'BEFORE 12/01/2022
                                 'Best_Stat_0 = Math.Sqrt((Val_Mat_Stat_Error(Num_Proc, Indice_Mat_0) ^ 2) + (Val_Mat_Fit_Error(Num_Proc, Indice_Mat_0) ^ 2))
                                 Best_Stat_0 = Val_Mat_Fit_Error(Num_proc, Indice_Mat_0)
                                 If Best_Stat_0 = 0 Then Best_Stat_0 = 10000000
-                            Else                        ' Seconde Z trouvé
+                            Else
+                                ' Si c'est la seconde valeur trouvée
                                 Indice_Mat_1 = indx_mat
                                 'BEFORE 12/01/2022
                                 'Best_Stat_1 = Math.Sqrt((Val_Mat_Stat_Error(Num_Proc, Indice_Mat_1) ^ 2) + (Val_Mat_Fit_Error(Num_Proc, Indice_Mat_1) ^ 2))
                                 Best_Stat_1 = Val_Mat_Fit_Error(Num_proc, Indice_Mat_1)
                                 If Best_Stat_1 = 0 Then Best_Stat_1 = 10000000
+
+                                ' Si Z_Mat est l'élément pivot, calcul de Err_Pivot_Mat
                                 If Z_Mat = Indice_Pivot_Mat(0) Then '######### Element Pivot on calcul Err_Pivot
                                     Err_Pivot_Mat = Best_Stat_1
                                     Val_Trc_Error_Pivot(Num_proc, Num_Trc) = Best_Stat_1
                                 End If
                             End If
 
+                            ' Comparaison des statistiques pour déterminer le meilleur Z
                             If Best_Stat_1 < Best_Stat_0 And Info_Mat_Raie(Num_proc, indx_mat) = False Then 'Second Z meilleur
                                 Best_Stat_0 = Best_Stat_1
                                 Best_Stat_1 = 10000000
 
+                                ' Récupération de la concentration pour le meilleur Z
                                 Conc_Return = Retourne_Conc_Mat(Y_N_Q, Num_proc, Indice_Mat_1, conc_in_oxide) ' IF Oxyde retourne la conc. en oxyde
                                 Val_Mat_Best_Yes(Num_proc, Indice_Mat_1) = Conc_Return(0)
                                 Val_Mat_Best_Yes_RED(Num_proc, Indice_Mat_1) = Conc_Return(0) 'Retourne aussi valeur 
                                 'Val_Mat_Best_Yes_RED(Num_Proc, Indice_Mat_1) = Conc_Return(0)
 
+                                ' Réinitialisation des valeurs pour l'ancien meilleur Z
                                 Val_Mat_Best_Yes(Num_proc, Indice_Mat_0) = Nothing
                                 Val_Mat_Best_Yes_RED(Num_proc, Indice_Mat_0) = Nothing
                                 Indice_Mat_0 = Indice_Mat_1 'Ind1 deviens le meilleur
-                            Else 'Cas Simple on ecris la valeur
+
+                            Else
+                                ' Cas simple, écriture de la valeur de concentration
                                 Conc_Return = Retourne_Conc_Mat(Y_N_Q, Num_proc, indx_mat, conc_in_oxide)
                                 Val_Mat_Best_Yes(Num_proc, Indice_Mat_0) = Conc_Return(0) ' Si ? ou N alors Conc_Return(0) = 0
                                 Val_Mat_Best_Yes_RED(Num_proc, Indice_Mat_0) = Conc_Return(0) ' Valeur conc.
                             End If
                         End If
 
-                        'End If 'Z trouvé en MAT
-                        'Next i
+
+                        ' Recherche d'autres occurrences de Z dans Mat
                         indx_mat = Array.IndexOf(Tab_Info_Mat.Z, Z, indx_mat + 1) ' Search for other Z in Mat 
                     Loop
 pass_mat:   ' Only_Trace
@@ -8527,10 +9044,7 @@ pass_mat:   ' Only_Trace
         For i = 0 To Nb_total_elements_trc - 1
             Somme = Somme + Val_Trc_Best_Yes(Num_Proc, i)
             Somme_RED = Somme_RED + Val_Trc_Best_Yes_RED(Num_Proc, i)
-
         Next
-
-
         el_only_gamma = True
         only_gamma_sum = 0
         num_elem_only_gamma = 0
@@ -8545,10 +9059,12 @@ pass_mat:   ' Only_Trace
                 '    nb_gamma_and_pixe += 1
             End If
 
+            '
             indx_trc = Array.IndexOf(All_Z_Trc, Z_gamma) 'Recheche Z_gamma dans Z Trace
             If indx_trc <> -1 Then
                 el_only_gamma = False
             End If
+
             If el_only_gamma = True Then
                 only_gamma_sum = only_gamma_sum + gamma_conc_init(Num_File, i)
                 format_return = Format_Str(gamma_conc_init(Num_File, i))
@@ -8603,9 +9119,7 @@ pass_mat:   ' Only_Trace
                 End If
                 Val_Mat_Best_Yes_RED(Num_Proc, i) = Val_Mat_Best_Yes_RED(Num_Proc, i) * (million_norm / Somme_RED)
             End If
-
         Next i
-
         For i = 0 To Nb_total_elements_trc - 1
             If Chk_RoundValue.Checked = True Then
                 Total_Error = Val_Trc_Total_Error(Num_Proc, i)
@@ -8713,6 +9227,7 @@ pass_mat:   ' Only_Trace
                             If Best_Stat_1 = 0 Then Best_Stat_1 = 10000000
                         End If
 
+                        'La premier boucle a trouvé VALEUR 100%  Y & ?
                         If Val_Mat_Best_Yes(Num_proc, indx_mat) <> 0 Then ' ########################################################## VALEUR 100%  Y & ?
                             'Valeur renormalisées
                             format_return = Format_Str(Val_Mat_Best_Yes(Num_proc, indx_mat))
@@ -8764,7 +9279,6 @@ pass_mat:   ' Only_Trace
                                         Val_Mat_Conc_ppm(Num_Proc, indx_mat) = "< " & Strings.Format(Conc_Return(2) * 3.3, 0) ''3.3 x LOD
                                         Val_Conc_S_RED_ppm(Num_Proc, Ind_Z_100) = Strings.Format(Conc_Return(1) * (million_norm / Somme_RED), 0)
                                         Val_Conc_S_RED100(Num_Proc, Ind_Z_100) = Strings.Format((Math.Round((Conc_Return(1) * (million_norm / Somme_RED)) / 10000, Nb_Dig)), Str_Prec)
-
                                         Val_Conc_S_100(Num_Proc, Ind_Z_100) = "< " & Strings.Format((Math.Round(Conc_Return(2) * 3.3 / 10000, Nb_Dig)), Str_Prec) '3.3 x LOD
                                         Val_Conc_S_ppm(Num_Proc, Ind_Z_100) = "< " & Strings.Format(Conc_Return(2) * 3.3, 0) '3.3 x LOD
                                         Val_YNQ_Final(Num_Proc, Ind_Z_100) = "?"
@@ -8816,7 +9330,6 @@ pass_mat:   ' Only_Trace
 
                             If Y_N_Q = "N" Then ' VALEUR LOD
                                 Best_Done = True
-
                                 If Indice_Mat_1 <> -1 Then 'Deja     
                                     Conc_Return = Retourne_Conc_Mat(Y_N_Q, Num_proc, Indice_Mat_1, conc_in_oxide)
                                     Best_Stat_1 = Conc_Return(2) ' Prend la valeur LOD
@@ -8848,11 +9361,8 @@ pass_mat:   ' Only_Trace
                                 Else
                                     Best_LOD_mat_current = Best_LOD_mat_previous
                                 End If
-
                             End If
-
                         End If
-
                         indx_mat = Array.IndexOf(Tab_Info_Mat.Z, Z, indx_mat + 1)
                     Loop
                     Indice_Trc_0 = -1
@@ -8954,7 +9464,6 @@ pass_mat:   ' Only_Trace
                                             End If
                                             Offset1 = Offset1 + Nb_Elements_Trc(t)
                                         Next t
-
                                         If Indice_Mat_0 <> -1 Then
                                             Str_Mat_Conc_100(Num_Proc, Indice_Mat_0) = ""
                                             Val_Mat_Conc_ppm(Num_Proc, Indice_Mat_0) = ""
@@ -9438,7 +9947,7 @@ pass_mat:   ' Only_Trace
                 Pivot_det0.Enabled = True
                 Pivot_det0.Focus()
             Else
-                Pivot_det0.Text = "File-Q"
+                Pivot_det0.Text = "Q-File"
                 Pivot_det0.Enabled = False
             End If
 
@@ -9476,7 +9985,7 @@ pass_mat:   ' Only_Trace
                 Pivot_det1.Enabled = True
                 Pivot_det1.Focus()
             Else
-                Pivot_det1.Text = "File-Q"
+                Pivot_det1.Text = "Q-File"
                 Pivot_det1.Enabled = False
             End If
 
@@ -9510,7 +10019,7 @@ pass_mat:   ' Only_Trace
                 Pivot_det2.Enabled = True
                 Pivot_det2.Focus()
             Else
-                Pivot_det2.Text = "File-Q"
+                Pivot_det2.Text = "Q-File"
                 Pivot_det2.Enabled = False
             End If
             Pivot_det2.Focus()
@@ -9546,7 +10055,7 @@ pass_mat:   ' Only_Trace
                 Pivot_det3.Enabled = True
                 Pivot_det3.Focus()
             Else
-                Pivot_det3.Text = "File-Q"
+                Pivot_det3.Text = "Q-File"
                 Pivot_det3.Enabled = False
             End If
             Pivot_det3.Focus()
@@ -9580,7 +10089,7 @@ pass_mat:   ' Only_Trace
                 Pivot_det4.Enabled = True
                 Pivot_det4.Focus()
             Else
-                Pivot_det4.Text = "File-Q"
+                Pivot_det4.Text = "Q-File"
                 Pivot_det4.Enabled = False
             End If
             Pivot_det4.Focus()
@@ -9613,7 +10122,7 @@ pass_mat:   ' Only_Trace
                 Pivot_det5.Enabled = True
                 Pivot_det5.Focus()
             Else
-                Pivot_det5.Text = "File-Q"
+                Pivot_det5.Text = "Q-File"
                 Pivot_det5.Enabled = False
             End If
             Pivot_det5.Focus()
@@ -9646,7 +10155,7 @@ pass_mat:   ' Only_Trace
                 Pivot_det6.Enabled = True
                 Pivot_det6.Focus()
             Else
-                Pivot_det6.Text = "File-Q"
+                Pivot_det6.Text = "Q-File"
                 Pivot_det6.Enabled = False
             End If
 
@@ -9680,7 +10189,7 @@ pass_mat:   ' Only_Trace
                 Pivot_det7.Enabled = True
                 Pivot_det7.Focus()
             Else
-                Pivot_det7.Text = "File-Q"
+                Pivot_det7.Text = "Q-File"
                 Pivot_det7.Enabled = False
             End If
 
@@ -9714,7 +10223,7 @@ pass_mat:   ' Only_Trace
                 Pivot_det8.Enabled = True
                 Pivot_det8.Focus()
             Else
-                Pivot_det8.Text = "File-Q"
+                Pivot_det8.Text = "Q-File"
                 Pivot_det8.Enabled = False
             End If
 
@@ -10177,164 +10686,6 @@ pass_mat:   ' Only_Trace
     End Sub
 
 
-    Private Sub Button8_Click(sender As Object, e As EventArgs) Handles Button8.Click
-        Dim ComputerName As String
-        Dim MesFiles(1000) As Object
-        Dim Nb_Det_ToRead As Integer
-        Dim MesSpectres(10, 200, 2048) As String
-        Dim Attrib_Spectrum(10, 10, 10) As String
-        Dim MesMaps(1000) As Object
-        ComputerName = System.Net.Dns.GetHostName
-        Dim HDF_as_Map As Boolean
-        '        Dim File = New H5File("c:\data\")
-        Dim Myh5
-
-        Myh5 = PureHDF.H5File.OpenRead("C:\Data\2023_Data_Euphro\20230322_globals_NomProjet_IBA.hdf5") 'H5.open("C:\Data\2023_Data_Euphro\20220620_0011_Night_SIBILLA_IBA.hdf5", OpenMode.Binary)
-        Dim myH5Group1 = Myh5.Group("/")
-        Dim i As Integer = 0
-
-        '        foreach(var link In group.Children)
-        '{
-        '    var Message = link switch
-        '    {
-        '        H5Group group >= $"I am a group and my name is '{group.Name}'.",
-        '        H5Dataset dataset           => $"I am a dataset, call me '{dataset.Name}'.",
-        '        H5CommitedDatatype datatype >= $"I am the data type '{datatype.Name}'.",
-        '        H5UnresolvedLink lostLink   => $"I cannot find my link target =( shame on '{lostLink.Name}'."
-        '        _                           => throw New Exception("Unknown link type");
-        '    }
-
-        '    Console.WriteLine(Message)
-        '}
-        '  LvFiles.Items.Clear()
-        Dim Attrib
-        Dim Attrib_ref_obj
-        Dim Attrib_Tmp
-        Dim Data
-        Dim Local_Ref_DataSet_ToRead() As String
-
-
-        'For Each List_Group As H5Group In myH5Group1.Children 'List les " GROUP" présent à la racine
-        '    MesFiles(i) = List_Group
-        '    Attrib = List_Group.Attribute("ref object")
-        '    Attrib_ref_obj = Attrib.ReadString
-        '    'Attrib_ref_obj.value()
-        '    LvFiles.Items.Add(MesFiles(i).Name & "_" & Attrib_ref_obj(0))
-        '    i += 1
-        '    'Data = DataSet.Read(Of Integer)
-        '    ' SubItemIndex += 1
-        'Next
-        Dim MyH5Group
-        Try
-            MyH5Group = Myh5.Group("/data")
-            HDF_as_Map = True
-        Catch ex As Exception
-            HDF_as_Map = False
-        End Try
-
-        i = 0
-        Dim DataSet
-        Dim j, k
-        j = 0
-        i = 0
-        k = 0
-        Ref_DataSet_ToRead(0) = "x0"
-        Ref_DataSet_ToRead(1) = "x10"
-        For Each Det_ToRead As String In Ref_DataSet_ToRead
-            If Det_ToRead <> "" Then
-                Nb_Det_ToRead += 1
-            End If
-        Next
-        ReDim Local_Ref_DataSet_ToRead(Nb_Det_ToRead - 1)
-        For i = 0 To Nb_Det_ToRead - 1
-            Local_Ref_DataSet_ToRead(i) = Ref_DataSet_ToRead(i)
-        Next
-
-        If HDF_as_Map = True Then
-            For Each List_Dataset As H5Dataset In MyH5Group.Children 'List les " DATASET" présent dans le group "/data"
-                MesMaps(i) = List_Dataset
-                i += 1
-            Next
-            Dim TestN = MesMaps(0).Name
-            'var group = root.Group("/my/nested/group");
-            '// get dataset in groupa
-            DataSet = MyH5Group.Dataset("HE1")
-            Data = DataSet.Read(Of Integer)
-
-        Else ' Ponctual DATA
-
-            ReDim MesSpectres(LvFiles.SelectedItems.Count - 1, Nb_Det_ToRead - 1, 2048)
-            ReDim Attrib_Spectrum(LvFiles.SelectedItems.Count - 1, Nb_Det_ToRead - 1, 7)
-            'For Each Grp As Object In MesFiles
-
-
-
-            For j = 0 To LvFiles.SelectedItems.Count - 1
-
-                For Each List_Group As H5Group In myH5Group1.Children
-                    Attrib = List_Group.Attribute("ref object")
-                    Attrib_ref_obj = Attrib.ReadString
-
-                    If LvFiles.SelectedItems(j).Text = List_Group.Name & "_" & Attrib_ref_obj(0) Then
-                        k = 0
-                        For Each Det_ToRead As String In Local_Ref_DataSet_ToRead
-                            DataSet = List_Group.Dataset(Det_ToRead)
-                            Data = DataSet.Read(Of Int64)
-                            Attrib = DataSet.Attribute("spectrum sum")
-                            Attrib_Tmp = Attrib.ReadString
-                            Attrib_Spectrum(j, k, 0) = Attrib_Tmp(0)
-                            Attrib = DataSet.Attribute("acquisition time")
-                            Attrib_Tmp = Attrib.ReadString
-                            Attrib_Spectrum(j, k, 1) = Attrib_Tmp(0)
-                            Attrib = DataSet.Attribute("seconds since midnight")
-                            Attrib_Tmp = Attrib.ReadString
-                            Attrib_Spectrum(j, k, 2) = Attrib_Tmp(0)
-                            Attrib = DataSet.Attribute("month")
-                            Attrib_Tmp = Attrib.ReadString
-                            Attrib_Spectrum(j, k, 3) = Attrib_Tmp(0)
-                            Attrib = DataSet.Attribute("year")
-                            Attrib_Tmp = Attrib.ReadString
-                            Attrib_Spectrum(j, k, 4) = Attrib_Tmp(0)
-                            Attrib = DataSet.Attribute("user comment")
-                            Attrib_Tmp = Attrib.ReadString
-                            Attrib_Spectrum(j, k, 5) = Attrib_Tmp(0)
-
-                            Attrib_Spectrum(j, k, 6) = Det_ToRead
-
-
-                            For i = 0 To 2047
-                                MesSpectres(j, k, i) = CStr(Data(i))
-                            Next
-                            k += 1
-                        Next
-                        Exit For
-                    End If
-
-                Next
-            Next j
-
-
-            'Dim DataSet = DataSet_Spectre.Dataset("x0")
-            ' Data = DataSet_Spectre.Read(Of Integer)
-
-            'Next
-
-
-        End If
-        Dim Spectre
-
-        'PureHDF.H5Group.Get("/")
-        'PureHDF.H5Group
-        'PureHDF.H5Object
-        'Dim i As Integer
-        'For i = 0 To 100
-        '    x(i) = i / 10
-        '    y(i) = Math.Sin(x(i))
-        '    Chart1.Series(0).Points.AddXY(x(i), y(i))
-
-        'Next
-        ' PureHDF.H5
-    End Sub
 
 
     Private Sub Button6_Click_1(sender As Object, e As EventArgs) Handles Button6.Click
@@ -10385,6 +10736,7 @@ pass_mat:   ' Only_Trace
         ComputerName = System.Net.Dns.GetHostName
         Dim HDF_as_Map As Boolean
         Dim Myh5
+        Dim gupix_header_ok As Boolean
 
         If hdf5_mode = False Then
             Exit Sub
@@ -10401,16 +10753,10 @@ pass_mat:   ' Only_Trace
         Dim Local_Attrib_Spectrum(20) As String
         Dim MyH5Group
         Dim Som As Long
-        Dim MyHeures As String, Second As String, MyDate As String
-
         Dim MyStrData As String
+        Dim noheader As Boolean
+        Dim rbs_format As Boolean
 
-        Dim MyYear As String
-        Dim Second_Temp As Byte
-        Dim Minute_Temp As Byte
-        Dim Heure_Temp As Long
-        Dim tps_cps As String
-        Dim commentaire As String
 
         Try
             MyH5Group = Myh5.Group("/data")
@@ -10425,9 +10771,8 @@ pass_mat:   ' Only_Trace
         j = 0
         i = 0
         k = 0
-        '''  Ref_DataSet_ToRead(0) = "x0"
-        ''''  Ref_DataSet_ToRead(1) = "x10"
-        Local_Ref_DataSet_ToRead = {"x0", "x1", "x3", "x4", "x10", "x11", "x12", "x13", "g20", "g70", "r135", "r150"}
+        gupix_header_ok = False
+        Local_Ref_DataSet_ToRead = {"X34", "X134", "X1234", "X0", "X1", "X3", "X4", "X10", "X11", "X12", "X13", "G20", "G70", "R135", "R150"}
 
         For Each Det_ToRead As String In Local_Ref_DataSet_ToRead
             If Det_ToRead <> "" Then
@@ -10437,13 +10782,8 @@ pass_mat:   ' Only_Trace
 
         Dim Spectres_hdf5()
 
-        'Dim AllSpectres_hdf5_gamma(LvFiles.SelectedItems.Count - 1, Nb_Det_ToRead - 1, 2048)
-        'Dim AllSpectres_hdf5_rbs(LvFiles.SelectedItems.Count - 1, Nb_Det_ToRead - 1, 512)
-        'Dim Attrib_Spectrum(LvFiles.SelectedItems.Count - 1, Nb_Det_ToRead - 1, 7)
-        'For Each Grp As Object In MesFiles
-
         Try
-            MkDir(Chemin_Data & "\GupixFiles\")
+            MkDir(Chemin_Data & "\AsciiFiles\")
         Catch ex As Exception
 
         End Try
@@ -10451,48 +10791,62 @@ pass_mat:   ' Only_Trace
         For j = 0 To LvFiles.SelectedItems.Count - 1
 
             For Each List_Group As H5Group In myH5Group1.Children
-                Attrib = List_Group.Attribute("ref object")
-                Attrib_ref_obj = Attrib.ReadString
+                'Attrib = List_Group.Attribute("ref object")
+                'Attrib_ref_obj = Attrib.ReadString
 
-
-                If LvFiles.SelectedItems(j).Text = List_Group.Name & "_" & Attrib_ref_obj(0) Then
+                If LvFiles.SelectedItems(j).Text = List_Group.Name Then ' & "_" & Attrib_ref_obj(0) Then
                     k = 0
 
+                    Try
+                        Attrib = List_Group.Attribute(tab_const_metadata(0)) ' Analyse description
+                        Attrib_Tmp = Attrib.ReadString
+                        Local_Attrib_Spectrum(0) = Attrib_Tmp(0)
+                        Attrib = List_Group.Attribute(tab_const_metadata(1)) '  acquisition time (sec)
+                        Attrib_Tmp = Attrib.ReadString
+                        Local_Attrib_Spectrum(1) = Attrib_Tmp(0)
+                        Attrib = List_Group.Attribute(tab_const_metadata(2)) '  ref. analyse
+                        Attrib_Tmp = Attrib.ReadString
+                        Local_Attrib_Spectrum(2) = Attrib_Tmp(0)
+
+                    Catch ex As Exception
+                        Local_Attrib_Spectrum(7) = 1
+                    End Try
+
                     Application.DoEvents()
-                    ToolStripStatusLabel1.Text = "extract dataset:  " & List_Group.Name & "_" & Attrib_ref_obj(0)
+                    ToolStripStatusLabel1.Text = "extract dataset:  " & List_Group.Name ' & "_" & Attrib_ref_obj(0)
 
                     For Each Det_ToRead As String In Local_Ref_DataSet_ToRead
+                        MyStrData = ""
+                        rbs_format = False
+                        noheader = False
+                        If InStr(Det_ToRead, "R", vbTextCompare) > 0 Then ' Format 2 colonnes RBS/SimNRA
+                            rbs_format = True
+                            noheader = True
+                        End If
                         Try
                             DataSet = List_Group.Dataset(Det_ToRead)
+                            Data = DataSet.Read(Of Int32)
                         Catch ex As Exception
                             GoTo Myend
                         End Try
 
-                        Data = DataSet.Read(Of Int32)
-                        Attrib = DataSet.Attribute("spectrum sum")
-                        Attrib_Tmp = Attrib.ReadString
-                        Local_Attrib_Spectrum(0) = Attrib_Tmp(0)
-
-                        Attrib = DataSet.Attribute("acquisition time")
-                        Attrib_Tmp = Attrib.ReadString
-                        Local_Attrib_Spectrum(1) = Attrib_Tmp(0)
-
-                        Attrib = DataSet.Attribute("seconds since midnight")
-                        Attrib_Tmp = Attrib.ReadString
-                        Local_Attrib_Spectrum(2) = Attrib_Tmp(0)
-
-                        Attrib = DataSet.Attribute("month")
-                        Attrib_Tmp = Attrib.ReadString
-                        Local_Attrib_Spectrum(3) = Attrib_Tmp(0)
-
-                        Attrib = DataSet.Attribute("year")
-                        Attrib_Tmp = Attrib.ReadString
-                        Local_Attrib_Spectrum(4) = Attrib_Tmp(0)
-
-                        Attrib = DataSet.Attribute("user comment")
-                        Attrib_Tmp = Attrib.ReadString
-                        Local_Attrib_Spectrum(5) = Attrib_Tmp(0)
                         Local_Attrib_Spectrum(6) = Det_ToRead
+
+                        If noheader = False Then
+                            Try
+                                Attrib = DataSet.Attribute("gupix header") ' 2025 05 58731 70 0  (year,month, second since midnight, acq. time , spectra sum)
+                                Attrib_Tmp = Attrib.ReadString
+                                Local_Attrib_Spectrum(3) = Attrib_Tmp(0)
+                                gupix_header_ok = True
+
+                            Catch ex As Exception
+                                Local_Attrib_Spectrum(0) = "unknown"
+                                Local_Attrib_Spectrum(3) = "2025 05 58731 70 10000"
+                                gupix_header_ok = True
+                                Local_Attrib_Spectrum(6) = Det_ToRead
+
+                            End Try
+                        End If
 
                         ReDim Spectres_hdf5(DataSet.Space.Dimensions(0))
 
@@ -10501,33 +10855,25 @@ pass_mat:   ' Only_Trace
                             Som = 0
                         End If
 
-
-                        MyYear = Local_Attrib_Spectrum(4)
-                        MyDate = "'" & Local_Attrib_Spectrum(4) & "-" & Local_Attrib_Spectrum(3) & "-01'"
-
-                        Second = Local_Attrib_Spectrum(2)
-                        Heure_Temp = Int(CInt(Second) / 3600)
-                        Minute_Temp = Int((CInt(Second) Mod 3600) / 60)
-                        Second_Temp = CInt(Second) Mod 3600 - Minute_Temp * 60
-                        MyHeures = IIf(Heure_Temp < 10, String.Format(Heure_Temp, "0#"), LTrim(Str(Heure_Temp))) & ":" & String.Format(Minute_Temp, "0#") & ":" & String.Format(Second_Temp, "0#")
-                        tps_cps = Local_Attrib_Spectrum(1) 'ACQ TIME
-                        commentaire = " " & Local_Attrib_Spectrum(5)
-                        'Tab_Comment(i) = commentaire
-                        MyStrData = ""
-                        MyStrData = CStr(DataSet.Space.Dimensions(0)) & " 1" & vbCrLf
-                        '2022 07 42292 245 668979  'DrN,1000,1000,25,25,500,40,100000,Proton , 3001 keV , 40mm He , 50 um Al + 20 um Cr , OFF , 50 um Al + 20 um Cr , 50 um Al'
-
-                        'MyStrData = MyStrData & MyDate & " '" & MyHeures & "' " & tps_cps & "    " & Local_Attrib_Spectrum(2) & " " & commentaire & " ' " & vbCrLf FOR PAR FILE
-                        MyStrData = MyStrData & MyYear & " 10 " & Local_Attrib_Spectrum(2) & " " & Local_Attrib_Spectrum(1) & " " & Local_Attrib_Spectrum(0) & " " & commentaire & " ' " & vbCrLf ' FOR SPECTRA FILE
+                        If gupix_header_ok = True And noheader = False Then
+                            MyStrData = "2048 1" & vbCrLf
+                            MyStrData += Local_Attrib_Spectrum(3) & " '" & Local_Attrib_Spectrum(2) & " ' " & vbCrLf ' FOR SPECTRA FILE
+                        ElseIf noheader = False Then
+                            MyStrData = "2048 1" & vbCrLf
+                            MyStrData += "2025 05 58731 70 10000 'unknown'" & vbCrLf
+                        End If
 
                         For i = 0 To DataSet.Space.Dimensions(0) - 1
                             Som = Som + Data(i)
-                            MyStrData = MyStrData & CStr(Data(i)) & vbCrLf ' Nb_file, Num_det, canauxSpectres_hdf5(i) = 
+                            If rbs_format = True Then
+                                MyStrData += CStr(i) & vbTab & CStr(Data(i)) & vbCrLf ' Nb_file, Num_det, canauxSpectres_hdf5(i) = 
+                            Else
+                                MyStrData += CStr(Data(i)) & vbCrLf ' Nb_file, Num_det, canauxSpectres_hdf5(i) = 
+                            End If
                         Next
-                        File.WriteAllText(Chemin_Data & "\GupixFiles\" & LvFiles.SelectedItems(j).Text & "." & Det_ToRead, MyStrData & vbCrLf)
+                        File.WriteAllText(Chemin_Data & "\AsciiFiles\" & LvFiles.SelectedItems(j).Text & "." & Det_ToRead, MyStrData & vbCrLf)
 
 Myend:
-                        k += 1
                     Next
 
                     Exit For
@@ -10536,7 +10882,7 @@ Myend:
             Next
         Next j
 
-        ToolStripStatusLabel1.Text = "extracting finish : " & Chemin_Data & "\GupixFiles\"
+        ToolStripStatusLabel1.Text = "extracting finish : " & Chemin_Data & "\Ascii_Files\"
     End Sub
 
     Private Sub LvFiles_SelectedIndexChanged(sender As Object, e As EventArgs) Handles LvFiles.SelectedIndexChanged
@@ -10941,33 +11287,7 @@ Myend:
         ReDim Tab_Info_Mat.Z(50)
         ReDim Tab_Info_Mat.Inv(50)
         ReDim Val_Inv_Mtx(50, 50)
-        'Read_gamma_xls()
-        '  ''''  Insert_Matrix_gamma(0, 0)
-        'Dim temp(100) As Integer
-        'Dim i As Integer
-        'For i = 0 To Nb_Elements_Mat - 1
-        '    temp(i) = Val_Mat_Conc_1(0, i)
-        'Next i
 
-        'Dim list As New List(Of Array)
-        'list.Add(temp)
-
-        'With xlSheet_Conc
-        '    ' .Range(
-        '    '.Cell(StartRow, StartCol).value = Val_Mat_Conc_1 'InsertTable(IEnumerable(Val_Mat_Conc_1))
-        '    Rng = .Range(StartRow, StartCol, (UBound(Val_Mat_Area_1, 1) - LBound(Val_Mat_Area_1, 1) + StartRow), (UBound(Val_Mat_Area_1, 2) - LBound(Val_Mat_Area_1, 2) + StartCol))
-        '    'Rng = .Ranges(StartRow, StartCol, (UBound(Val_Mat_Area_1, 1) - LBound(Val_Mat_Area_1, 1) + StartRow), (UBound(Val_Mat_Area_1, 2) - LBound(Val_Mat_Area_1, 2) + StartCol))
-
-        'End With
-        'Rng.Value = Val_Mat_Conc_1
-        ' Rng.HorizontalAlignment = xlCenter
-
-
-        ' Renvoi un List(Of Array) a partir d'un datatable
-        'Dim retArray As New List(Of Array)
-        'For i = 0 To 10
-        '    retArray.Add(Val_Mat_Area_1(i, 0))
-        'Next
         'Return retArray
         Dim Montest As String
         Dim gamma_z, gamma_f, Mycell_z, Mycell_f
@@ -11044,25 +11364,6 @@ Myend:
                     Next j
 
                 Next i
-
-                    'val_gamma(0, i) = gamma_z
-
-
-
-
-
-                'Try
-                '   
-
-                '    For j = 0 To 2
-                '        For i = 0 To 2
-                '            multiList(j).Add(Val_Mat_Area_1(j, i))
-                '        Next
-                '    Next j
-                'Catch ex As Exception
-                'End Try
-
-
 
             Case "createexcel"
 
@@ -11149,16 +11450,26 @@ Myend:
         Dim MesMaps(1000) As Object
         Dim Attrib
         Dim Attrib_ref_obj
+        Dim attrib_val
+        Dim attrib_val_1
         Dim Data
-        Dim HDF_as_Map As Boolean
+        Dim MyH5Group
         Dim Myh5
         Dim i As Integer = 0
+
+        Dim pixel_size_x As Integer
+        Dim size_x As Integer
+        Dim pixel_size_y As Integer
+        Dim size_y As Integer
+        Dim pen_size As Integer
+
 
         'Myh5 = PureHDF.H5File.OpenRead("C:\Data\2023_Data_Euphro\20230322_globals_OBJ_PRJ_IBA.hdf5") 
         Try
             Myh5 = PureHDF.H5File.OpenRead(Hdf5file)
         Catch ex As Exception
             hdf5_mode = False
+            hdf5_is_map = False
             Exit Sub
         End Try
 
@@ -11166,60 +11477,134 @@ Myend:
 
         Dim myH5Group1 = Myh5.Group("/")
 
-
-        '        foreach(var link In group.Children)
-        '{
-        '    var Message = link switch
-        '    {
-        '        H5Group group >= $"I am a group and my name is '{group.Name}'.",
-        '        H5Dataset dataset           => $"I am a dataset, call me '{dataset.Name}'.",
-        '        H5CommitedDatatype datatype >= $"I am the data type '{datatype.Name}'.",
-        '        H5UnresolvedLink lostLink   => $"I cannot find my link target =( shame on '{lostLink.Name}'."
-        '        _                           => throw New Exception("Unknown link type");
-        '    }
-
-        '    Console.WriteLine(Message)
-        '}
         LvFiles.Items.Clear()
-
+        hdf5_is_map = False
         Try
 
             For Each List_Group As H5Group In myH5Group1.Children 'List les " GROUP" présent à la racine
 
-                Try
-                    Attrib = List_Group.Attribute("ref object")
-                    Attrib_ref_obj = Attrib.ReadString
-                    'Attrib_ref_obj.value()
 
-                    If InStr(Attrib_ref_obj(0), Box_txtFiltre.Text, CompareMethod.Text) > 0 Or Box_txtFiltre.Text = "*" Then
-                        MesFiles(i) = List_Group
-                        LvFiles.Items.Add(MesFiles(i).Name & "_" & Attrib_ref_obj(0))
-                        i += 1
+                If List_Group.Name = "Experimental parameters" Then
+                    hdf5_is_map = True
+                    hdf5_mode = False
+                End If
+
+
+
+
+
+                If hdf5_is_map = False Then
+
+                    Try
+                        Attrib = List_Group.Attribute("ref. analyse")
+                        Attrib_ref_obj = Attrib.ReadString
+                        If InStr(List_Group.Name, Box_txtFiltre.Text, CompareMethod.Text) > 0 Or Box_txtFiltre.Text = "*" Then
+                            MesFiles(i) = List_Group.Name
+                            LvFiles.Items.Add(MesFiles(i)) ' & "_" & Attrib_ref_obj(0))
+                            i += 1
+                        End If
+                    Catch ex As Exception
+                        Try
+                            Attrib = List_Group.Attribute("ref. object")
+                            Attrib_ref_obj = Attrib.ReadString
+
+                            If InStr(Attrib_ref_obj(0), Box_txtFiltre.Text, CompareMethod.Text) > 0 Or Box_txtFiltre.Text = "*" Then
+                                MesFiles(i) = List_Group
+                                LvFiles.Items.Add(MesFiles(i).Name & "_" & Attrib_ref_obj(0))
+                                i += 1
+                            End If
+
+                        Catch ex1 As Exception
+                            If i = 0 Then
+                                hdf5_mode = False
+                                TxtBox_HDF5_File.Text = "No AGLAE ponctual group corresponding in this hdf5"
+                                Button_Extract.Enabled = False
+                            End If
+                        End Try
+                    End Try
+
+                    If i > 0 Then
+                        hdf5_mode = True '########### info Ref. analyse trouvé
+                        Button_Extract.Enabled = True
                     End If
 
-                Catch ex As Exception
-                    hdf5_mode = False
-                    TxtBox_HDF5_File.Text = "No AGLAE ponctual group corresponding in this hdf5"
-                    Button_Extract.Enabled = False
-                End Try
+
+                    'Try
+                    '    MyH5Group = Myh5.Group("/data")
+                    '    hdf5_is_map = True
+                    '    LvFiles.Items.Clear()
+                    '    hdf5_mode = False
+                    '    TxtBox_HDF5_File.Text = "No AGLAE ponctual group corresponding in this hdf5"
+                    'Catch ex As Exception
+
+                    '    hdf5_is_map = False
+                    'End Try
+
+                ElseIf hdf5_is_map = True Then ' list les cartos de hdf5 map
+                    If List_Group.Name = "Experimental parameters" Then
+                        LvFiles.Items.Add("      1 - Experimental parameters")
+                        Attrib = List_Group.Attribute("ref. analyse")
+                        attrib_val = Attrib.ReadString
+                        LvFiles.Items.Add("      1 - ref. analyse: " & attrib_val(0))
+                        Attrib = List_Group.Attribute("pen size (um)")
+                        attrib_val = Attrib.ReadString
+                        pen_size = Int(attrib_val(0))
+                        LvFiles.Items.Add("      1 - pen size (um): " & attrib_val(0))
+
+                        Attrib = List_Group.Attribute("map size x (um)")
+                        attrib_val = Attrib.ReadString
+                        size_x = Int(attrib_val(0))
+
+                        Attrib = List_Group.Attribute("map size y (um)")
+                        attrib_val_1 = Attrib.ReadString
+                        size_y = Int(attrib_val_1(0))
+                        LvFiles.Items.Add("      1 - map size (um): X=" & attrib_val(0) & ", Y:" & attrib_val_1(0))
+
+                        Attrib = List_Group.Attribute("pixel size x (um)")
+                        attrib_val = Attrib.ReadString
+                        pixel_size_x = Int(attrib_val(0))
+
+                        Attrib = List_Group.Attribute("pixel size y (um)")
+                        attrib_val_1 = Attrib.ReadString
+                        pixel_size_y = Int(attrib_val_1(0))
+                        LvFiles.Items.Add("      1 - pixel size (um)= X:" & attrib_val(0) & ", Y:" & attrib_val_1(0))
+                        LvFiles.Items.Add(" 2 - Maps datacube available")
+                        nb_pixel_x_map = size_x / pixel_size_x
+                        nb_pixel_y_map = (size_y / pen_size) * (pen_size / pixel_size_y)
+
+                    Else
+
+                        If InStr(List_Group.Name, "X", CompareMethod.Text) > 0 Then
+                            MesMaps(i) = List_Group.Name
+                            LvFiles.Items.Add(MesMaps(i))
+                            i += 1
+                        End If
+
+                    End If
+
+                Else ' No ref. analyse trouvé
+                    If hdf5_mode = False And hdf5_is_map = False Then
+                        TxtBox_HDF5_File.Text = "No AGLAE data type corresponding in this hdf5"
+                        Button_Extract.Enabled = False
+                    End If
+
+
+                End If
+
+
+
+
+
             Next
 
-            If i > 0 Then
-                hdf5_mode = True '########### Group type Matrice trouvé
-                Button_Extract.Enabled = True
-            End If
+            'If i = 0 Then
+            '    hdf5_mode = False
+            '    hdf5_is_map = False
+            '    TxtBox_HDF5_File.Text = "No AGLAE data type corresponding in this hdf5"
+            '    Button_Extract.Enabled = False
+            'End If
 
-            Dim MyH5Group
-            Try
-                MyH5Group = Myh5.Group("/data")
-                HDF_as_Map = True
-                LvFiles.Items.Clear()
-                hdf5_mode = False
-                TxtBox_HDF5_File.Text = "No AGLAE ponctual group corresponding in this hdf5"
-            Catch ex As Exception
 
-                HDF_as_Map = False
-            End Try
 
 
             'If HDF_as_Map = True Then
@@ -11246,7 +11631,7 @@ Myend:
         End Try
     End Sub
 
-    Private Sub hdf5_Read_Dataset_Attrib()
+    Private Sub hdf5_trc_Read_Dataset_Attrib()
         Dim ComputerName As String
         Dim MesFiles(1000) As Object
         Dim Nb_Det_ToRead As Integer
@@ -11281,16 +11666,17 @@ Myend:
         j = 0
         i = 0
         k = 0
-        '''  Ref_DataSet_ToRead(0) = "x0"
-      ''''  Ref_DataSet_ToRead(1) = "x10"
-        For Each Det_ToRead As String In Ref_DataSet_ToRead
+
+        For Each Det_ToRead As String In Ref_trc_DataSet_ToRead
             If Det_ToRead <> "" Then
                 Nb_Det_ToRead += 1
             End If
         Next
+
+
         ReDim Local_Ref_DataSet_ToRead(Nb_Det_ToRead - 1)
         For i = 0 To Nb_Det_ToRead - 1
-            Local_Ref_DataSet_ToRead(i) = Ref_DataSet_ToRead(i)
+            Local_Ref_DataSet_ToRead(i) = Ref_trc_DataSet_ToRead(i)
         Next
 
         If HDF_as_Map = True Then
@@ -11306,48 +11692,67 @@ Myend:
 
         Else ' Ponctual DATA
 
-            ReDim AllSpectres_hdf5(LvFiles.SelectedItems.Count - 1, Nb_Det_ToRead - 1, 2048)
-            ReDim Attrib_Spectrum(LvFiles.SelectedItems.Count - 1, Nb_Det_ToRead - 1, 7)
+            ReDim AllSpectres_trc_hdf5(LvFiles.SelectedItems.Count - 1, Nb_Det_ToRead - 1, 2048)
+            ReDim Attrib_Trc_hdf5(LvFiles.SelectedItems.Count - 1, Nb_Det_ToRead - 1, 7)
             'For Each Grp As Object In MesFiles
 
 
-
             For j = 0 To LvFiles.SelectedItems.Count - 1
-
+                k = 0
                 For Each List_Group As H5Group In myH5Group1.Children
-                    Attrib = List_Group.Attribute("ref object")
-                    Attrib_ref_obj = Attrib.ReadString
 
-                    If LvFiles.SelectedItems(j).Text = List_Group.Name & "_" & Attrib_ref_obj(0) Then
+                    'Try
+                    '    Attrib = List_Group.Attribute("ref. analyse")
+                    '    Attrib_ref_obj = Attrib.ReadString
+                    'Catch ex As Exception
+                    '    Try
+                    '        Attrib = List_Group.Attribute("ref. object")
+                    '        Attrib_ref_obj = Attrib.ReadString
+                    '    Catch ex1 As Exception
+
+                    '    End Try
+
+                    'End Try
+
+
+                    If LvFiles.SelectedItems(j).Text = List_Group.Name Then '& "_" & Attrib_ref_obj(0) Then
+
+                        Try
+                            Attrib = List_Group.Attribute(tab_const_metadata(0)) ' Analyse description
+                            Attrib_Tmp = Attrib.ReadString
+                            Attrib_Trc_hdf5(j, k, 0) = Attrib_Tmp(0)
+                            Attrib = List_Group.Attribute(tab_const_metadata(1)) '  acquisition time (sec)
+                            Attrib_Tmp = Attrib.ReadString
+                            Attrib_Trc_hdf5(j, k, 1) = Attrib_Tmp(0)
+                            Attrib = List_Group.Attribute(tab_const_metadata(2)) '  ref. analyse
+                            Attrib_Tmp = Attrib.ReadString
+                            Attrib_Trc_hdf5(j, k, 2) = Attrib_Tmp(0)
+
+                        Catch ex As Exception
+                            Attrib_Trc_hdf5(j, k, 7) = 1
+                        End Try
                         k = 0
                         For Each Det_ToRead As String In Local_Ref_DataSet_ToRead
                             DataSet = List_Group.Dataset(Det_ToRead)
                             Data = DataSet.Read(Of Int32)
-                            Attrib = DataSet.Attribute("spectrum sum")
-                            Attrib_Tmp = Attrib.ReadString
-                            Attrib_Spectrum(j, k, 0) = Attrib_Tmp(0)
-                            Attrib = DataSet.Attribute("acquisition time")
-                            Attrib_Tmp = Attrib.ReadString
-                            Attrib_Spectrum(j, k, 1) = Attrib_Tmp(0)
-                            Attrib = DataSet.Attribute("seconds since midnight")
-                            Attrib_Tmp = Attrib.ReadString
-                            Attrib_Spectrum(j, k, 2) = Attrib_Tmp(0)
-                            Attrib = DataSet.Attribute("month")
-                            Attrib_Tmp = Attrib.ReadString
-                            Attrib_Spectrum(j, k, 3) = Attrib_Tmp(0)
-                            Attrib = DataSet.Attribute("year")
-                            Attrib_Tmp = Attrib.ReadString
-                            Attrib_Spectrum(j, k, 4) = Attrib_Tmp(0)
-                            Attrib = DataSet.Attribute("user comment")
-                            Attrib_Tmp = Attrib.ReadString
-                            Attrib_Spectrum(j, k, 5) = Attrib_Tmp(0)
-                            Attrib_Spectrum(j, k, 6) = Det_ToRead
+                            Attrib_Trc_hdf5(j, k, 4) = List_Group.Name
+                            Attrib_Trc_hdf5(j, k, 5) = Strings.LCase(Det_ToRead)
 
+                            Try
+                                Attrib = DataSet.Attribute("gupix header") ' 2025 05 58731 70 0  (year,month, second since midnight, acq. time , spectra sum)
+                                Attrib_Tmp = Attrib.ReadString
+                                Attrib_Trc_hdf5(j, k, 3) = Attrib_Tmp(0)
+                            Catch ex As Exception
+                                Attrib_Trc_hdf5(j, k, 3) = "2025 05 58731 70 10000"
+                            End Try
+
+
+                            Som = 0
                             For i = 0 To DataSet.Space.Dimensions(0) - 1
                                 Som = Som + Data(i)
-                                AllSpectres_hdf5(j, k, i) = CStr(Data(i))
+                                AllSpectres_trc_hdf5(j, k, i) = CStr(Data(i))
                             Next
-                            Attrib_Spectrum(j, k, 7) = CStr(Som)
+                            Attrib_Trc_hdf5(j, k, 7) = CStr(Som)
                             If Som = 0 Then
                                 Som = 0
                             End If
@@ -11363,6 +11768,121 @@ Myend:
 
     End Sub
 
+    Private Sub hdf5_mat_Read_Dataset_Attrib()
+        Dim ComputerName As String
+        Dim MesFiles(1000) As Object
+        Dim Nb_Det_ToRead As Integer
+        Dim MesMaps(1000) As Object
+        ComputerName = System.Net.Dns.GetHostName
+        Dim HDF_as_Map As Boolean
+        '        Dim File = New H5File("c:\data\")
+        Dim Myh5
+        'Myh5 = PureHDF.H5File.OpenRead("C:\Data\2023_Data_Euphro\20230322_globals_NomProjet_IBA.hdf5") 'H5.open("C:\Data\2023_Data_Euphro\20220620_0011_Night_SIBILLA_IBA.hdf5", OpenMode.Binary)
+        Myh5 = PureHDF.H5File.OpenRead(Chemin_Data & "\" & TxtBox_HDF5_File.Text)
+        Dim myH5Group1 = Myh5.Group("/")
+        Dim i As Integer = 0
+
+        Dim Attrib
+        Dim Attrib_ref_obj
+        Dim Attrib_Tmp
+        Dim Data
+        Dim Local_Ref_DataSet_ToRead As String
+        Dim MyH5Group
+        Dim Som As Long
+
+        Try
+            MyH5Group = Myh5.Group("/data")
+            HDF_as_Map = True
+        Catch ex As Exception
+            HDF_as_Map = False
+        End Try
+
+        i = 0
+        Dim DataSet
+        Dim j, k
+        j = 0
+        i = 0
+        k = 0
+
+
+
+        Local_Ref_DataSet_ToRead = Ref_mat_DataSet_ToRead
+
+
+        If HDF_as_Map = True Then
+            For Each List_Dataset As H5Dataset In MyH5Group.Children 'List les " DATASET" présent dans le group "/data"
+                MesMaps(i) = List_Dataset
+                i += 1
+            Next
+            Dim TestN = MesMaps(0).Name
+            'var group = root.Group("/my/nested/group");
+            '// get dataset in groupa
+            DataSet = MyH5Group.Dataset("HE1")
+            Data = DataSet.Read(Of Integer)
+
+        Else ' Ponctual DATA
+
+            ReDim AllSpectres_mat_hdf5(LvFiles.SelectedItems.Count - 1, 2048)
+            ReDim Attrib_mat_hdf5(LvFiles.SelectedItems.Count - 1, 7)
+            'For Each Grp As Object In MesFiles
+
+
+            For j = 0 To LvFiles.SelectedItems.Count - 1
+
+                For Each List_Group As H5Group In myH5Group1.Children
+
+                    If LvFiles.SelectedItems(j).Text = List_Group.Name Then ' & "_" & Attrib_ref_obj(0) Then
+                        Attrib_mat_hdf5(j, 4) = List_Group.Name
+                        Try
+                            Attrib = List_Group.Attribute(tab_const_metadata(0)) ' Analyse description
+                            Attrib_Tmp = Attrib.ReadString
+                            Attrib_mat_hdf5(j, 0) = Attrib_Tmp(0)
+                            Attrib = List_Group.Attribute(tab_const_metadata(1)) '  acquisition time (sec)
+                            Attrib_Tmp = Attrib.ReadString
+                            Attrib_mat_hdf5(j, 1) = Attrib_Tmp(0)
+                            Attrib = List_Group.Attribute(tab_const_metadata(2)) '  ref. analyse (sec)
+                            Attrib_Tmp = Attrib.ReadString
+                            Attrib_mat_hdf5(j, 2) = Attrib_Tmp(0)
+
+                        Catch ex As Exception
+                            Attrib_mat_hdf5(j, 7) = 1
+                        End Try
+                        k = 0
+
+                        DataSet = List_Group.Dataset(Ref_mat_DataSet_ToRead)
+                        Data = DataSet.Read(Of Int32)
+
+                        Attrib_mat_hdf5(j, 5) = List_Group.Name
+                        Attrib_mat_hdf5(j, 6) = Strings.LCase(Ref_mat_DataSet_ToRead)
+
+
+                        Try
+                            Attrib = DataSet.Attribute("gupix header") ' 2025 05 58731 70 0  (year,month, second since midnight, acq. time , spectra sum)
+                            Attrib_Tmp = Attrib.ReadString
+                            Attrib_mat_hdf5(j, 3) = Attrib_Tmp(0)
+                        Catch ex As Exception
+                            Attrib_mat_hdf5(j, 3) = "2025 05 58731 70 10000"
+                        End Try
+
+
+                        Som = 0
+                        For i = 0 To DataSet.Space.Dimensions(0) - 1
+                            Som = Som + Data(i)
+                            AllSpectres_mat_hdf5(j, i) = CStr(Data(i))
+                        Next
+                        Attrib_mat_hdf5(j, 7) = CStr(Som)
+                        If Som = 0 Then
+                            Som = 0
+                        End If
+
+                    End If
+
+                Next
+            Next j
+
+        End If
+
+    End Sub
     Private Sub SkipPbMatrixToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SkipPbMatrixToolStripMenuItem.Click
         SkipPbMatrixToolStripMenuItem.Checked = Not (SkipPbMatrixToolStripMenuItem.Checked)
         invert_skip_z_status_1(SkipPbMatrixToolStripMenuItem.Checked)
@@ -11423,6 +11943,29 @@ Myend:
     End Sub
 
 
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        Dim elements As Single() = {0.12, 6.5, 4.2, 1.2}
+        Dim combinationSize As Integer = 2 ' Taille des combinaisons (par exemple, paires)
+        Dim unc_mat = 2
+        Dim combined_uncertainty As Single
+        ' Liste pour stocker les combinaisons
+        Dim combinations As New List(Of Single)
+
+        ' Appeler la fonction pour générer les combinaisons
+        'GenerateCombinations(elements, combinationSize, New List(Of Single), 0, combinations)
+        For i As Integer = 0 To elements.Length - 1
+            Dim combination As New Single
+            ' combination.Add(2) ' Ajouter l'élément fixe (unc1)
+            ' combination.Add(elements(i))  ' Ajouter l'autre élément (unc2, unc3, etc.)
+            combined_uncertainty = Math.Sqrt(unc_mat ^ 2 + elements(i) ^ 2)
+            combinations.Add(combined_uncertainty) ' Ajouter la combinaison à la liste
+        Next
+        ' Afficher les résultats
+        Console.WriteLine("Combinaisons générées :")
+        For Each combination In combinations
+            Console.WriteLine(combination)
+        Next
+    End Sub
 
     Private Sub chk_external_ok_CheckedChanged(sender As Object, e As EventArgs) Handles chk_external_ok.CheckedChanged
 
@@ -11599,6 +12142,7 @@ Okread:
         Pivot_det6.Enabled = True
         Pivot_det7.Enabled = True
         Pivot_det8.Enabled = True
+        Label_QFile.Visible = False
 
         'MAtrix has chareg value in charge.csv file
         For Each nom In Det_name_with_charge
@@ -11606,6 +12150,7 @@ Okread:
                 Use_ext_charge_Mat = True
                 num_column_charge_csv_MAT = num_column_in_csv_file
                 num_column_in_csv_file += 1
+                Label_QFile.Visible = True
             End If
 
 
@@ -11685,7 +12230,7 @@ Okread:
             End If
 
             If Check_det7.Checked = True Then
-                If Check_det6.Text = nom Then
+                If Check_det7.Text = nom Then
                     Use_ext_charge_Trc(7) = True
                     num_column_charge_csv_TRC(7) = num_column_in_csv_file
                     num_column_in_csv_file += 1
@@ -11896,6 +12441,15 @@ Okread:
         Dim rapport_y As Single
         Dim rapport_x As Single
 
+        'Args:
+        'Va:     Volume élément
+        '        Ma: Masse molaire élément
+        '        Vo: Volume oxygène
+        '        Mo: Masse molaire oxygène
+        '        tmp_conc: Concentration temporaire
+        '        i, j: Indices de position dans les matrices
+        '        withoxide: Booléen d'activation du calcul d'oxyde
+
         If withoxide = True Then
             rapport_x = (Va * Ma / (Va * Ma + Vo * Mo))
             rapport_y = (Vo * Mo / (Va * Ma + Vo * Mo))
@@ -11979,7 +12533,20 @@ Okread:
         ReDim Val_YNQ_Final_1(-1, -1)
     End Sub
 
+    Private Sub ListBox_HDF5_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListBox_HDF5.SelectedIndexChanged
+
+    End Sub
+
+    Private Sub Button8_Click(sender As Object, e As EventArgs) Handles Button8.Click
+        Dim Chemin_source As String = "C:\tmp_Traupixe\_46450\46450\PIXTABLE0_1.OUT"
+        Dim Chemin_Processed_Data As String = "C:\data\processed_data\"
+        Dim File_Name As String = "202506_std.x0"
+        Dim nom_projet As String = "fff"
+        Dim result As Integer = Form_Traupixe_H5_2024.FiTtoPNG_LV16_2025(0, Chemin_source, Chemin_Processed_Data, File_Name, nom_projet)
+    End Sub
 End Class
+
+
 
 
 

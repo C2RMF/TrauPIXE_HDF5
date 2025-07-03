@@ -1,3 +1,18 @@
+####################### Version 25.09 #######################
+06/2025
+1 - Ajout de la fonction "Adjust Absorbers" pour les détecteurs PIGE et PIXE
+	-> Permet de corriger les absorbeurs pour les détecteurs PIGE et PIXE
+	-> Fonctionne avec tout type de filtre
+
+2- Ajout de la prise en charge des fichiers hdf5
+	-> Permet de lire les fichiers hdf5 générés par AGLAE
+	-> Fonctionne avec les détecteurs PIXE
+3 - Metadonnées HeaderGupix indispensable dans la metadata du fichier hdf5
+	-> Permet de lire les métadonnées du fichier hdf5 pour le traitement des données PIXE
+	-> Les métadonnées doivent être présentes dans le fichier hdf5 pour que la fonction fonctionne correctement
+
+
+
 ####################### Version 25.08 #######################
 10/2024
 0 - La fonction "Adjust Absorbers" fonctionne pour tout les détecteurs et tout type de filtres.

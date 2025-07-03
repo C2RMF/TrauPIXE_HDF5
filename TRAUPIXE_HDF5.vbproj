@@ -47,8 +47,14 @@
     <None Update="Atomic_mass.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Config_Traupixe.ini">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="FiTtoPNG_2023_DLL.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="FiTtoPNG_2025_DLL.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Historic_Update.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
