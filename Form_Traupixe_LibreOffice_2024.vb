@@ -665,6 +665,7 @@ Public Class Form_Traupixe_H5_2024
         TxtBox_HDF5_File.Text = ""
         Myinit = True
         hdf5_mode = False
+        LvFiles.Enabled = True
         List_Par_Files_Trc()
         Maj_Files_Mat()
         Ext_Par_Trc = "*.par"
@@ -768,7 +769,7 @@ Public Class Form_Traupixe_H5_2024
                 MessageBox.Show(ex.Message)
             Finally
                 If SubItemIndex = 0 Then
-                    LvFiles.Items.Add("No files ...")
+                    LvFiles.Items.Add("No ASCII spectra files founded...")
                 Else
                     ReDim Lst_Files_Det0(SubItemIndex)
                     ReDim Lst_Files_Det1(SubItemIndex)
@@ -915,7 +916,7 @@ Public Class Form_Traupixe_H5_2024
 
                 MessageBox.Show(ex.Message)
             Finally
-                If SubItemIndex = 0 Then LvFiles.Items.Add("No files ...")
+                If SubItemIndex = 0 Then LvFiles.Items.Add("No GUPIX par files ...")
             End Try
         End If
 
@@ -1188,7 +1189,7 @@ Public Class Form_Traupixe_H5_2024
             Catch ex As Exception 'Something Went Wrong
                 MessageBox.Show(ex.Message)
             Finally
-                If SubItemIndex = 0 Then LstPar_Trc.Items.Add("No files ...")
+                If SubItemIndex = 0 Then LstPar_Trc.Items.Add("No GUPIX par files ...")
             End Try
 
 
@@ -1247,7 +1248,7 @@ Public Class Form_Traupixe_H5_2024
         Dim FileExtension As String 'Stores File Extension
         Dim SubItemIndex As Integer 'Sub Item Counter
         ListBox_HDF5.Items.Clear()
-
+        ComboBox_Type_Calc.Visible = False
 
         Dim folder As String = CStr(trvFolders.SelectedNode.Tag) 'Folder Name
 
@@ -1267,7 +1268,7 @@ Public Class Form_Traupixe_H5_2024
             Catch ex As Exception 'Something Went Wrong
                 MessageBox.Show(ex.Message)
             Finally
-                If SubItemIndex = 0 Then ListBox_HDF5.Items.Add("No files ...")
+                If SubItemIndex = 0 Then ListBox_HDF5.Items.Add("No hdf5 files founded...")
             End Try
 
         End If
@@ -1306,7 +1307,7 @@ Public Class Form_Traupixe_H5_2024
             Catch ex As Exception 'Something Went Wrong
                 MessageBox.Show(ex.Message)
             Finally
-                If SubItemIndex = 0 Then LstPar_Mat.Items.Add("No files ...")
+                If SubItemIndex = 0 Then LstPar_Mat.Items.Add("No GUPIX par files ...")
             End Try
 
         End If
@@ -1341,7 +1342,7 @@ Public Class Form_Traupixe_H5_2024
             Catch ex As Exception 'Something Went Wrong
                 MessageBox.Show(ex.Message)
             Finally
-                If SubItemIndex = 0 Then LstPar_Trc.Items.Add("No files ...")
+                If SubItemIndex = 0 Then LstPar_Trc.Items.Add("No GUPIX par files ...")
             End Try
 
             If FileExtension <> "" Then
@@ -1743,7 +1744,12 @@ Public Class Form_Traupixe_H5_2024
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
         Button2.Enabled = False
         Tps_Calc.Visible = True
-        Run_Calcul_Ponctual()
+        If hdf5_is_map = False Then
+            Run_Calcul_Ponctual()
+        Else
+            run_Calcul_map_hdf5()
+        End If
+
         Button2.Enabled = True
         Tps_Calc.Visible = False
     End Sub
@@ -2102,7 +2108,15 @@ Public Class Form_Traupixe_H5_2024
     Private Sub hdf5_to_ascii()
 
     End Sub
+    Private Sub exctrat_ascii_from_hdf5()
+        'This sub is used to extract ascii from hdf5 file
+        'It is used in the map mode to extract the ascii file from hdf5 file
 
+
+
+
+
+    End Sub
     Private Sub run_Calcul_map_hdf5()
         Dim Nb_file As Integer
         Dim I As Integer
@@ -10783,7 +10797,7 @@ pass_mat:   ' Only_Trace
         Dim Spectres_hdf5()
 
         Try
-            MkDir(Chemin_Data & "\AsciiFiles\")
+            MkDir(Chemin_Data & "\ASCII_files\")
         Catch ex As Exception
 
         End Try
@@ -10871,7 +10885,7 @@ pass_mat:   ' Only_Trace
                                 MyStrData += CStr(Data(i)) & vbCrLf ' Nb_file, Num_det, canauxSpectres_hdf5(i) = 
                             End If
                         Next
-                        File.WriteAllText(Chemin_Data & "\AsciiFiles\" & LvFiles.SelectedItems(j).Text & "." & Det_ToRead, MyStrData & vbCrLf)
+                        File.WriteAllText(Chemin_Data & "\ASCII_files\" & LvFiles.SelectedItems(j).Text & "." & Det_ToRead, MyStrData & vbCrLf)
 
 Myend:
                     Next
@@ -10882,7 +10896,7 @@ Myend:
             Next
         Next j
 
-        ToolStripStatusLabel1.Text = "extracting finish : " & Chemin_Data & "\Ascii_Files\"
+        ToolStripStatusLabel1.Text = "ASCII files extraction completed : " & Chemin_Data & "\ASCII_files\"
     End Sub
 
     Private Sub LvFiles_SelectedIndexChanged(sender As Object, e As EventArgs) Handles LvFiles.SelectedIndexChanged
@@ -10905,52 +10919,52 @@ Myend:
 
 
 
-    Private Sub ComboBox_Type_Calc_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_Type_Calc.SelectedIndexChanged
+    'Private Sub ComboBox_Type_Calc_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox_Type_Calc.SelectedIndexChanged
 
-        If Myinit = True Then
+    '    If Myinit = True Then
 
-            Select Case CbDetMat.SelectedIndex
-                Case 0
-                    If ComboBox_Type_Calc.Text = "Ponctual" Then
-                        Ext_Mat = "*.x" + CStr(CbDetMat.SelectedIndex)
-                    Else
-                        Ext_Mat = "*BE0*.edf"
-                    End If
+    '        Select Case CbDetMat.SelectedIndex
+    '            Case 0
+    '                If ComboBox_Type_Calc.Text = "Ponctual" Then
+    '                    Ext_Mat = "*.x" + CStr(CbDetMat.SelectedIndex)
+    '                Else
+    '                    Ext_Mat = "*BE0*.edf"
+    '                End If
 
-                    Ext_Par_Mat = "*BE0*.par"
-                Case 1 To 4
-                    Ext_Mat = "*.x" + CStr(CbDetMat.SelectedIndex)
-                    Ext_Par_Mat = "*HE" + CStr(CbDetMat.SelectedIndex) & "*.par"
-                Case 5
-                    Ext_Mat = "*.x10"
-                    Ext_Par_Mat = "*HE10*.par"
-                Case 6
-                    Ext_Mat = "*.x11"
-                    Ext_Par_Mat = "*HE11*.par"
-                Case 7
-                    Ext_Mat = "*.x12"
-                    Ext_Par_Mat = "*HE12*.par"
-                Case 8
-                    Ext_Mat = "*.x13"
-                    Ext_Par_Mat = "*HE13*.par"
-                Case 9
-                    Ext_Mat = ""
-                    Ext_Par_Mat = ""
-                Case Else
-                    Ext_Mat = "*.x12"
-                    Ext_Par_Mat = "*HE12*.par"
+    '                Ext_Par_Mat = "*BE0*.par"
+    '            Case 1 To 4
+    '                Ext_Mat = "*.x" + CStr(CbDetMat.SelectedIndex)
+    '                Ext_Par_Mat = "*HE" + CStr(CbDetMat.SelectedIndex) & "*.par"
+    '            Case 5
+    '                Ext_Mat = "*.x10"
+    '                Ext_Par_Mat = "*HE10*.par"
+    '            Case 6
+    '                Ext_Mat = "*.x11"
+    '                Ext_Par_Mat = "*HE11*.par"
+    '            Case 7
+    '                Ext_Mat = "*.x12"
+    '                Ext_Par_Mat = "*HE12*.par"
+    '            Case 8
+    '                Ext_Mat = "*.x13"
+    '                Ext_Par_Mat = "*HE13*.par"
+    '            Case 9
+    '                Ext_Mat = ""
+    '                Ext_Par_Mat = ""
+    '            Case Else
+    '                Ext_Mat = "*.x12"
+    '                Ext_Par_Mat = "*HE12*.par"
 
-            End Select
+    '        End Select
 
-            If hdf5_mode = True Then
-                List_HDF5_group(Chemin_hdf5)
-            Else
-                Maj_Files_Mat()
-            End If
-        End If
+    '        If hdf5_mode = True Then
+    '            List_HDF5_group(Chemin_hdf5)
+    '        Else
+    '            Maj_Files_Mat()
+    '        End If
+    '    End If
 
 
-    End Sub
+    'End Sub
 
     Sub lecture_Spectres_Mat_EDF(Num_Pixel As Integer, Num_File_EDF As Integer)
         Dim i As Long
@@ -11479,6 +11493,9 @@ Myend:
 
         LvFiles.Items.Clear()
         hdf5_is_map = False
+        LvFiles.Enabled = True
+        LvFiles.Clear()
+        ComboBox_Type_Calc.Visible = False
         Try
 
             For Each List_Group As H5Group In myH5Group1.Children 'List les " GROUP" présent à la racine
@@ -11490,11 +11507,10 @@ Myend:
                 End If
 
 
-
-
-
                 If hdf5_is_map = False Then
-
+                    LvFiles.Enabled = True
+                    ComboBox_Type_Calc.Visible = True
+                    ComboBox_Type_Calc.SelectedIndex = 0 ' Ponctual DATA
                     Try
                         Attrib = List_Group.Attribute("ref. analyse")
                         Attrib_ref_obj = Attrib.ReadString
@@ -11541,6 +11557,10 @@ Myend:
                     'End Try
 
                 ElseIf hdf5_is_map = True Then ' list les cartos de hdf5 map
+                    ComboBox_Type_Calc.Visible = True
+                    ComboBox_Type_Calc.SelectedIndex = 1 ' Maps DATA
+
+                    LvFiles.Enabled = False
                     If List_Group.Name = "Experimental parameters" Then
                         LvFiles.Items.Add("      1 - Experimental parameters")
                         Attrib = List_Group.Attribute("ref. analyse")
@@ -11767,7 +11787,120 @@ Myend:
         End If
 
     End Sub
+    Private Sub hdf5_map_mat_read_Dataset_Attrib()
+        Dim ComputerName As String
+        Dim MesFiles(1000) As Object
+        Dim Nb_Det_ToRead As Integer
+        Dim MesMaps(1000) As Object
+        ComputerName = System.Net.Dns.GetHostName
+        Dim HDF_as_Map As Boolean
+        '        Dim File = New H5File("c:\data\")
+        Dim Myh5
+        Myh5 = PureHDF.H5File.OpenRead(Chemin_Data & "\" & TxtBox_HDF5_File.Text)
+        Dim myH5Group1 = Myh5.Group("/")
+        Dim i As Integer = 0
 
+        Dim Attrib
+        Dim Attrib_ref_obj
+        Dim Attrib_Tmp
+        Dim Data
+        Dim Local_Ref_DataSet_ToRead As String
+        Dim MyH5Group
+        Dim Som As Long
+
+        Try
+            MyH5Group = Myh5.Group("/data")
+            HDF_as_Map = True
+        Catch ex As Exception
+            HDF_as_Map = False
+        End Try
+
+        i = 0
+        Dim DataSet
+        Dim j, k
+        j = 0
+        i = 0
+        k = 0
+
+
+
+        Local_Ref_DataSet_ToRead = Ref_mat_DataSet_ToRead
+
+
+        If HDF_as_Map = True Then
+            For Each List_Dataset As H5Dataset In MyH5Group.Children 'List les " DATASET" présent dans le group "/data"
+                MesMaps(i) = List_Dataset
+                i += 1
+            Next
+            Dim TestN = MesMaps(0).Name
+            'var group = root.Group("/my/nested/group");
+            '// get dataset in groupa
+            DataSet = MyH5Group.Dataset("HE1")
+            Data = DataSet.Read(Of Integer)
+
+        Else ' Ponctual DATA
+
+            ReDim AllSpectres_mat_hdf5(LvFiles.SelectedItems.Count - 1, 2048)
+            ReDim Attrib_mat_hdf5(LvFiles.SelectedItems.Count - 1, 7)
+            'For Each Grp As Object In MesFiles
+
+
+            For j = 0 To LvFiles.SelectedItems.Count - 1
+
+                For Each List_Group As H5Group In myH5Group1.Children
+
+                    If LvFiles.SelectedItems(j).Text = List_Group.Name Then ' & "_" & Attrib_ref_obj(0) Then
+                        Attrib_mat_hdf5(j, 4) = List_Group.Name
+                        Try
+                            Attrib = List_Group.Attribute(tab_const_metadata(0)) ' Analyse description
+                            Attrib_Tmp = Attrib.ReadString
+                            Attrib_mat_hdf5(j, 0) = Attrib_Tmp(0)
+                            Attrib = List_Group.Attribute(tab_const_metadata(1)) '  acquisition time (sec)
+                            Attrib_Tmp = Attrib.ReadString
+                            Attrib_mat_hdf5(j, 1) = Attrib_Tmp(0)
+                            Attrib = List_Group.Attribute(tab_const_metadata(2)) '  ref. analyse (sec)
+                            Attrib_Tmp = Attrib.ReadString
+                            Attrib_mat_hdf5(j, 2) = Attrib_Tmp(0)
+
+                        Catch ex As Exception
+                            Attrib_mat_hdf5(j, 7) = 1
+                        End Try
+                        k = 0
+
+                        DataSet = List_Group.Dataset(Ref_mat_DataSet_ToRead)
+                        Data = DataSet.Read(Of Int32)
+
+                        Attrib_mat_hdf5(j, 5) = List_Group.Name
+                        Attrib_mat_hdf5(j, 6) = Strings.LCase(Ref_mat_DataSet_ToRead)
+
+
+                        Try
+                            Attrib = DataSet.Attribute("gupix header") ' 2025 05 58731 70 0  (year,month, second since midnight, acq. time , spectra sum)
+                            Attrib_Tmp = Attrib.ReadString
+                            Attrib_mat_hdf5(j, 3) = Attrib_Tmp(0)
+                        Catch ex As Exception
+                            Attrib_mat_hdf5(j, 3) = "2025 05 58731 70 10000"
+                        End Try
+
+
+                        Som = 0
+                        For i = 0 To DataSet.Space.Dimensions(0) - 1
+                            Som = Som + Data(i)
+                            AllSpectres_mat_hdf5(j, i) = CStr(Data(i))
+                        Next
+                        Attrib_mat_hdf5(j, 7) = CStr(Som)
+                        If Som = 0 Then
+                            Som = 0
+                        End If
+
+                    End If
+
+                Next
+            Next j
+
+        End If
+
+    End Sub
     Private Sub hdf5_mat_Read_Dataset_Attrib()
         Dim ComputerName As String
         Dim MesFiles(1000) As Object
