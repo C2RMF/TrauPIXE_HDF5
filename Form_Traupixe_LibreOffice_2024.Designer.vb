@@ -1274,7 +1274,7 @@ Partial Class Form_Traupixe_H5_2024
         Margin = New Padding(5, 4, 5, 4)
         MaximizeBox = False
         Name = "Form_Traupixe_H5_2024"
-        Text = "TrauPIXE 25.11 - C2RMF"
+        Text = "TrauPIXE 25.12 - C2RMF"
         MenuStrip1.ResumeLayout(False)
         MenuStrip1.PerformLayout()
         StatusStrip1.ResumeLayout(False)
