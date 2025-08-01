@@ -6,9 +6,16 @@ Imports ClosedXML.Excel.Ranges
 Imports DocumentFormat.OpenXml.Drawing
 Imports DocumentFormat.OpenXml.VariantTypes
 Imports System.Runtime.InteropServices
+Imports DocumentFormat.OpenXml.Spreadsheet
+Imports DocumentFormat.OpenXml.Office2019.Word
 
 
 Public Class Form_Traupixe_H5_2024
+
+    Private Const Height0_with_hdf5 = 505
+    Private Const Height0_no_hdf5 = 597
+    Private Const Height1_with_hdf5 = 505
+    Private Const Height1_no_hdf5 = 597
 
     Private Const ERROR_FILE_NOT_FOUND = 2&
     Private Const ERROR_PATH_NOT_FOUND = 3&
@@ -57,6 +64,10 @@ Public Class Form_Traupixe_H5_2024
     'Dim worksheet As Excel.Worksheet
     'Dim workbook As Excel.Workbook
     ' Dim Fs_Log As Object
+    Dim list_checkbox() As CheckBox
+    Dim list_extension() As String
+    Dim list_pivotbox() As Windows.Forms.TextBox
+
     Dim B_skip_elem_mtx As Boolean
     Dim nb_process_custom As Boolean
     Dim Global_Nb_Swap As Integer
@@ -177,7 +188,9 @@ Public Class Form_Traupixe_H5_2024
     Dim path_gamma As String
     Dim nb_pixel_x_map As Integer
     Dim nb_pixel_y_map As Integer
+    Dim dataset_availabe(20) As String
 
+    Dim tab_list_par_trc(20) As String
 
     Dim Nom_Projet As String
     Dim Date_Projet As String
@@ -602,15 +615,6 @@ Public Class Form_Traupixe_H5_2024
         Dim nb_trace As Integer
         'tab_select_file_indices(l + ((Nb_Process1) * (J - 1))), l, Nb_Trc
     End Structure
-    Private Sub FolderBrowserDialog1_HelpRequest(sender As Object, e As EventArgs)
-
-    End Sub
-
-    Private Sub File4_SelectedIndexChanged(sender As Object, e As EventArgs)
-
-    End Sub
-
-
 
     Private Sub ComboBoxDrive_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBoxDrive.SelectedIndexChanged
         Dim Drive_Short As String
@@ -622,37 +626,25 @@ Public Class Form_Traupixe_H5_2024
 
     End Sub
 
-    Private Sub OpenFileDialog1_FileOk(sender As Object, e As System.ComponentModel.CancelEventArgs)
-
-    End Sub
 
 
     Private Sub AddAllFolders(ByVal TNode As TreeNode, ByVal FolderPath As String)
 
         Dim TA As Array
-        '  
 
         Try
             TA = Directory.GetDirectories(FolderPath, "*")
             Array.Sort(TA)
             For Each FolderNode As String In TA 'Directory.GetDirectories(FolderPath, "*") 'Load All Sub Folders 
-
                 Dim SubFolderNode As TreeNode = TNode.Nodes.Add(FolderNode.Substring(FolderNode.LastIndexOf("\"c) + 1)) 'Add Each Sub Folder Name
-
                 SubFolderNode.Tag = FolderNode 'Set Tag For Each Sub Folder
-
                 SubFolderNode.Nodes.Add("Loading...")
-
             Next
 
         Catch ex As Exception
-
             MessageBox.Show(ex.Message) 'Something Went Wrong
-
         End Try
-
     End Sub
-
 
     Private Sub trvFolders_AfterSelect(ByVal sender As Object, ByVal e As System.Windows.Forms.TreeViewEventArgs) Handles trvFolders.AfterSelect
 
@@ -666,6 +658,9 @@ Public Class Form_Traupixe_H5_2024
         Myinit = True
         hdf5_mode = False
         LvFiles.Enabled = True
+        If trvFolders.SelectedNode.Tag Is Nothing Then
+            Exit Sub
+        End If
         List_Par_Files_Trc()
         Maj_Files_Mat()
         Ext_Par_Trc = "*.par"
@@ -693,6 +688,7 @@ Public Class Form_Traupixe_H5_2024
         List_Par_Files_Trc()
         If hdf5_mode = True Then
             List_HDF5_group(Chemin_hdf5)
+            Dim dataset_ok As Boolean = hdf5_check_dataset_available()
         Else
             Maj_Files_Mat()
         End If
@@ -996,44 +992,47 @@ Public Class Form_Traupixe_H5_2024
         Dim SubItemIndex As Integer 'Sub Item Counter
         Dim i As Integer
         Dim Name As String
-
+        list_checkbox = {Check_det0, Check_det1, Check_det2, Check_det3, Check_det4, Check_det5, Check_det6, Check_det7, Check_det8}
+        list_extension = {Ext_Trc0, Ext_Trc1, Ext_Trc2, Ext_Trc3, Ext_Trc4, Ext_Trc5, Ext_Trc6, Ext_Trc7, Ext_Trc8}
+        ReDim tab_list_par_trc(20)
         LstPar_Trc.Items.Clear()
         'Adjust_Filter.Enabled = False
-        Check_det0.Enabled = False
-        Check_det1.Enabled = False
-        Check_det2.Enabled = False
-        Check_det3.Enabled = False
-        Check_det4.Enabled = False
-        Check_det5.Enabled = False
-        Check_det6.Enabled = False
-        Check_det7.Enabled = False
-        Check_det8.Enabled = False
+        For Each check In list_checkbox
+            check.Enabled = False
+            check.Checked = False
+            check.BackColor = System.Drawing.Color.LightGray
+        Next
+        'Check_det0.Enabled = False
+        'Check_det1.Enabled = False
+        'Check_det2.Enabled = False
+        'Check_det3.Enabled = False
+        'Check_det4.Enabled = False
+        'Check_det5.Enabled = False
+        'Check_det6.Enabled = False
+        'Check_det7.Enabled = False
+        'Check_det8.Enabled = False
 
-        Check_det0.Checked = False
-        Check_det1.Checked = False
-        Check_det2.Checked = False
-        Check_det3.Checked = False
-        Check_det4.Checked = False
-        Check_det5.Checked = False
-        Check_det6.Checked = False
-        Check_det7.Checked = False
-        Check_det8.Checked = False
-        Par_det0.Text = ""
-
-
-        Check_det0.BackColor = System.Drawing.Color.LightGray
-        Check_det1.BackColor = System.Drawing.Color.LightGray
-        Check_det2.BackColor = System.Drawing.Color.LightGray
-        Check_det3.BackColor = System.Drawing.Color.LightGray
-        Check_det4.BackColor = System.Drawing.Color.LightGray
-        Check_det5.BackColor = System.Drawing.Color.LightGray
-        Check_det6.BackColor = System.Drawing.Color.LightGray
-        Check_det7.BackColor = System.Drawing.Color.LightGray
-        Check_det8.BackColor = System.Drawing.Color.LightGray
+        'Check_det0.Checked = False
+        'Check_det1.Checked = False
+        'Check_det2.Checked = False
+        'Check_det3.Checked = False
+        'Check_det4.Checked = False
+        'Check_det5.Checked = False
+        'Check_det6.Checked = False
+        'Check_det7.Checked = False
+        'Check_det8.Checked = False
+        'Par_det0.Text = ""
 
 
-
-
+        'Check_det0.BackColor = System.Drawing.Color.LightGray
+        'Check_det1.BackColor = System.Drawing.Color.LightGray
+        'Check_det2.BackColor = System.Drawing.Color.LightGray
+        'Check_det3.BackColor = System.Drawing.Color.LightGray
+        'Check_det4.BackColor = System.Drawing.Color.LightGray
+        'Check_det5.BackColor = System.Drawing.Color.LightGray
+        'Check_det6.BackColor = System.Drawing.Color.LightGray
+        'Check_det7.BackColor = System.Drawing.Color.LightGray
+        'Check_det8.BackColor = System.Drawing.Color.LightGray
 
         FileExtension = "*.par"
         Dim folder As String
@@ -1046,67 +1045,81 @@ Public Class Form_Traupixe_H5_2024
 
         If Not folder Is Nothing AndAlso Directory.Exists(folder) Then
             Try
-                For i = 0 To 8
-                    Select Case i
-                        Case 0
-                            If Ext_Trc0 <> "" And Ext_Trc0 <> Ext_Mat Then
-                                FileExtension = "*" & Ext_Trc0 & ".par" '"*HE1.par"
-                            Else
-                                FileExtension = "NoTrcDefined"
-                            End If
+                i = 0
+                For Each Ext_Trc In list_extension
+                    If Ext_Trc <> "" And Ext_Trc <> Ext_Mat Then
+                        FileExtension = "*" & Ext_Trc & ".par" '"*HE1.par"
+                    Else
+                        FileExtension = "NoTrcDefined"
+                    End If
+                    'If ext_trc <> "" And ext_trc <> Ext_Mat Then
+                    '    FileExtension = "*" & ext_trc & ".par" '"*HE1.par"
+                    'Else
+                    '    FileExtension = "NoTrcDefined"
+                    'End If
 
-                        Case 1
-                            If Ext_Trc1 <> "" And Ext_Trc1 <> Ext_Mat Then
-                                FileExtension = "*" & Ext_Trc1 & ".par" '"*HE1.par"
-                            Else
-                                FileExtension = "NoTrcDefined"
-                            End If
 
-                        Case 2
-                            If Ext_Trc2 <> "" And Ext_Trc2 <> Ext_Mat Then
-                                FileExtension = "*" & Ext_Trc2 & ".par" '"*HE1.par"
-                            Else
-                                FileExtension = "NoTrcDefined"
-                            End If
-                            '"*HE2*.par"
-                        Case 3
-                            If Ext_Trc3 <> "" And Ext_Trc3 <> Ext_Mat Then
-                                FileExtension = "*" & Ext_Trc3 & ".par" '"*HE1.par"
-                            Else
-                                FileExtension = "NoTrcDefined"
-                            End If
-                        Case 4
-                            If Ext_Trc4 <> "" And Ext_Trc4 <> Ext_Mat Then
-                                FileExtension = "*" & Ext_Trc4 & ".par" '"*HE1.par"
-                            Else
-                                FileExtension = "NoTrcDefined"
-                            End If
-                        Case 5
-                            If Ext_Trc5 <> "" And Ext_Trc5 <> Ext_Mat Then
-                                FileExtension = "*" & Ext_Trc5 & ".par" '"*HE1.par"
-                            Else
-                                FileExtension = "NoTrcDefined"
-                            End If
-                        Case 6
-                            If Ext_Trc6 <> "" And Ext_Trc6 <> Ext_Mat Then
-                                FileExtension = "*" & Ext_Trc6 & ".par" '"*HE1.par"
-                            Else
-                                FileExtension = "NoTrcDefined"
-                            End If
-                        Case 7
-                            If Ext_Trc7 <> "" And Ext_Trc7 <> Ext_Mat Then
-                                FileExtension = "*" & Ext_Trc7 & ".par" '"*HE1.par"
-                            Else
-                                FileExtension = "NoTrcDefined"
-                            End If
-                        Case 8
-                            If Ext_Trc8 <> "" And Ext_Trc8 <> Ext_Mat Then
-                                FileExtension = "*" & Ext_Trc8 & ".par" '"*HE1.par"
-                            Else
-                                FileExtension = "NoTrcDefined"
-                            End If
+                    'For i = 0 To 8
+                    '    Select Case i
+                    '        Case 0
+                    '            If Ext_Trc0 <> "" And Ext_Trc0 <> Ext_Mat Then
+                    '                FileExtension = "*" & Ext_Trc0 & ".par" '"*HE1.par"
+                    '            Else
+                    '                FileExtension = "NoTrcDefined"
+                    '            End If
 
-                    End Select
+                    '        Case 1
+                    '            If Ext_Trc1 <> "" And Ext_Trc1 <> Ext_Mat Then
+                    '                FileExtension = "*" & Ext_Trc1 & ".par" '"*HE1.par"
+                    '            Else
+                    '                FileExtension = "NoTrcDefined"
+                    '            End If
+
+                    '        Case 2
+                    '            If Ext_Trc2 <> "" And Ext_Trc2 <> Ext_Mat Then
+                    '                FileExtension = "*" & Ext_Trc2 & ".par" '"*HE1.par"
+                    '            Else
+                    '                FileExtension = "NoTrcDefined"
+                    '            End If
+                    '            '"*HE2*.par"
+                    '        Case 3
+                    '            If Ext_Trc3 <> "" And Ext_Trc3 <> Ext_Mat Then
+                    '                FileExtension = "*" & Ext_Trc3 & ".par" '"*HE1.par"
+                    '            Else
+                    '                FileExtension = "NoTrcDefined"
+                    '            End If
+                    '        Case 4
+                    '            If Ext_Trc4 <> "" And Ext_Trc4 <> Ext_Mat Then
+                    '                FileExtension = "*" & Ext_Trc4 & ".par" '"*HE1.par"
+                    '            Else
+                    '                FileExtension = "NoTrcDefined"
+                    '            End If
+                    '        Case 5
+                    '            If Ext_Trc5 <> "" And Ext_Trc5 <> Ext_Mat Then
+                    '                FileExtension = "*" & Ext_Trc5 & ".par" '"*HE1.par"
+                    '            Else
+                    '                FileExtension = "NoTrcDefined"
+                    '            End If
+                    '        Case 6
+                    '            If Ext_Trc6 <> "" And Ext_Trc6 <> Ext_Mat Then
+                    '                FileExtension = "*" & Ext_Trc6 & ".par" '"*HE1.par"
+                    '            Else
+                    '                FileExtension = "NoTrcDefined"
+                    '            End If
+                    '        Case 7
+                    '            If Ext_Trc7 <> "" And Ext_Trc7 <> Ext_Mat Then
+                    '                FileExtension = "*" & Ext_Trc7 & ".par" '"*HE1.par"
+                    '            Else
+                    '                FileExtension = "NoTrcDefined"
+                    '            End If
+                    '        Case 8
+                    '            If Ext_Trc8 <> "" And Ext_Trc8 <> Ext_Mat Then
+                    '                FileExtension = "*" & Ext_Trc8 & ".par" '"*HE1.par"
+                    '            Else
+                    '                FileExtension = "NoTrcDefined"
+                    '            End If
+
+                    '    End Select
 
 
                     For Each file As String In Directory.GetFiles(folder, FileExtension) 'Get Files In Folder
@@ -1115,83 +1128,93 @@ Public Class Form_Traupixe_H5_2024
                         SubItemIndex += 1
                     Next
 
-                    Select Case i
-                        Case 0
-                            If SubItemIndex <> 0 Then
-                                Check_det0.Checked = False
-                                Check_det0.Enabled = True
-                                Check_det0.BackColor = System.Drawing.Color.DarkGray
+                    For Each check_det In list_checkbox
+                        If SubItemIndex <> 0 And check_det.Text = Ext_Trc Then
+                            check_det.Checked = False
+                            check_det.Enabled = True
+                            check_det.BackColor = System.Drawing.Color.DarkGray
+                            tab_list_par_trc(i) = Ext_Trc
+                            i += 1
+                        End If
 
-                            End If
+                    Next
+                    'Select Case i
+                    '    Case 0
+                    '        If SubItemIndex <> 0 Then
+                    '            Check_det0.Checked = False
+                    '            Check_det0.Enabled = True
+                    '            Check_det0.BackColor = System.Drawing.Color.DarkGray
 
-                        Case 1
-                            If SubItemIndex <> 0 Then
-                                Check_det1.Checked = False
-                                Check_det1.Enabled = True
-                                Check_det1.BackColor = System.Drawing.Color.DarkGray
+                    '        End If
 
-                            End If
-                        Case 2
-                            If SubItemIndex <> 0 Then
-                                Check_det2.Checked = False
-                                Check_det2.Enabled = True
-                                Check_det2.BackColor = System.Drawing.Color.DarkGray
+                    '    Case 1
+                    '        If SubItemIndex <> 0 Then
+                    '            Check_det1.Checked = False
+                    '            Check_det1.Enabled = True
+                    '            Check_det1.BackColor = System.Drawing.Color.DarkGray
 
-                            End If
-                        Case 3
-                            If SubItemIndex <> 0 Then
-                                Check_det3.Checked = False
-                                Check_det3.Enabled = True
-                                Check_det3.BackColor = System.Drawing.Color.DarkGray
+                    '        End If
+                    '    Case 2
+                    '        If SubItemIndex <> 0 Then
+                    '            Check_det2.Checked = False
+                    '            Check_det2.Enabled = True
+                    '            Check_det2.BackColor = System.Drawing.Color.DarkGray
 
-                            End If
+                    '        End If
+                    '    Case 3
+                    '        If SubItemIndex <> 0 Then
+                    '            Check_det3.Checked = False
+                    '            Check_det3.Enabled = True
+                    '            Check_det3.BackColor = System.Drawing.Color.DarkGray
 
-                        Case 4
-                            If SubItemIndex <> 0 Then
-                                Check_det4.Checked = False
-                                Check_det4.Enabled = True
-                                Check_det4.BackColor = System.Drawing.Color.DarkGray
+                    '        End If
 
-                            End If
-                        Case 5
-                            If SubItemIndex <> 0 Then
-                                Check_det5.Checked = False
-                                Check_det5.Enabled = True
-                                Check_det5.BackColor = System.Drawing.Color.DarkGray
+                    '    Case 4
+                    '        If SubItemIndex <> 0 Then
+                    '            Check_det4.Checked = False
+                    '            Check_det4.Enabled = True
+                    '            Check_det4.BackColor = System.Drawing.Color.DarkGray
 
-                            End If
-                        Case 6
-                            If SubItemIndex <> 0 Then
-                                Check_det6.Checked = False
-                                Check_det6.Enabled = True
-                                Check_det6.Visible = True
-                                Check_det6.BackColor = System.Drawing.Color.DarkGray
+                    '        End If
+                    '    Case 5
+                    '        If SubItemIndex <> 0 Then
+                    '            Check_det5.Checked = False
+                    '            Check_det5.Enabled = True
+                    '            Check_det5.BackColor = System.Drawing.Color.DarkGray
 
-                            End If
-                        Case 7
-                            If SubItemIndex <> 0 Then
-                                Check_det7.Checked = False
-                                Check_det7.Enabled = True
-                                Check_det7.BackColor = System.Drawing.Color.DarkGray
+                    '        End If
+                    '    Case 6
+                    '        If SubItemIndex <> 0 Then
+                    '            Check_det6.Checked = False
+                    '            Check_det6.Enabled = True
+                    '            Check_det6.Visible = True
+                    '            Check_det6.BackColor = System.Drawing.Color.DarkGray
 
-                            End If
-                        Case 8
-                            If SubItemIndex <> 0 Then
-                                Check_det8.Checked = False
-                                Check_det8.Enabled = True
-                                Check_det8.BackColor = System.Drawing.Color.DarkGray
+                    '        End If
+                    '    Case 7
+                    '        If SubItemIndex <> 0 Then
+                    '            Check_det7.Checked = False
+                    '            Check_det7.Enabled = True
+                    '            Check_det7.BackColor = System.Drawing.Color.DarkGray
 
-                            End If
+                    '        End If
+                    '    Case 8
+                    '        If SubItemIndex <> 0 Then
+                    '            Check_det8.Checked = False
+                    '            Check_det8.Enabled = True
+                    '            Check_det8.BackColor = System.Drawing.Color.DarkGray
 
-                    End Select
+                    '        End If
+
+                    'End Select
                     SubItemIndex = 0
-                Next i
+                    'Next i
+                Next
             Catch ex As Exception 'Something Went Wrong
                 MessageBox.Show(ex.Message)
             Finally
                 If SubItemIndex = 0 Then LstPar_Trc.Items.Add("No GUPIX par files ...")
             End Try
-
 
             If CbDetMat.Text = Check_det0.Text Then
                 Check_det0.Enabled = False
@@ -1240,13 +1263,16 @@ Public Class Form_Traupixe_H5_2024
 
         End If
 
-
+        ReDim Preserve tab_list_par_trc(i)
     End Sub
 
     Sub Maj_HDF5_Files()
 
         Dim FileExtension As String 'Stores File Extension
         Dim SubItemIndex As Integer 'Sub Item Counter
+        Dim Sup1 As Integer
+        Dim Sup2 As Integer
+
         ListBox_HDF5.Items.Clear()
         ComboBox_Type_Calc.Visible = False
 
@@ -1261,14 +1287,47 @@ Public Class Form_Traupixe_H5_2024
                     ListBox_HDF5.Items.Add(System.IO.Path.GetFileName(file))
                     SubItemIndex += 1
                 Next
-                If SubItemIndex = 1 Then
+
+                If Me.Height > 700 Then
+                    Sup1 = 300
+                    Sup2 = 200
+                Else
+                    Sup1 = 240
+                    Sup2 = 190
+                End If
+
+                If SubItemIndex <> 0 Then
+                    'trvFolders.Top = 180
+
+                    trvFolders.Height = Me.Height - Sup1 'Height0_with_hdf5 - (800 - Me.Height) '478
+                    LvFiles.Height = Me.Height - Sup1 'Height1_with_hdf5 - (800 - Me.Height) '561
+                    ListBox_HDF5.Visible = True
+                    Label4.Visible = True
+                    TxtBox_HDF5_File.Visible = True
+                    TextBox_hdf5_grps.Visible = True
+                    Label3.Visible = True
+                    Label12.Visible = True
+
                     'TxtBox_HDF5_File.Text = ListBox_HDF5.Items(0)
                     'List_HDF5_group(Chemin_Data + "\" + TxtBox_HDF5_File.Text)
                 End If
             Catch ex As Exception 'Something Went Wrong
                 MessageBox.Show(ex.Message)
             Finally
-                If SubItemIndex = 0 Then ListBox_HDF5.Items.Add("No hdf5 files founded...")
+                If SubItemIndex = 0 Then
+                    ListBox_HDF5.Items.Add("No hdf5 files founded...")
+                    'trvFolders.Top = 90
+
+                    LvFiles.Height = Me.Height - Sup2 'Height1_no_hdf5 - (900 - ) '561
+                    trvFolders.Height = Me.Height - Sup2 'Height0_no_hdf5 - (900 - Me.Height) '590
+                    ListBox_HDF5.Visible = False
+                    Label4.Visible = False
+                    Label3.Visible = False
+                    Label12.Visible = False
+                    TxtBox_HDF5_File.Visible = False
+                    TextBox_hdf5_grps.Visible = False
+
+                End If
             End Try
 
         End If
@@ -1382,7 +1441,6 @@ Public Class Form_Traupixe_H5_2024
         Select_Par_files = 0
         Par_Mat.Text = ""
 
-
         If ComboBox_Type_Calc.Text = "" Then ComboBox_Type_Calc.Text = "Ponctual" ''Init
         If CbDetMat.Text = Nothing Then
             Ext_Mat = "*"
@@ -1404,19 +1462,24 @@ Public Class Form_Traupixe_H5_2024
         End If
 
 
-        If Myinit = True And Ext_Mat <> "" Then
-            Maj_Par_Files_Mat()
-            If hdf5_mode = True Then
-                List_HDF5_group(Chemin_hdf5)
-            Else
-                Maj_Files_Mat()
+        Try
+            If Myinit = True And Ext_Mat <> "" Then
+                Maj_Par_Files_Mat()
+                If hdf5_mode = True Then
+                    List_HDF5_group(Chemin_hdf5)
+                Else
+                    Maj_Files_Mat()
+                End If
+                List_Par_Files_Trc()
+            ElseIf Ext_Mat <> "*" Then
+                List_Par_Files_Trc()
+                LstPar_Mat.Items.Clear()
+                List_Par_Files_Trc()
             End If
-            List_Par_Files_Trc()
-        ElseIf Ext_Mat <> "*" Then
-            List_Par_Files_Trc()
-            LstPar_Mat.Items.Clear()
-            List_Par_Files_Trc()
-        End If
+        Catch ex As Exception
+
+        End Try
+
 
         If Myinit = False Then
 
@@ -2031,6 +2094,16 @@ Public Class Form_Traupixe_H5_2024
 
 
         If Nb_file = 0 Then Exit Sub
+
+        If LvFiles.SelectedItems.Count > Environment.ProcessorCount + 1 Then
+            Nb_Process = Environment.ProcessorCount  '25
+            Nb_Proc.Text = CStr(Nb_Process)
+        Else
+            Nb_Process = LvFiles.SelectedItems.Count
+            Nb_Proc.Text = CStr(Nb_Process)
+        End If
+
+
 
         ReDim Val_Charge_Trc(Nb_Process)
         ReDim Chemin_GupixWin_Multi(Nb_file) 'As String
@@ -4835,7 +4908,6 @@ Public Class Form_Traupixe_H5_2024
         LstPar_Mat.Refresh()
 
         Nb_Trc = 0
-
 
         If Check_det0.Checked = True And Par_det0.Text <> "" Then
             Tab_Num_Trc(Nb_Trc) = 0
@@ -9321,7 +9393,6 @@ pass_mat:   ' Only_Trace
 
                                     Str_Mat_Conc_100(Num_Proc, Indice_Mat_0) = "<" & Strings.Format((Math.Round(Conc_Return(2) * 3.3 / 10000, Nb_Dig)), Str_Prec)
                                     Val_Mat_Conc_ppm(Num_Proc, Indice_Mat_0) = "<" & Strings.Format(Conc_Return(2) * 3.3, 0)
-
                                     If Conc_Return(1) < limite_conc_red_ok Then ' 5 % de val en ROUGE
                                         Val_Conc_S_RED_ppm(Num_proc, Ind_Z_100) = Strings.Format(Conc_Return(1) * (million_norm / Somme_RED), 0)
                                         Val_Conc_S_RED100(Num_proc, Ind_Z_100) = Strings.Format((Math.Round((Conc_Return(1) * (million_norm / Somme_RED)) / 10000, Nb_Dig)), Str_Prec)
@@ -9338,10 +9409,7 @@ pass_mat:   ' Only_Trace
                                     'Val_Error_S(Num_Proc, Ind_Z_100) = Math.Round(Math.Sqrt((Math.Sqrt(Val_Mat_Fit_Error(Num_Proc, i) ^ 2 + Val_Mat_Stat_Error(Num_Proc, i) ^ 2) ^ 2)), 2) 'Strings.Format(Conc_Return(1), 0) '"n.d."
                                     Val_Error_S(Num_Proc, Ind_Z_100) = Math.Round(Val_Mat_Fit_Error(Num_Proc, indx_mat), 2)
                                 End If
-
                             End If
-
-
                             If Y_N_Q = "N" Then ' VALEUR LOD
                                 Best_Done = True
                                 If Indice_Mat_1 <> -1 Then 'Deja     
@@ -9514,7 +9582,6 @@ pass_mat:   ' Only_Trace
                                         Best_LOD_Trc_previous = Best_LOD_Trc_current
                                         '################## BEFORE 2023 3.3 remplacé par 1 
                                         format_return = Format_Str(Conc_Return(2) * 1)
-
                                         Str_Prec = format_return(0)
                                         Nb_Dig = CInt(format_return(1))
                                         Val_Trc_Conc100(Num_Proc, Indice_Trc_1) = "<" & Strings.Format((Math.Round((Conc_Return(2) / 10000) * 1, Nb_Dig)), Str_Prec)
@@ -9600,7 +9667,6 @@ pass_mat:   ' Only_Trace
         Dim Best_Trc2 As Boolean
         Dim Nb_Trc_Search As Integer
         Dim Num_Best_Trc As Integer
-
         Dim Look_4_Trc As Boolean
         'Dim NomDet_Mat As String
         ' Dim NomDet_Trc As String
@@ -9945,9 +10011,19 @@ pass_mat:   ' Only_Trace
     Private Sub Check_det0_CheckedChanged(sender As Object, e As EventArgs) Handles Check_det0.CheckedChanged
         Dim Det_use_Q As Boolean
         Dim i
+        Dim dataset_founded As Boolean
         Par_det0.Text = ""
 
         If Check_det0.Checked = True Then
+
+            If hdf5_mode = True Then ' check if dataset in hdf5
+                For Each av_dataset In dataset_availabe
+                    If av_dataset = Check_det0.Text Then
+                        dataset_founded = True
+                    End If
+                Next
+            End If
+
             Select_Par_files = 0
             Ext_Par_Trc = "*" & Check_det0.Text & ".par"
             Maj_Par_Files_Trc(Par_det0, "det0")
@@ -9982,12 +10058,15 @@ pass_mat:   ' Only_Trace
 
     End Sub
 
-
-
     Private Sub Check_det1_CheckedChanged(sender As Object, e As EventArgs) Handles Check_det1.CheckedChanged
         Dim Det_use_Q As Boolean
         Dim i
+        Dim dataset_founded As Boolean
+
         If Check_det1.Checked = True Then
+            If hdf5_mode = True Then
+                ' dataset_founded = hdf5_check_dataset_available(Check_det1.Text)
+            End If
             Select_Par_files = 1
             Ext_Par_Trc = "*" & Check_det1.Text & ".par"
             Maj_Par_Files_Trc(Par_det1, "det1")
@@ -10022,7 +10101,19 @@ pass_mat:   ' Only_Trace
     Private Sub Check_det2_CheckedChanged(sender As Object, e As EventArgs) Handles Check_det2.CheckedChanged
         Dim Det_use_Q As Boolean
         Dim i
+        Dim dataset_founded As Boolean
         If Check_det2.Checked = True Then
+
+            If hdf5_mode = True Then
+                '  dataset_founded = hdf5_check_dataset_available(Check_det2.Text)
+                If dataset_founded = False Then
+                    Par_det2.Text = "no " & Check_det2.Text & " dataset founded"
+                    Check_det2.Checked = False
+                    Check_det2.Enabled = False
+
+                    Exit Sub
+                End If
+            End If
             Select_Par_files = 2
             Ext_Par_Trc = "*" & Check_det2.Text & ".par" '"*HE2*.par"
             ComboBox_Type_F.Items.Add(Check_det2.Text)
@@ -10057,7 +10148,11 @@ pass_mat:   ' Only_Trace
     Private Sub Check_det3_CheckedChanged(sender As Object, e As EventArgs) Handles Check_det3.CheckedChanged
         Dim Det_use_Q As Boolean
         Dim i As Integer
+        Dim dataset_founded As Boolean
         If Check_det3.Checked = True Then
+            If hdf5_mode = True Then
+                '   dataset_founded = hdf5_check_dataset_available(Check_det3.Text)
+            End If
             Select_Par_files = 3
             Ext_Par_Trc = "*" & Check_det3.Text & ".par" '"*HE3*.par"
             ComboBox_Type_F.Items.Add(Check_det3.Text)
@@ -10089,6 +10184,7 @@ pass_mat:   ' Only_Trace
     Private Sub Check_det4_CheckedChanged(sender As Object, e As EventArgs) Handles Check_det4.CheckedChanged
         Dim Det_use_Q As Boolean
         Dim i As Integer
+        Dim dataset_founded As Boolean
 
         If Check_det4.Checked = True Then
             Select_Par_files = 4
@@ -11440,7 +11536,6 @@ Myend:
 
                 List_Par_Files_Trc()
             ElseIf Ext_Mat <> "*.x0" Then
-                List_Par_Files_Trc()
                 LstPar_Mat.Items.Clear()
                 List_Par_Files_Trc()
             End If
@@ -11451,10 +11546,24 @@ Myend:
     End Sub
 
     Private Sub ListBox_HDF5_DoubleClick(sender As Object, e As EventArgs) Handles ListBox_HDF5.DoubleClick
-
+        Dim dataset_founded As Boolean
+        If ListBox_HDF5.SelectedItem Is Nothing Then
+            Exit Sub
+        End If
         TxtBox_HDF5_File.Text = ListBox_HDF5.SelectedItem
         Chemin_hdf5 = Chemin_Data + "\" + TxtBox_HDF5_File.Text
         List_HDF5_group(Chemin_hdf5)
+
+        If hdf5_mode = True Then
+            Button_Extract.Enabled = True
+            List_Par_Files_Trc()
+        Else
+            Button_Extract.Enabled = False
+        End If
+
+        dataset_founded = hdf5_check_dataset_available()
+
+
     End Sub
 
 
@@ -11470,13 +11579,15 @@ Myend:
         Dim MyH5Group
         Dim Myh5
         Dim i As Integer = 0
+        Dim j As Integer = 0
 
         Dim pixel_size_x As Integer
         Dim size_x As Integer
         Dim pixel_size_y As Integer
         Dim size_y As Integer
         Dim pen_size As Integer
-
+        ReDim dataset_availabe(20)
+        Dim name_tmp As String
 
         'Myh5 = PureHDF.H5File.OpenRead("C:\Data\2023_Data_Euphro\20230322_globals_OBJ_PRJ_IBA.hdf5") 
         Try
@@ -11496,16 +11607,29 @@ Myend:
         LvFiles.Enabled = True
         LvFiles.Clear()
         ComboBox_Type_Calc.Visible = False
+        TextBox_hdf5_grps.Text = ""
+        ' List les " GROUP" présent à la racine 
+
+
         Try
-
             For Each List_Group As H5Group In myH5Group1.Children 'List les " GROUP" présent à la racine
-
-
                 If List_Group.Name = "Experimental parameters" Then
                     hdf5_is_map = True
                     hdf5_mode = False
+                Else
+                    If j = 0 Then 'remplit 1 seule foix
+                        For Each child In List_Group.Children
+                            name_tmp = child.Name
+                            name_tmp = name_tmp.ToUpper
+                            If name_tmp(0) = "X" Then
+                                dataset_availabe(j) = child.Name
+                                TextBox_hdf5_grps.Text += dataset_availabe(j) & " ,"
+                                j += 1
+                            End If
+                        Next
+                        ReDim Preserve dataset_availabe(j - 1)
+                    End If
                 End If
-
 
                 If hdf5_is_map = False Then
                     LvFiles.Enabled = True
@@ -11539,7 +11663,7 @@ Myend:
                         End Try
                     End Try
 
-                    If i > 0 Then
+                    If i > 0 Or dataset_availabe.Count > 0 Then
                         hdf5_mode = True '########### info Ref. analyse trouvé
                         Button_Extract.Enabled = True
                     End If
@@ -11597,10 +11721,11 @@ Myend:
                         If InStr(List_Group.Name, "X", CompareMethod.Text) > 0 Then
                             MesMaps(i) = List_Group.Name
                             LvFiles.Items.Add(MesMaps(i))
-                            i += 1
+                            TextBox_hdf5_grps.Text += MesMaps(i) & " ,"
                         End If
-
+                        i += 1
                     End If
+
 
                 Else ' No ref. analyse trouvé
                     If hdf5_mode = False And hdf5_is_map = False Then
@@ -11649,6 +11774,8 @@ Myend:
             TxtBox_HDF5_File.Text = "No AGLAE ponctual group corresponding in this hdf5"
             hdf5_mode = False
         End Try
+
+        Myh5.Dispose()
     End Sub
 
     Private Sub hdf5_trc_Read_Dataset_Attrib()
@@ -11752,6 +11879,7 @@ Myend:
                             Attrib_Trc_hdf5(j, k, 7) = 1
                         End Try
                         k = 0
+
                         For Each Det_ToRead As String In Local_Ref_DataSet_ToRead
                             DataSet = List_Group.Dataset(Det_ToRead)
                             Data = DataSet.Read(Of Int32)
@@ -11901,6 +12029,100 @@ Myend:
         End If
 
     End Sub
+    Private Function hdf5_check_dataset_available() As Boolean
+
+        Dim ComputerName As String
+        Dim MesFiles(1000) As Object
+        ComputerName = System.Net.Dns.GetHostName
+        Dim HDF_as_Map As Boolean
+        '        Dim File = New H5File("c:\data\")
+        Dim Myh5
+        'Myh5 = PureHDF.H5File.OpenRead("C:\Data\2023_Data_Euphro\20230322_globals_NomProjet_IBA.hdf5") 'H5.open("C:\Data\2023_Data_Euphro\20220620_0011_Night_SIBILLA_IBA.hdf5", OpenMode.Binary)
+        Myh5 = PureHDF.H5File.OpenRead(Chemin_Data & "\" & TxtBox_HDF5_File.Text)
+        Dim myH5Group1 = Myh5.Group("/")
+        Dim i As Integer = 0
+        Dim MesMaps(100)
+        Dim Local_Ref_DataSet_ToRead As String
+        Dim MyH5Group
+        Dim name_tmp As String
+        i = 0
+        Dim DataSet
+        Dim j, k
+        j = 0
+        i = 0
+        k = 0
+
+        ReDim dataset_availabe(20)
+
+        Try
+            MyH5Group = Myh5.Group("/data")
+            HDF_as_Map = True
+        Catch ex As Exception
+            HDF_as_Map = False
+        End Try
+
+
+        Local_Ref_DataSet_ToRead = Ref_mat_DataSet_ToRead
+
+
+        If HDF_as_Map = True Then
+            For Each List_Dataset As H5Dataset In MyH5Group.Children 'List les " DATASET" présent dans le group "/data"
+                MesMaps(i) = List_Dataset
+                i += 1
+            Next
+            Dim TestN = MesMaps(0).Name
+
+
+        Else ' Ponctual DATA
+
+            If dataset_availabe(0) = Nothing Then
+                For Each List_Group As H5Group In myH5Group1.Children 'List les " GROUP" présent à la racine
+                    If j = 0 Then 'remplit 1 seule foix
+                        For Each child In List_Group.Children
+                            name_tmp = child.Name
+                            name_tmp = name_tmp.ToUpper
+                            If name_tmp(0) = "X" Then
+                                dataset_availabe(j) = child.Name
+                                j += 1
+
+                            End If
+                        Next
+                        ReDim Preserve dataset_availabe(j - 1)
+                    End If
+                Next
+            End If
+
+            For Each check_box In list_checkbox
+                hdf5_check_dataset_available = False
+                check_box.Checked = False
+                check_box.Enabled = False
+
+                For Each DataSetname In dataset_availabe
+
+                    If DataSetname = check_box.Text Then
+                        hdf5_check_dataset_available = True
+                        'Exit Function
+
+                        For Each par In tab_list_par_trc
+                            If par = DataSetname Then
+                                check_box.Enabled = True
+                                Exit For
+                            End If
+                        Next
+
+                    Else
+                        hdf5_check_dataset_available = False
+                    End If
+
+
+                Next
+                'hdf5_check_dataset_available = False
+            Next
+        End If
+        Myh5.Dispose()
+
+    End Function
+
     Private Sub hdf5_mat_Read_Dataset_Attrib()
         Dim ComputerName As String
         Dim MesFiles(1000) As Object
@@ -12264,8 +12486,8 @@ Okread:
     End Function
     Public Sub Det_use_charge()
         Dim num_column_in_csv_file As Integer
-
         num_column_in_csv_file = 0
+        Dim ind As Integer = 0
         Pivot_det0.Enabled = True
         Pivot_det1.Enabled = True
         Pivot_det2.Enabled = True
@@ -12276,6 +12498,7 @@ Okread:
         Pivot_det7.Enabled = True
         Pivot_det8.Enabled = True
         Label_QFile.Visible = False
+        list_pivotbox = {Pivot_det0, Pivot_det1, Pivot_det2, Pivot_det3, Pivot_det4, Pivot_det5, Pivot_det6, Pivot_det7, Pivot_det8}
 
         'MAtrix has chareg value in charge.csv file
         For Each nom In Det_name_with_charge
@@ -12286,103 +12509,116 @@ Okread:
                 Label_QFile.Visible = True
             End If
 
-
-            If Check_det0.Checked = True Then
-                If Check_det0.Text = nom Then
-                    Use_ext_charge_Trc(0) = True
-                    num_column_charge_csv_TRC(0) = num_column_in_csv_file
+            For Each loc_check_det In list_checkbox
+                If loc_check_det.Checked = True And loc_check_det.Text = nom Then
+                    Use_ext_charge_Trc(ind) = True
+                    num_column_charge_csv_TRC(ind) = num_column_in_csv_file
                     num_column_in_csv_file += 1
-                    Pivot_det0.Text = "Q-File"
-                    Pivot_det0.Enabled = False
+                    'Pivot_det0.Text = "Q-File"
+                    list_pivotbox(ind).Text = "Q-File"
+                    list_pivotbox(ind).Enabled = False
+                    'Pivot_det0.Enabled = False
                 End If
-            End If
-
-            If Check_det1.Checked = True Then
-                If Check_det1.Text = nom Then
-                    Use_ext_charge_Trc(1) = True
-                    num_column_charge_csv_TRC(1) = num_column_in_csv_file
-                    num_column_in_csv_file += 1
-                    Pivot_det1.Text = "Q-File"
-                    Pivot_det1.Enabled = False
-
-                End If
-            End If
-
-
-            If Check_det2.Checked = True Then
-                If Check_det2.Text = nom Then
-                    Use_ext_charge_Trc(2) = True
-                    num_column_charge_csv_TRC(2) = num_column_in_csv_file
-                    num_column_in_csv_file += 1
-                    Pivot_det2.Text = "Q-File"
-                    Pivot_det2.Enabled = False
-
-                End If
-            End If
-
-            If Check_det3.Checked = True Then
-                If Check_det3.Text = nom Then
-                    Use_ext_charge_Trc(3) = True
-                    num_column_charge_csv_TRC(3) = num_column_in_csv_file
-                    num_column_in_csv_file += 1
-                    Pivot_det3.Text = "Q-File"
-                    Pivot_det3.Enabled = False
-
-                End If
-            End If
-
-            If Check_det4.Checked = True Then
-                If Check_det4.Text = nom Then
-                    Use_ext_charge_Trc(4) = True
-                    num_column_charge_csv_TRC(4) = num_column_in_csv_file
-                    num_column_in_csv_file += 1
-                    Pivot_det4.Text = "Q-File"
-                    Pivot_det4.Enabled = False
-
-                End If
-            End If
-
-            If Check_det5.Checked = True Then
-                If Check_det5.Text = nom Then
-                    Use_ext_charge_Trc(5) = True
-                    num_column_charge_csv_TRC(5) = num_column_in_csv_file
-                    num_column_in_csv_file += 1
-                    Pivot_det5.Text = "Q-File"
-                    Pivot_det5.Enabled = False
-                End If
-            End If
-
-            If Check_det6.Checked = True Then
-                If Check_det6.Text = nom Then
-                    Use_ext_charge_Trc(6) = True
-                    num_column_charge_csv_TRC(6) = num_column_in_csv_file
-                    num_column_in_csv_file += 1
-                    Pivot_det6.Text = "Q-File"
-                    Pivot_det6.Enabled = False
-                End If
-            End If
-
-            If Check_det7.Checked = True Then
-                If Check_det7.Text = nom Then
-                    Use_ext_charge_Trc(7) = True
-                    num_column_charge_csv_TRC(7) = num_column_in_csv_file
-                    num_column_in_csv_file += 1
-                    Pivot_det7.Text = "Q-File"
-                    Pivot_det7.Enabled = False
-                End If
-            End If
-
-            If Check_det8.Checked = True Then
-                If Check_det8.Text = nom Then
-                    Use_ext_charge_Trc(8) = True
-                    num_column_charge_csv_TRC(8) = num_column_in_csv_file
-                    num_column_in_csv_file += 1
-                    Pivot_det8.Text = "Q-File"
-                    Pivot_det8.Enabled = False
-                End If
-            End If
-
+                ind += 1
+            Next
         Next
+
+        'If Check_det0.Checked = True Then
+        '        If Check_det0.Text = nom Then
+        '            Use_ext_charge_Trc(0) = True
+        '            num_column_charge_csv_TRC(0) = num_column_in_csv_file
+        '            num_column_in_csv_file += 1
+        '            Pivot_det0.Text = "Q-File"
+        '            Pivot_det0.Enabled = False
+        '        End If
+        '    End If
+
+        '    If Check_det1.Checked = True Then
+        '        If Check_det1.Text = nom Then
+        '            Use_ext_charge_Trc(1) = True
+        '            num_column_charge_csv_TRC(1) = num_column_in_csv_file
+        '            num_column_in_csv_file += 1
+        '            Pivot_det1.Text = "Q-File"
+        '            Pivot_det1.Enabled = False
+
+        '        End If
+        '    End If
+
+
+        '    If Check_det2.Checked = True Then
+        '        If Check_det2.Text = nom Then
+        '            Use_ext_charge_Trc(2) = True
+        '            num_column_charge_csv_TRC(2) = num_column_in_csv_file
+        '            num_column_in_csv_file += 1
+        '            Pivot_det2.Text = "Q-File"
+        '            Pivot_det2.Enabled = False
+
+        '        End If
+        '    End If
+
+        '    If Check_det3.Checked = True Then
+        '        If Check_det3.Text = nom Then
+        '            Use_ext_charge_Trc(3) = True
+        '            num_column_charge_csv_TRC(3) = num_column_in_csv_file
+        '            num_column_in_csv_file += 1
+        '            Pivot_det3.Text = "Q-File"
+        '            Pivot_det3.Enabled = False
+
+        '        End If
+        '    End If
+
+        '    If Check_det4.Checked = True Then
+        '        If Check_det4.Text = nom Then
+        '            Use_ext_charge_Trc(4) = True
+        '            num_column_charge_csv_TRC(4) = num_column_in_csv_file
+        '            num_column_in_csv_file += 1
+        '            Pivot_det4.Text = "Q-File"
+        '            Pivot_det4.Enabled = False
+
+        '        End If
+        '    End If
+
+        '    If Check_det5.Checked = True Then
+        '        If Check_det5.Text = nom Then
+        '            Use_ext_charge_Trc(5) = True
+        '            num_column_charge_csv_TRC(5) = num_column_in_csv_file
+        '            num_column_in_csv_file += 1
+        '            Pivot_det5.Text = "Q-File"
+        '            Pivot_det5.Enabled = False
+        '        End If
+        '    End If
+
+        '    If Check_det6.Checked = True Then
+        '        If Check_det6.Text = nom Then
+        '            Use_ext_charge_Trc(6) = True
+        '            num_column_charge_csv_TRC(6) = num_column_in_csv_file
+        '            num_column_in_csv_file += 1
+        '            Pivot_det6.Text = "Q-File"
+        '            Pivot_det6.Enabled = False
+        '        End If
+        '    End If
+
+        '    If Check_det7.Checked = True Then
+        '        If Check_det7.Text = nom Then
+        '            Use_ext_charge_Trc(7) = True
+        '            num_column_charge_csv_TRC(7) = num_column_in_csv_file
+        '            num_column_in_csv_file += 1
+        '            Pivot_det7.Text = "Q-File"
+        '            Pivot_det7.Enabled = False
+        '        End If
+        '    End If
+
+        '    If Check_det8.Checked = True Then
+        '        If Check_det8.Text = nom Then
+        '            Use_ext_charge_Trc(8) = True
+        '            num_column_charge_csv_TRC(8) = num_column_in_csv_file
+        '            num_column_in_csv_file += 1
+        '            Pivot_det8.Text = "Q-File"
+        '            Pivot_det8.Enabled = False
+        '        End If
+        '    End If
+
+
 
     End Sub
     Public Sub Load_atomic_masse_csv()
