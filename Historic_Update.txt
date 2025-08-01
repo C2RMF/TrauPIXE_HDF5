@@ -1,21 +1,26 @@
+####################### Version 25.12 #######################
+07/2025
+MAJ de l'interface de TRAUPIXE pour mieux intÃ©grer les hdf5
+Affiche les dataset prÃ©sent dans hdf5. Desactive les detecteurs si dataset non prÃ©sent.
+
 ####################### Version 25.09 #######################
 06/2025
-1 - Ajout de la fonction "Adjust Absorbers" pour les détecteurs PIGE et PIXE
-	-> Permet de corriger les absorbeurs pour les détecteurs PIGE et PIXE
+1 - Ajout de la fonction "Adjust Absorbers" pour les dÃ©tecteurs PIGE et PIXE
+	-> Permet de corriger les absorbeurs pour les dÃ©tecteurs PIGE et PIXE
 	-> Fonctionne avec tout type de filtre
 
 2- Ajout de la prise en charge des fichiers hdf5
-	-> Permet de lire les fichiers hdf5 générés par AGLAE
-	-> Fonctionne avec les détecteurs PIXE
-3 - Metadonnées HeaderGupix indispensable dans la metadata du fichier hdf5
-	-> Permet de lire les métadonnées du fichier hdf5 pour le traitement des données PIXE
-	-> Les métadonnées doivent être présentes dans le fichier hdf5 pour que la fonction fonctionne correctement
+	-> Permet de lire les fichiers hdf5 gÃ©nÃ©rÃ©s par AGLAE
+	-> Fonctionne avec les dÃ©tecteurs PIXE
+3 - MetadonnÃ©es HeaderGupix indispensable dans la metadata du fichier hdf5
+	-> Permet de lire les mÃ©tadonnÃ©es du fichier hdf5 pour le traitement des donnÃ©es PIXE
+	-> Les mÃ©tadonnÃ©es doivent Ãªtre prÃ©sentes dans le fichier hdf5 pour que la fonction fonctionne correctement
 
 
 
 ####################### Version 25.08 #######################
 10/2024
-0 - La fonction "Adjust Absorbers" fonctionne pour tout les détecteurs et tout type de filtres.
+0 - La fonction "Adjust Absorbers" fonctionne pour tout les dÃ©tecteurs et tout type de filtres.
 
 1- Ajout d'une option dans le menu Setup 
 	"Skip Pb Matrix"
@@ -24,14 +29,14 @@
 
 2 - Modification du seuil de conc. pour les valeurs "?" 
 	Dans le cas mode metal (Projet Cymbals) le Pb est "?" et > 1% mais on veut garder la valeur
-	Seuil modifier de 1% à 5%
+	Seuil modifier de 1% Ã  5%
 	-> Si conc = "?" et < 5% alors on garde la valeur de conc. pour le tableau final des feuilles "S_xxxxxx"
 
 3- Ajout du fichier de "atomic_mass.csv" et  fnct de calcul de masse atomique
 
-Cela permet de définir tout élément chimique dans le fichier "external_conc.csv" (Z = 1 à Z = 118)
+Cela permet de dÃ©finir tout Ã©lÃ©ment chimique dans le fichier "external_conc.csv" (Z = 1 Ã  Z = 118)
 Recherche de la valence dans la formule fourni par l'utilisateur. 
-Attention Oxygène doit être en majuscule -> "O" les autres 'Co, Mo' -> "o" doivent être en minuscule 
+Attention OxygÃ¨ne doit Ãªtre en majuscule -> "O" les autres 'Co, Mo' -> "o" doivent Ãªtre en minuscule 
 
 
 
@@ -39,10 +44,10 @@ Attention Oxygène doit être en majuscule -> "O" les autres 'Co, Mo' -> "o" doive
 ####################### Version 25.07 #######################
 09/2024
 - Optimisation de la fonction "Calcul_best_conc_Thread" 
- Ne parcoure que les Z présents dans tout les detecteurs
+ Ne parcoure que les Z prÃ©sents dans tout les detecteurs
  Creation de multi thread pour execution en parallele de la fonction
 
-- Ajout de PbO (82) comme élément possible dans le fichier "External_conc.csv"
+- Ajout de PbO (82) comme Ã©lÃ©ment possible dans le fichier "External_conc.csv"
  
 - Ajout de la lecture de la charge via le fichier "charge-exp.csv"
 Example :
@@ -68,8 +73,8 @@ Type;PIGE;PIGE;EXT;STD;STD
 01/2022
 1 - Introducing two New Excel Sheet "S_Conc. & Err. "
 This two new sheet show the concentration in ppm or in pourcentage with the calculated error on the adjacent cell
-	- Special Sheet  «S_Conc. & Err. 100% » Conc. 100% looping concentration expressed in % follow by its error expressed in %
-	- Special Sheet  «S_Conc. & Err. ppm » conc. 100% looping, concentration expressed in ppm follow by its error expressed in %
+	- Special Sheet  Â«S_Conc. & Err. 100% Â» Conc. 100% looping concentration expressed in % follow by its error expressed in %
+	- Special Sheet  Â«S_Conc. & Err. ppm Â» conc. 100% looping, concentration expressed in ppm follow by its error expressed in %
 2 - Element tagged 'Y' Determine the best value only with FIT ERROR and PIVOT_ERROR
 	After contacting Iain Campbell it seems that the Stat Error output is a old and none adapted error to take in concideration.
 	It was a mistake to add the 2 error Fit and Stat. They do not represent two different error but to way of processing the error into GUPIX (See section 13C Gupix manual)
@@ -86,11 +91,11 @@ This two new sheet show the concentration in ppm or in pourcentage with the calc
 ####################### Version 20.xx #######################
 10/2021
 1 - Introducing four New Excel Sheet so called "Special" (Under developement)
-	- Special Sheet « Conc. S 100 % » concentration loop to 100% including the concentration of trace elements value expressed in % 
-	- Special Sheet  « Conc. S ppm » concentration loop to 100%  including the conc of trace elements, value expressed in ppm
-	- Special Sheet « Conc. S ppm (RED) » 100% looping including the conc of trace elements but also the conc. <LOQ and> LOD ( '?' In Gupix) whose concentration is less than 1%. 
-		value expressed in ppm (01/29/21, under development…) 
-	- Special Sheet  « Best Det. » 	Indicate from which detector the algo. retained the best value
+	- Special Sheet Â«Â Conc. S 100 %Â Â» concentration loop to 100% including the concentration of trace elements value expressed in % 
+	- Special Sheet  Â« Conc. S ppmÂ Â» concentration loop to 100%  including the conc of trace elements, value expressed in ppm
+	- Special Sheet Â«Â Conc. S ppm (RED)Â Â» 100% looping including the conc of trace elements but also the conc. <LOQ and> LOD ( '?' In Gupix) whose concentration is less than 1%. 
+		value expressed in ppm (01/29/21, under developmentâ€¦) 
+	- Special Sheet  Â«Â Best Det.Â Â» 	Indicate from which detector the algo. retained the best value
 
 2- Element 'Y' Selection of the best value with the lowest error calculated on the base of the quadratic sum of Fit and stat error as :
 	--> Matrix Error(%) = sqrt(STAT_Error^2 + FIT_Error ^2)
