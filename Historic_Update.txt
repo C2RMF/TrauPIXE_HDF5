@@ -1,3 +1,9 @@
+####################### Version 25.12 #######################
+07/2025
+MAJ de l'interface de TRAUPIXE pour mieux intégrer les hdf5
+Affiche les dataset présent dans hdf5. Desactive les detecteurs si dataset non présent.
+
+
 ####################### Version 25.09 #######################
 06/2025
 1 - Ajout de la fonction "Adjust Absorbers" pour les détecteurs PIGE et PIXE

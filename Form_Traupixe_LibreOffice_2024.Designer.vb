@@ -144,28 +144,28 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         ' LstPar_Mat
         ' 
-        LstPar_Mat.Font = New Font("Calibri", 8.25F, FontStyle.Regular, GraphicsUnit.Point)
+        LstPar_Mat.Font = New Font("Calibri", 8.25F)
         LstPar_Mat.FormattingEnabled = True
-        LstPar_Mat.Location = New Point(8, 48)
+        LstPar_Mat.Location = New Point(8, 35)
         LstPar_Mat.Margin = New Padding(5, 4, 5, 4)
         LstPar_Mat.Name = "LstPar_Mat"
-        LstPar_Mat.Size = New Size(377, 30)
+        LstPar_Mat.Size = New Size(377, 56)
         LstPar_Mat.TabIndex = 7
         ' 
         ' LstPar_Trc
         ' 
-        LstPar_Trc.Font = New Font("Calibri", 8.25F, FontStyle.Regular, GraphicsUnit.Point)
+        LstPar_Trc.Font = New Font("Calibri", 8.25F)
         LstPar_Trc.FormattingEnabled = True
-        LstPar_Trc.Location = New Point(8, 276)
+        LstPar_Trc.Location = New Point(6, 268)
         LstPar_Trc.Margin = New Padding(5, 4, 5, 4)
         LstPar_Trc.Name = "LstPar_Trc"
         LstPar_Trc.SelectionMode = SelectionMode.MultiExtended
-        LstPar_Trc.Size = New Size(383, 30)
+        LstPar_Trc.Size = New Size(383, 56)
         LstPar_Trc.TabIndex = 9
         ' 
         ' ComboBoxDrive
         ' 
-        ComboBoxDrive.Font = New Font("Calibri", 8.25F, FontStyle.Regular, GraphicsUnit.Point)
+        ComboBoxDrive.Font = New Font("Calibri", 8.25F)
         ComboBoxDrive.FormattingEnabled = True
         ComboBoxDrive.Location = New Point(12, 35)
         ComboBoxDrive.Margin = New Padding(5, 4, 5, 4)
@@ -175,7 +175,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         ' trvFolders
         ' 
-        trvFolders.Font = New Font("Calibri", 8.25F, FontStyle.Regular, GraphicsUnit.Point)
+        trvFolders.Font = New Font("Calibri", 8.25F)
         trvFolders.Location = New Point(12, 70)
         trvFolders.Margin = New Padding(5, 4, 5, 4)
         trvFolders.Name = "trvFolders"
@@ -186,7 +186,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         ' LvFiles
         ' 
-        LvFiles.Font = New Font("Calibri", 8.25F, FontStyle.Regular, GraphicsUnit.Point)
+        LvFiles.Font = New Font("Calibri", 8.25F)
         LvFiles.GridLines = True
         LvFiles.Location = New Point(361, 70)
         LvFiles.Margin = New Padding(5, 4, 5, 4)
@@ -199,7 +199,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         ' BtRefresh
         ' 
-        BtRefresh.Font = New Font("Calibri", 9.0F, FontStyle.Regular, GraphicsUnit.Point)
+        BtRefresh.Font = New Font("Calibri", 9F)
         BtRefresh.Location = New Point(361, 33)
         BtRefresh.Margin = New Padding(5, 4, 5, 4)
         BtRefresh.Name = "BtRefresh"
@@ -237,7 +237,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Check_det0
         ' 
         Check_det0.AutoSize = True
-        Check_det0.Font = New Font("Calibri", 9.75F, FontStyle.Regular, GraphicsUnit.Point)
+        Check_det0.Font = New Font("Calibri", 9.75F)
         Check_det0.Location = New Point(5, 11)
         Check_det0.Margin = New Padding(5, 4, 5, 4)
         Check_det0.Name = "Check_det0"
@@ -402,7 +402,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         ' Button2
         ' 
-        Button2.Font = New Font("Calibri", 15.75F, FontStyle.Regular, GraphicsUnit.Point)
+        Button2.Font = New Font("Calibri", 15.75F)
         Button2.Location = New Point(9, 115)
         Button2.Margin = New Padding(5, 4, 5, 4)
         Button2.Name = "Button2"
@@ -415,7 +415,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         Label1.AutoSize = True
         Label1.BackColor = Color.Gray
-        Label1.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point)
+        Label1.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold)
         Label1.ForeColor = Color.White
         Label1.Location = New Point(800, 33)
         Label1.Margin = New Padding(5, 0, 5, 0)
@@ -428,7 +428,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         Label2.AutoSize = True
         Label2.BackColor = Color.LightGray
-        Label2.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point)
+        Label2.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold)
         Label2.Location = New Point(803, 164)
         Label2.Margin = New Padding(5, 0, 5, 0)
         Label2.Name = "Label2"
@@ -438,7 +438,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         ' Nb_Proc
         ' 
-        Nb_Proc.Font = New Font("Calibri", 8.25F, FontStyle.Regular, GraphicsUnit.Point)
+        Nb_Proc.Font = New Font("Calibri", 8.25F)
         Nb_Proc.Location = New Point(351, 171)
         Nb_Proc.Margin = New Padding(5, 4, 5, 4)
         Nb_Proc.Name = "Nb_Proc"
@@ -458,7 +458,7 @@ Partial Class Form_Traupixe_H5_2024
         ' ComboBox_Type_Calc
         ' 
         ComboBox_Type_Calc.Enabled = False
-        ComboBox_Type_Calc.Font = New Font("Calibri", 9.0F, FontStyle.Regular, GraphicsUnit.Point)
+        ComboBox_Type_Calc.Font = New Font("Calibri", 9F)
         ComboBox_Type_Calc.FormattingEnabled = True
         ComboBox_Type_Calc.Items.AddRange(New Object() {"Ponctual hdf5 ", "Map hdf5 "})
         ComboBox_Type_Calc.Location = New Point(663, 651)
@@ -472,7 +472,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Progress
         ' 
         Progress.Enabled = False
-        Progress.Font = New Font("Segoe UI", 12.0F, FontStyle.Regular, GraphicsUnit.Point)
+        Progress.Font = New Font("Segoe UI", 12F)
         Progress.Location = New Point(150, 123)
         Progress.Margin = New Padding(5, 4, 5, 4)
         Progress.Name = "Progress"
@@ -494,7 +494,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         ' MyPause
         ' 
-        MyPause.Font = New Font("Calibri", 15.75F, FontStyle.Regular, GraphicsUnit.Point)
+        MyPause.Font = New Font("Calibri", 15.75F)
         MyPause.Location = New Point(261, 115)
         MyPause.Margin = New Padding(5, 4, 5, 4)
         MyPause.Name = "MyPause"
@@ -520,7 +520,7 @@ Partial Class Form_Traupixe_H5_2024
         MenuStrip1.Location = New Point(0, 0)
         MenuStrip1.Name = "MenuStrip1"
         MenuStrip1.Padding = New Padding(8, 3, 0, 3)
-        MenuStrip1.Size = New Size(1199, 30)
+        MenuStrip1.Size = New Size(1206, 30)
         MenuStrip1.TabIndex = 50
         MenuStrip1.Text = "MenuStrip1"
         ' 
@@ -665,10 +665,10 @@ Partial Class Form_Traupixe_H5_2024
         ' Same_Z
         ' 
         Same_Z.AutoSize = True
-        Same_Z.Location = New Point(326, 306)
+        Same_Z.Location = New Point(1113, 162)
         Same_Z.Margin = New Padding(5, 4, 5, 4)
         Same_Z.Name = "Same_Z"
-        Same_Z.Size = New Size(55, 19)
+        Same_Z.Size = New Size(65, 24)
         Same_Z.TabIndex = 61
         Same_Z.Text = "Same"
         Same_Z.UseVisualStyleBackColor = True
@@ -677,7 +677,7 @@ Partial Class Form_Traupixe_H5_2024
         ' TextXLS
         ' 
         TextXLS.Enabled = False
-        TextXLS.Font = New Font("Arial Narrow", 9.75F, FontStyle.Regular, GraphicsUnit.Point)
+        TextXLS.Font = New Font("Arial Narrow", 9.75F)
         TextXLS.Location = New Point(89, 688)
         TextXLS.Margin = New Padding(5, 4, 5, 4)
         TextXLS.Name = "TextXLS"
@@ -758,7 +758,7 @@ Partial Class Form_Traupixe_H5_2024
         StatusStrip1.Location = New Point(0, 742)
         StatusStrip1.Name = "StatusStrip1"
         StatusStrip1.Padding = New Padding(1, 0, 18, 0)
-        StatusStrip1.Size = New Size(1199, 22)
+        StatusStrip1.Size = New Size(1206, 22)
         StatusStrip1.TabIndex = 80
         StatusStrip1.Text = "StatusStrip1"
         ' 
@@ -769,7 +769,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         ' ToolStripStatusLabel1
         ' 
-        ToolStripStatusLabel1.Font = New Font("Arial Narrow", 9.75F, FontStyle.Regular, GraphicsUnit.Point)
+        ToolStripStatusLabel1.Font = New Font("Arial Narrow", 9.75F)
         ToolStripStatusLabel1.Margin = New Padding(200, 3, 0, 2)
         ToolStripStatusLabel1.Name = "ToolStripStatusLabel1"
         ToolStripStatusLabel1.Size = New Size(254, 17)
@@ -790,7 +790,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         ' Adjust_Filter
         ' 
-        Adjust_Filter.Font = New Font("Calibri", 15.75F, FontStyle.Regular, GraphicsUnit.Point)
+        Adjust_Filter.Font = New Font("Calibri", 15.75F)
         Adjust_Filter.Location = New Point(169, 85)
         Adjust_Filter.Margin = New Padding(5, 4, 5, 4)
         Adjust_Filter.Name = "Adjust_Filter"
@@ -805,7 +805,7 @@ Partial Class Form_Traupixe_H5_2024
         TabControl1.Controls.Add(Calcul)
         TabControl1.Controls.Add(Tab_Adjust)
         TabControl1.Controls.Add(TabPage1)
-        TabControl1.Font = New Font("Calibri", 9.75F, FontStyle.Regular, GraphicsUnit.Point)
+        TabControl1.Font = New Font("Calibri", 9.75F)
         TabControl1.Location = New Point(800, 525)
         TabControl1.Margin = New Padding(5, 4, 5, 4)
         TabControl1.Name = "TabControl1"
@@ -1079,7 +1079,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Box_txtFiltre
         ' 
         Box_txtFiltre.AcceptsReturn = True
-        Box_txtFiltre.Font = New Font("Calibri", 9.0F, FontStyle.Regular, GraphicsUnit.Point)
+        Box_txtFiltre.Font = New Font("Calibri", 9.0F)
         Box_txtFiltre.Location = New Point(654, 40)
         Box_txtFiltre.Margin = New Padding(5, 4, 5, 4)
         Box_txtFiltre.Name = "Box_txtFiltre"
@@ -1091,7 +1091,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Label11
         ' 
         Label11.AutoSize = True
-        Label11.Font = New Font("Calibri", 9.75F, FontStyle.Regular, GraphicsUnit.Point)
+        Label11.Font = New Font("Calibri", 9.75F)
         Label11.Location = New Point(654, 26)
         Label11.Margin = New Padding(5, 0, 5, 0)
         Label11.Name = "Label11"
@@ -1101,7 +1101,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         ' ListBox_HDF5
         ' 
-        ListBox_HDF5.Font = New Font("Calibri", 8.25F, FontStyle.Regular, GraphicsUnit.Point)
+        ListBox_HDF5.Font = New Font("Calibri", 8.25F)
         ListBox_HDF5.FormattingEnabled = True
         ListBox_HDF5.Location = New Point(12, 592)
         ListBox_HDF5.Margin = New Padding(5, 4, 5, 4)
@@ -1111,7 +1111,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         ' TxtBox_HDF5_File
         ' 
-        TxtBox_HDF5_File.Font = New Font("Calibri", 9.0F, FontStyle.Regular, GraphicsUnit.Point)
+        TxtBox_HDF5_File.Font = New Font("Calibri", 9.0F)
         TxtBox_HDF5_File.Location = New Point(365, 605)
         TxtBox_HDF5_File.Margin = New Padding(5, 4, 5, 4)
         TxtBox_HDF5_File.Name = "TxtBox_HDF5_File"
@@ -1146,12 +1146,11 @@ Partial Class Form_Traupixe_H5_2024
         Panel1.Controls.Add(Par_det2)
         Panel1.Controls.Add(Check_det2)
         Panel1.Controls.Add(Check_det1)
-        Panel1.Controls.Add(Same_Z)
         Panel1.Controls.Add(Check_det0)
         Panel1.Controls.Add(Par_det1)
         Panel1.Controls.Add(Par_det0)
         Panel1.Controls.Add(LstPar_Trc)
-        Panel1.Font = New Font("Calibri", 9.75F, FontStyle.Regular, GraphicsUnit.Point)
+        Panel1.Font = New Font("Calibri", 9.75F)
         Panel1.Location = New Point(800, 187)
         Panel1.Margin = New Padding(3, 4, 3, 4)
         Panel1.Name = "Panel1"
@@ -1164,7 +1163,7 @@ Partial Class Form_Traupixe_H5_2024
         Panel2.Controls.Add(Par_Mat)
         Panel2.Controls.Add(CbDetMat)
         Panel2.Controls.Add(LstPar_Mat)
-        Panel2.Font = New Font("Calibri", 9.75F, FontStyle.Regular, GraphicsUnit.Point)
+        Panel2.Font = New Font("Calibri", 9.75F)
         Panel2.Location = New Point(800, 55)
         Panel2.Margin = New Padding(3, 4, 3, 4)
         Panel2.Name = "Panel2"
@@ -1173,7 +1172,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         ' Button_Run2
         ' 
-        Button_Run2.Font = New Font("Calibri", 9.0F, FontStyle.Regular, GraphicsUnit.Point)
+        Button_Run2.Font = New Font("Calibri", 9.0F)
         Button_Run2.Location = New Point(487, 35)
         Button_Run2.Margin = New Padding(5, 4, 5, 4)
         Button_Run2.Name = "Button_Run2"
@@ -1184,7 +1183,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         ' TextProcessIf
         ' 
-        TextProcessIf.Font = New Font("Calibri", 9.0F, FontStyle.Regular, GraphicsUnit.Point)
+        TextProcessIf.Font = New Font("Calibri", 9.0F)
         TextProcessIf.Location = New Point(566, 41)
         TextProcessIf.Name = "TextProcessIf"
         TextProcessIf.Size = New Size(80, 22)
@@ -1205,7 +1204,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         Label_QFile.AutoSize = True
         Label_QFile.BackColor = Color.Transparent
-        Label_QFile.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point)
+        Label_QFile.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold)
         Label_QFile.ForeColor = Color.Black
         Label_QFile.Location = New Point(857, 33)
         Label_QFile.Margin = New Padding(5, 0, 5, 0)
@@ -1218,7 +1217,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Label3
         ' 
         Label3.AutoSize = True
-        Label3.Font = New Font("Calibri", 9.75F, FontStyle.Regular, GraphicsUnit.Point)
+        Label3.Font = New Font("Calibri", 9.75F)
         Label3.Location = New Point(365, 588)
         Label3.Margin = New Padding(5, 0, 5, 0)
         Label3.Name = "Label3"
@@ -1229,7 +1228,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Label4
         ' 
         Label4.AutoSize = True
-        Label4.Font = New Font("Calibri", 9.75F, FontStyle.Regular, GraphicsUnit.Point)
+        Label4.Font = New Font("Calibri", 9.75F)
         Label4.Location = New Point(14, 577)
         Label4.Margin = New Padding(5, 0, 5, 0)
         Label4.Name = "Label4"
@@ -1240,7 +1239,7 @@ Partial Class Form_Traupixe_H5_2024
         ' TextBox_hdf5_grps
         ' 
         TextBox_hdf5_grps.Enabled = False
-        TextBox_hdf5_grps.Font = New Font("Calibri", 9.0F, FontStyle.Regular, GraphicsUnit.Point)
+        TextBox_hdf5_grps.Font = New Font("Calibri", 9.0F)
         TextBox_hdf5_grps.Location = New Point(365, 652)
         TextBox_hdf5_grps.Margin = New Padding(5, 4, 5, 4)
         TextBox_hdf5_grps.Multiline = True
@@ -1252,7 +1251,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Label12
         ' 
         Label12.AutoSize = True
-        Label12.Font = New Font("Calibri", 9.75F, FontStyle.Regular, GraphicsUnit.Point)
+        Label12.Font = New Font("Calibri", 9.75F)
         Label12.Location = New Point(365, 636)
         Label12.Margin = New Padding(5, 0, 5, 0)
         Label12.Name = "Label12"
@@ -1264,7 +1263,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         AutoScaleDimensions = New SizeF(8.0F, 20.0F)
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(1199, 764)
+        ClientSize = New Size(1206, 764)
         Controls.Add(ComboBox_Type_Calc)
         Controls.Add(Label12)
         Controls.Add(TextBox_hdf5_grps)
@@ -1289,6 +1288,7 @@ Partial Class Form_Traupixe_H5_2024
         Controls.Add(ListFileInit)
         Controls.Add(LabelNew)
         Controls.Add(LabelAppend)
+        Controls.Add(Same_Z)
         Controls.Add(TextXLS)
         Controls.Add(Text_Status)
         Controls.Add(ProgressBar1)
@@ -1303,7 +1303,7 @@ Partial Class Form_Traupixe_H5_2024
         Margin = New Padding(5, 4, 5, 4)
         MaximizeBox = False
         Name = "Form_Traupixe_H5_2024"
-        Text = "TrauPIXE 25.12 - C2RMF"
+        Text = "TrauPIXE 25.13 - C2RMF"
         MenuStrip1.ResumeLayout(False)
         MenuStrip1.PerformLayout()
         StatusStrip1.ResumeLayout(False)

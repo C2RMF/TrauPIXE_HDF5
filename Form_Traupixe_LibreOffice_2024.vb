@@ -8,6 +8,8 @@ Imports DocumentFormat.OpenXml.VariantTypes
 Imports System.Runtime.InteropServices
 Imports DocumentFormat.OpenXml.Spreadsheet
 Imports DocumentFormat.OpenXml.Office2019.Word
+Imports System.Windows.Forms
+
 
 
 Public Class Form_Traupixe_H5_2024
@@ -66,7 +68,7 @@ Public Class Form_Traupixe_H5_2024
     ' Dim Fs_Log As Object
     Dim list_checkbox() As CheckBox
     Dim list_extension() As String
-    Dim list_pivotbox() As Windows.Forms.TextBox
+    Dim list_pivotbox() As System.Windows.Forms.TextBox
 
     Dim B_skip_elem_mtx As Boolean
     Dim nb_process_custom As Boolean
@@ -663,6 +665,7 @@ Public Class Form_Traupixe_H5_2024
         End If
         List_Par_Files_Trc()
         Maj_Files_Mat()
+        Maj_external_conc(CStr(trvFolders.SelectedNode.Tag))
         Ext_Par_Trc = "*.par"
         Maj_Par_Files_Trc(Par_det0, "det0")
         Maj_Par_Files_Mat()
@@ -688,7 +691,7 @@ Public Class Form_Traupixe_H5_2024
         List_Par_Files_Trc()
         If hdf5_mode = True Then
             List_HDF5_group(Chemin_hdf5)
-            Dim dataset_ok As Boolean = hdf5_check_dataset_available()
+            hdf5_check_dataset_available()
         Else
             Maj_Files_Mat()
         End If
@@ -780,45 +783,91 @@ Public Class Form_Traupixe_H5_2024
 
 
             End Try
-            Text_gamma.Visible = False
-            chk_external_ok.Visible = False
+            ' Text_gamma.Visible = False
+            '  chk_external_ok.Visible = False
+            '  chk_external_ok.Checked = False
             gamma_ok = False
             nb_gamma = 0
             glob_gamma_mode = False
+            '  Maj_external_conc(folder)
 
-            If chk_external_ok.Checked = True Then
-                For Each file As String In Directory.GetFiles(folder, "*.csv") 'Get Files In Folder
-                    FileExtension = System.IO.Path.GetExtension(file) 'Get File Extension(s)
-                    If LCase(FileExtension) = ".csv" Then 'Or LCase(FileExtension) = ".xlsx" Then
-                        If LCase(System.IO.Path.GetFileNameWithoutExtension(file)) = "external-conc" Then
-                            Text_gamma.Text = System.IO.Path.GetFileName(file) & " found"
-                            Text_gamma.Visible = True
-                            path_gamma = file
-                            chk_external_ok.Visible = True
+            'If chk_external_ok.Checked = True Then
 
-                            read_gamma_name_csv()
+            '    For Each file As String In Directory.GetFiles(folder, "*.csv") 'Get Files In Folder
+            '        FileExtension = System.IO.Path.GetExtension(file) 'Get File Extension(s)
+            '        If LCase(FileExtension) = ".csv" Then 'Or LCase(FileExtension) = ".xlsx" Then
+            '            If LCase(System.IO.Path.GetFileNameWithoutExtension(file)) = "external-conc" Then
+            '                Text_gamma.Text = System.IO.Path.GetFileName(file) & " found"
+            '                Text_gamma.Visible = True
+            '                path_gamma = file
+            '                chk_external_ok.Visible = True
 
-                        End If
-                    End If
+            '                read_gamma_name_csv()
 
-                Next
+            '            End If
+            '        End If
 
-            Else
-                gamma_mode = False
-                gamma_ok = False
-                nb_gamma = 0
+            '    Next
 
-                Text_gamma.Text = "No external elements for this processing"
-                ReDim info_gamma_z(1)
-                ReDim info_gamma_name(1)
-                ReDim ext_tech(1)
-            End If
+            'Else
+            '    gamma_mode = False
+            '    gamma_ok = False
+            '    nb_gamma = 0
+
+            '    Text_gamma.Text = "No external elements for this processing"
+            '    ReDim info_gamma_z(1)
+            '    ReDim info_gamma_name(1)
+            '    ReDim ext_tech(1)
+            'End If
 
         End If
 
 
     End Sub
 
+    Sub Maj_external_conc(folder As String)
+        Dim FileExtension As String 'Stores File Extension
+        Dim nb_file_1 As Integer
+        ' Dim folder As String
+        '  If chk_external_ok.Checked = True Then
+        nb_file_1 = 0
+        For Each file As String In Directory.GetFiles(folder, "*.csv") 'Get Files In Folder
+                FileExtension = System.IO.Path.GetExtension(file) 'Get File Extension(s)
+            If LCase(FileExtension) = ".csv" Then 'Or LCase(FileExtension) = ".xlsx" Then
+
+                If LCase(System.IO.Path.GetFileNameWithoutExtension(file)) = "external-conc" Then
+                    Text_gamma.Text = System.IO.Path.GetFileName(file) & " found"
+                    Text_gamma.Visible = True
+                    path_gamma = file
+                    chk_external_ok.Checked = True
+                    chk_external_ok.Visible = True
+                    read_gamma_name_csv()
+                    nb_file_1 = 1
+                    Exit For
+
+                End If
+            End If
+
+        Next
+
+        '   Else
+
+        '   End If
+        If nb_file_1 = 0 Then
+            gamma_mode = False
+            gamma_ok = False
+            nb_gamma = 0
+            Text_gamma.Text = "File 'external-conc.csv' not found"
+            ReDim info_gamma_z(1)
+            ReDim info_gamma_name(1)
+            ReDim ext_tech(1)
+            chk_external_ok.Visible = False
+            chk_external_ok.Checked = False
+            Text_gamma.Text = "File 'external-conc.csv' not found"
+        End If
+
+
+    End Sub
 
     Sub Maj_Files_Trc(Det As String, ext_trc As String)
         Dim FileExtension As String 'Stores File Extension
@@ -3340,7 +3389,6 @@ Public Class Form_Traupixe_H5_2024
         Dim Charge As Single
         Dim i As Integer
         Dim j As Integer
-        Dim T As Integer
         Dim Str_Entete As String
         Dim data As String
         Dim Result As String
@@ -3378,7 +3426,7 @@ Public Class Form_Traupixe_H5_2024
         Dim gupix_header_ok As Boolean
 
         Lect_Depth = True
-
+        commentaire = "---"
 
         ToolStripStatusLabel1.Text = "Matrix processing"
         '  Fs_Log.writeline("Calculate MATRIX" & CStr(Num_Fichier))
@@ -8615,7 +8663,6 @@ OpenWorkbook_OK:
 
     Function Retourne_Conc_Trc(Y_N_Q As String, Num_Proc As Integer, Indice As Integer, Z As Integer) As Double()
         Dim val_return(2) As Double
-        Dim i As Integer
         Dim Conc_as_Oxy As Boolean
 
         Conc_as_Oxy = False
@@ -10061,11 +10108,10 @@ pass_mat:   ' Only_Trace
     Private Sub Check_det1_CheckedChanged(sender As Object, e As EventArgs) Handles Check_det1.CheckedChanged
         Dim Det_use_Q As Boolean
         Dim i
-        Dim dataset_founded As Boolean
 
         If Check_det1.Checked = True Then
             If hdf5_mode = True Then
-                ' dataset_founded = hdf5_check_dataset_available(Check_det1.Text)
+                'dataset_founded = hdf5_check_dataset_available(Check_det1.Text)
             End If
             Select_Par_files = 1
             Ext_Par_Trc = "*" & Check_det1.Text & ".par"
@@ -10148,11 +10194,8 @@ pass_mat:   ' Only_Trace
     Private Sub Check_det3_CheckedChanged(sender As Object, e As EventArgs) Handles Check_det3.CheckedChanged
         Dim Det_use_Q As Boolean
         Dim i As Integer
-        Dim dataset_founded As Boolean
+
         If Check_det3.Checked = True Then
-            If hdf5_mode = True Then
-                '   dataset_founded = hdf5_check_dataset_available(Check_det3.Text)
-            End If
             Select_Par_files = 3
             Ext_Par_Trc = "*" & Check_det3.Text & ".par" '"*HE3*.par"
             ComboBox_Type_F.Items.Add(Check_det3.Text)
@@ -10184,7 +10227,7 @@ pass_mat:   ' Only_Trace
     Private Sub Check_det4_CheckedChanged(sender As Object, e As EventArgs) Handles Check_det4.CheckedChanged
         Dim Det_use_Q As Boolean
         Dim i As Integer
-        Dim dataset_founded As Boolean
+
 
         If Check_det4.Checked = True Then
             Select_Par_files = 4
@@ -11076,7 +11119,7 @@ Myend:
         Dim Tab_Val_Read() As Long
         Dim br As BinaryReader
         fs = CreateObject("Scripting.FileSystemObject")
-
+        Tmp_Spe = ""
         'If Dir_EDF <> "c:" Then
         '           fs.CopyFile(Chemin_Data & "\" + Fichier_Matrix(Num_File_EDF), Dir_EDF & "\" & Fichier_Matrix(Num_File_EDF))
         'fil1 = fs.GetFile(Chemin_Data + "\" + Fichier_Matrix(i + Num_Fichier))
@@ -11361,6 +11404,7 @@ Myend:
 
 
 
+
         'Dim xlBook = New XLWorkbook("c:\data\Test.xlsx")
         'Dim xlBook1 = New XLWorkbook(Mypath)
         'xlBook = Excel_Open(0, "Test.xlsx")
@@ -11546,7 +11590,7 @@ Myend:
     End Sub
 
     Private Sub ListBox_HDF5_DoubleClick(sender As Object, e As EventArgs) Handles ListBox_HDF5.DoubleClick
-        Dim dataset_founded As Boolean
+
         If ListBox_HDF5.SelectedItem Is Nothing Then
             Exit Sub
         End If
@@ -11561,7 +11605,7 @@ Myend:
             Button_Extract.Enabled = False
         End If
 
-        dataset_founded = hdf5_check_dataset_available()
+        hdf5_check_dataset_available()
 
 
     End Sub
@@ -11575,12 +11619,9 @@ Myend:
         Dim Attrib_ref_obj
         Dim attrib_val
         Dim attrib_val_1
-        Dim Data
-        Dim MyH5Group
         Dim Myh5
         Dim i As Integer = 0
         Dim j As Integer = 0
-
         Dim pixel_size_x As Integer
         Dim size_x As Integer
         Dim pixel_size_y As Integer
@@ -12029,7 +12070,7 @@ Myend:
         End If
 
     End Sub
-    Private Function hdf5_check_dataset_available() As Boolean
+    Private Sub hdf5_check_dataset_available()
 
         Dim ComputerName As String
         Dim MesFiles(1000) As Object
@@ -12046,21 +12087,20 @@ Myend:
         Dim MyH5Group
         Dim name_tmp As String
         i = 0
-        Dim DataSet
+        Dim DataSet_available As Boolean
         Dim j, k
         j = 0
         i = 0
         k = 0
 
         ReDim dataset_availabe(20)
-
+        DataSet_available = False
         Try
             MyH5Group = Myh5.Group("/data")
             HDF_as_Map = True
         Catch ex As Exception
             HDF_as_Map = False
         End Try
-
 
         Local_Ref_DataSet_ToRead = Ref_mat_DataSet_ToRead
 
@@ -12093,14 +12133,16 @@ Myend:
             End If
 
             For Each check_box In list_checkbox
-                hdf5_check_dataset_available = False
+                ' hdf5_check_dataset_available = False
+                DataSet_available = False
                 check_box.Checked = False
                 check_box.Enabled = False
 
                 For Each DataSetname In dataset_availabe
 
                     If DataSetname = check_box.Text Then
-                        hdf5_check_dataset_available = True
+                        ' hdf5_check_dataset_available = True
+                        DataSet_available = True
                         'Exit Function
 
                         For Each par In tab_list_par_trc
@@ -12111,7 +12153,8 @@ Myend:
                         Next
 
                     Else
-                        hdf5_check_dataset_available = False
+                        'hdf5_check_dataset_available = False
+                        DataSet_available = False
                     End If
 
 
@@ -12121,7 +12164,7 @@ Myend:
         End If
         Myh5.Dispose()
 
-    End Function
+    End Sub
 
     Private Sub hdf5_mat_Read_Dataset_Attrib()
         Dim ComputerName As String
@@ -12320,6 +12363,7 @@ Myend:
         For Each combination In combinations
             Console.WriteLine(combination)
         Next
+        My.Computer.Audio.Play("C:\Windows\Media\chimes.wav")
     End Sub
 
     Private Sub chk_external_ok_CheckedChanged(sender As Object, e As EventArgs) Handles chk_external_ok.CheckedChanged
