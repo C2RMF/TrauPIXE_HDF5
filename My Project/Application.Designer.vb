@@ -33,7 +33,7 @@ Namespace My
         
         <Global.System.Diagnostics.DebuggerStepThroughAttribute()>  _
         Protected Overrides Sub OnCreateMainForm()
-            Me.MainForm = Global.TRAUPIXE_HDF5.Form_Traupixe_H5_2023
+            Me.MainForm = Global.TRAUPIXE_HDF5.Form_Traupixe_H5_2024
         End Sub
         
         <Global.System.Diagnostics.DebuggerStepThroughAttribute()>  _

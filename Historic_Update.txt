@@ -1,3 +1,13 @@
+####################### Version 25.14 #######################
+01/2026
+Correction Lecture fichier "external-conc.csv"
+Toutes les ananlyses ne sont pas obligées d'avoir une ligne de valeur
+
+####################### Version 25.13 #######################
+01/2026
+Correction BUG lecture hdf5 mode metal en matrice sans trace
+
+
 ####################### Version 25.12 #######################
 07/2025
 MAJ de l'interface de TRAUPIXE pour mieux intégrer les hdf5
