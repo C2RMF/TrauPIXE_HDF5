@@ -1,3 +1,7 @@
+####################### Version 25.15 #######################
+02/2026
+Correction Bug: cas skip Z in matrice pas de recherche de la LOD pour les éléments "N" dans les Traces.
+
 ####################### Version 25.14 #######################
 01/2026
 Correction Lecture fichier "external-conc.csv"

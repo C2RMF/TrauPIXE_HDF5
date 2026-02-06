@@ -2152,7 +2152,6 @@ Public Class Form_Traupixe_H5_2024
         If Check_det7.Checked = False Then ReDim Fichier_Trace7(0)
         If Check_det8.Checked = False Then ReDim Fichier_Trace8(0)
 
-
         If Nb_file = 0 Then Exit Sub
 
         If LvFiles.SelectedItems.Count > Environment.ProcessorCount + 1 Then
@@ -9120,6 +9119,7 @@ OpenWorkbook_OK:
                         Best_Stat_0 = 1000000 'Permet pour le Pb de prendre la valeur en HE quelque soit sont l'erreur Total (Fit+Stat
                         Y_N_Q_Prev = "N" ' Ajout 29/09/2024
                         indx_mat = -1
+                        ' Best_Done = False
                     End If
 
                     Do While indx_mat <> -1
@@ -9246,7 +9246,7 @@ pass_mat:   ' Only_Trace
 
                             'BEFORE 12/01/2022
                             'If Math.Sqrt(Val_Trc_Fit_Error(Num_Proc, i) ^ 2 + Val_Trc_Stat_Error(Num_Proc, i) ^ 2) = 0 Then Best_Stat_1 = 10000001
-                            If Val_Trc_Fit_Error(Num_proc, indx_trc) = 0 Then Best_Stat_1 = 10000001
+                            If Val_Trc_Fit_Error(Num_proc, indx_trc) = 0 And Indice_Trc_0 <> -1 Then Best_Stat_1 = 10000001
                             'Else
                             'Best_Stat_0 = Math.Sqrt(Val_Trc_Fit_Error(Num_Proc, i) ^ 2) + (Val_Trc_Stat_Error(Num_Proc, i) ^ 2)
                             'End If
@@ -9480,6 +9480,7 @@ pass_mat:   ' Only_Trace
                         Best_Stat_0 = 100000000
                         Y_N_Q_Prev = ""
                         Best_LOD_mat_current = -1
+
                     End If
 
                     'If Z = 82 And B_skip_elem_mtx = True Then
@@ -9492,6 +9493,7 @@ pass_mat:   ' Only_Trace
                         Best_Stat_0 = 1000000 'Permet pour le Pb de prendre la valeur en HE quelque soit sont l'erreur Total (Fit+Stat
                         Y_N_Q_Prev = "N" ' Ajout 29/09/2024
                         indx_mat = -1
+                        Best_LOD_mat_current = -1
                     End If
 
                     If Z = 29 Then

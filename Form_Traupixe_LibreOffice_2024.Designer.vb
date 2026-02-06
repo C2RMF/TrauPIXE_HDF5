@@ -469,7 +469,7 @@ Partial Class Form_Traupixe_H5_2024
         ' ComboBox_Type_Calc
         ' 
         ComboBox_Type_Calc.Enabled = False
-        ComboBox_Type_Calc.Font = New Font("Calibri", 8.0F)
+        ComboBox_Type_Calc.Font = New Font("Calibri", 8F)
         ComboBox_Type_Calc.FormattingEnabled = True
         ComboBox_Type_Calc.Items.AddRange(New Object() {"Ponctual hdf5 ", "Map hdf5 "})
         ComboBox_Type_Calc.Location = New Point(231, 342)
@@ -483,7 +483,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Progress
         ' 
         Progress.Enabled = False
-        Progress.Font = New Font("Segoe UI", 12.0F)
+        Progress.Font = New Font("Segoe UI", 12F)
         Progress.Location = New Point(555, 11)
         Progress.Margin = New Padding(5, 4, 5, 4)
         Progress.Name = "Progress"
@@ -505,7 +505,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         ' MyPause
         ' 
-        MyPause.Font = New Font("Calibri", 13.0F)
+        MyPause.Font = New Font("Calibri", 13F)
         MyPause.Location = New Point(666, 5)
         MyPause.Margin = New Padding(5, 4, 5, 4)
         MyPause.Name = "MyPause"
@@ -526,7 +526,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         ' MenuStrip1
         ' 
-        MenuStrip1.Font = New Font("Segoe UI", 8.0F)
+        MenuStrip1.Font = New Font("Segoe UI", 8F)
         MenuStrip1.ImageScalingSize = New Size(24, 24)
         MenuStrip1.Items.AddRange(New ToolStripItem() {mnuOxyde, LODToolStripMenuItem})
         MenuStrip1.Location = New Point(0, 0)
@@ -604,7 +604,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         ' Pivot_det1
         ' 
-        Pivot_det1.Font = New Font("Calibri", 8.0F)
+        Pivot_det1.Font = New Font("Calibri", 8F)
         Pivot_det1.Location = New Point(306, 28)
         Pivot_det1.Margin = New Padding(5, 4, 5, 4)
         Pivot_det1.Name = "Pivot_det1"
@@ -614,7 +614,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         ' Pivot_det2
         ' 
-        Pivot_det2.Font = New Font("Calibri", 8.0F)
+        Pivot_det2.Font = New Font("Calibri", 8F)
         Pivot_det2.Location = New Point(306, 53)
         Pivot_det2.Margin = New Padding(5, 4, 5, 4)
         Pivot_det2.Name = "Pivot_det2"
@@ -624,7 +624,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         ' Pivot_det5
         ' 
-        Pivot_det5.Font = New Font("Calibri", 8.0F)
+        Pivot_det5.Font = New Font("Calibri", 8F)
         Pivot_det5.Location = New Point(306, 128)
         Pivot_det5.Margin = New Padding(5, 4, 5, 4)
         Pivot_det5.Name = "Pivot_det5"
@@ -634,7 +634,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         ' Pivot_det4
         ' 
-        Pivot_det4.Font = New Font("Calibri", 8.0F)
+        Pivot_det4.Font = New Font("Calibri", 8F)
         Pivot_det4.Location = New Point(306, 103)
         Pivot_det4.Margin = New Padding(5, 4, 5, 4)
         Pivot_det4.Name = "Pivot_det4"
@@ -644,7 +644,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         ' Pivot_det3
         ' 
-        Pivot_det3.Font = New Font("Calibri", 8.0F)
+        Pivot_det3.Font = New Font("Calibri", 8F)
         Pivot_det3.Location = New Point(306, 77)
         Pivot_det3.Margin = New Padding(5, 4, 5, 4)
         Pivot_det3.Name = "Pivot_det3"
@@ -654,7 +654,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         ' Pivot_det8
         ' 
-        Pivot_det8.Font = New Font("Calibri", 8.0F)
+        Pivot_det8.Font = New Font("Calibri", 8F)
         Pivot_det8.Location = New Point(306, 204)
         Pivot_det8.Margin = New Padding(5, 4, 5, 4)
         Pivot_det8.Name = "Pivot_det8"
@@ -664,7 +664,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         ' Pivot_det7
         ' 
-        Pivot_det7.Font = New Font("Calibri", 8.0F)
+        Pivot_det7.Font = New Font("Calibri", 8F)
         Pivot_det7.Location = New Point(306, 179)
         Pivot_det7.Margin = New Padding(5, 4, 5, 4)
         Pivot_det7.Name = "Pivot_det7"
@@ -675,7 +675,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Pivot_det6
         ' 
         Pivot_det6.AccessibleDescription = ""
-        Pivot_det6.Font = New Font("Calibri", 8.0F)
+        Pivot_det6.Font = New Font("Calibri", 8F)
         Pivot_det6.Location = New Point(306, 152)
         Pivot_det6.Margin = New Padding(5, 4, 5, 4)
         Pivot_det6.Name = "Pivot_det6"
@@ -698,7 +698,7 @@ Partial Class Form_Traupixe_H5_2024
         ' TextXLS
         ' 
         TextXLS.Enabled = False
-        TextXLS.Font = New Font("Arial Narrow", 10.0F)
+        TextXLS.Font = New Font("Arial Narrow", 10F)
         TextXLS.Location = New Point(85, 525)
         TextXLS.Margin = New Padding(5, 4, 5, 4)
         TextXLS.Name = "TextXLS"
@@ -709,7 +709,7 @@ Partial Class Form_Traupixe_H5_2024
         ' LabelAppend
         ' 
         LabelAppend.AutoSize = True
-        LabelAppend.Font = New Font("Segoe UI", 8.0F)
+        LabelAppend.Font = New Font("Segoe UI", 8F)
         LabelAppend.Location = New Point(14, 532)
         LabelAppend.Margin = New Padding(5, 0, 5, 0)
         LabelAppend.Name = "LabelAppend"
@@ -720,7 +720,7 @@ Partial Class Form_Traupixe_H5_2024
         ' LabelNew
         ' 
         LabelNew.AutoSize = True
-        LabelNew.Font = New Font("Segoe UI", 8.0F)
+        LabelNew.Font = New Font("Segoe UI", 8F)
         LabelNew.Location = New Point(15, 532)
         LabelNew.Margin = New Padding(5, 0, 5, 0)
         LabelNew.Name = "LabelNew"
@@ -733,7 +733,7 @@ Partial Class Form_Traupixe_H5_2024
         Check_Trc_As_Oxy.AutoSize = True
         Check_Trc_As_Oxy.Checked = True
         Check_Trc_As_Oxy.CheckState = CheckState.Checked
-        Check_Trc_As_Oxy.Font = New Font("Calibri", 8.0F)
+        Check_Trc_As_Oxy.Font = New Font("Calibri", 8F)
         Check_Trc_As_Oxy.Location = New Point(15, 5)
         Check_Trc_As_Oxy.Margin = New Padding(5, 4, 5, 4)
         Check_Trc_As_Oxy.Name = "Check_Trc_As_Oxy"
@@ -744,7 +744,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         ' Text_Lst_Ox_Trc
         ' 
-        Text_Lst_Ox_Trc.Font = New Font("Calibri", 8.0F)
+        Text_Lst_Ox_Trc.Font = New Font("Calibri", 8F)
         Text_Lst_Ox_Trc.Location = New Point(10, 21)
         Text_Lst_Ox_Trc.Margin = New Padding(5, 4, 5, 4)
         Text_Lst_Ox_Trc.Name = "Text_Lst_Ox_Trc"
@@ -755,7 +755,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Ck_AllAsOxy
         ' 
         Ck_AllAsOxy.AutoSize = True
-        Ck_AllAsOxy.Font = New Font("Calibri", 8.0F)
+        Ck_AllAsOxy.Font = New Font("Calibri", 8F)
         Ck_AllAsOxy.Location = New Point(117, 5)
         Ck_AllAsOxy.Margin = New Padding(5, 4, 5, 4)
         Ck_AllAsOxy.Name = "Ck_AllAsOxy"
@@ -806,7 +806,7 @@ Partial Class Form_Traupixe_H5_2024
         Chk_RoundValue.AutoSize = True
         Chk_RoundValue.Checked = True
         Chk_RoundValue.CheckState = CheckState.Checked
-        Chk_RoundValue.Font = New Font("Calibri", 8.0F)
+        Chk_RoundValue.Font = New Font("Calibri", 8F)
         Chk_RoundValue.Location = New Point(421, 48)
         Chk_RoundValue.Margin = New Padding(5, 4, 5, 4)
         Chk_RoundValue.Name = "Chk_RoundValue"
@@ -817,7 +817,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         ' Adjust_Filter
         ' 
-        Adjust_Filter.Font = New Font("Calibri", 14.0F)
+        Adjust_Filter.Font = New Font("Calibri", 14F)
         Adjust_Filter.Location = New Point(583, 10)
         Adjust_Filter.Margin = New Padding(5, 4, 5, 4)
         Adjust_Filter.Name = "Adjust_Filter"
@@ -832,7 +832,7 @@ Partial Class Form_Traupixe_H5_2024
         TabControl1.Controls.Add(Calcul)
         TabControl1.Controls.Add(Tab_Adjust)
         TabControl1.Controls.Add(TabPage1)
-        TabControl1.Font = New Font("Calibri", 8.0F)
+        TabControl1.Font = New Font("Calibri", 8F)
         TabControl1.Location = New Point(360, 423)
         TabControl1.Margin = New Padding(5, 4, 5, 4)
         TabControl1.Name = "TabControl1"
@@ -867,7 +867,7 @@ Partial Class Form_Traupixe_H5_2024
         ' chb_skip_elem
         ' 
         chb_skip_elem.AutoSize = True
-        chb_skip_elem.Font = New Font("Calibri", 8.0F)
+        chb_skip_elem.Font = New Font("Calibri", 8F)
         chb_skip_elem.Location = New Point(239, 5)
         chb_skip_elem.Margin = New Padding(5, 4, 5, 4)
         chb_skip_elem.Name = "chb_skip_elem"
@@ -879,7 +879,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         ' txt_skip_elem
         ' 
-        txt_skip_elem.Font = New Font("Calibri", 8.0F)
+        txt_skip_elem.Font = New Font("Calibri", 8F)
         txt_skip_elem.Location = New Point(239, 21)
         txt_skip_elem.Margin = New Padding(5, 4, 5, 4)
         txt_skip_elem.Name = "txt_skip_elem"
@@ -893,7 +893,7 @@ Partial Class Form_Traupixe_H5_2024
         chk_external_ok.AutoSize = True
         chk_external_ok.Checked = True
         chk_external_ok.CheckState = CheckState.Checked
-        chk_external_ok.Font = New Font("Calibri", 8.0F)
+        chk_external_ok.Font = New Font("Calibri", 8F)
         chk_external_ok.Location = New Point(336, 48)
         chk_external_ok.Margin = New Padding(5, 4, 5, 4)
         chk_external_ok.Name = "chk_external_ok"
@@ -905,7 +905,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         ' Text_gamma
         ' 
-        Text_gamma.Font = New Font("Calibri", 8.0F)
+        Text_gamma.Font = New Font("Calibri", 8F)
         Text_gamma.Location = New Point(11, 45)
         Text_gamma.Margin = New Padding(5, 4, 5, 4)
         Text_gamma.Name = "Text_gamma"
@@ -1060,7 +1060,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         ' Button_Extract
         ' 
-        Button_Extract.Font = New Font("Calibri", 12.0F)
+        Button_Extract.Font = New Font("Calibri", 12F)
         Button_Extract.Location = New Point(290, 11)
         Button_Extract.Margin = New Padding(3, 4, 3, 4)
         Button_Extract.Name = "Button_Extract"
@@ -1113,7 +1113,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Box_txtFiltre
         ' 
         Box_txtFiltre.AcceptsReturn = True
-        Box_txtFiltre.Font = New Font("Calibri", 8.0F)
+        Box_txtFiltre.Font = New Font("Calibri", 8F)
         Box_txtFiltre.Location = New Point(654, 33)
         Box_txtFiltre.Margin = New Padding(5, 4, 5, 4)
         Box_txtFiltre.Name = "Box_txtFiltre"
@@ -1125,7 +1125,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Label11
         ' 
         Label11.AutoSize = True
-        Label11.Font = New Font("Calibri", 8.0F)
+        Label11.Font = New Font("Calibri", 8F)
         Label11.Location = New Point(655, 21)
         Label11.Margin = New Padding(5, 0, 5, 0)
         Label11.Name = "Label11"
@@ -1145,7 +1145,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         ' TxtBox_HDF5_File
         ' 
-        TxtBox_HDF5_File.Font = New Font("Calibri", 9.0F)
+        TxtBox_HDF5_File.Font = New Font("Calibri", 9F)
         TxtBox_HDF5_File.Location = New Point(11, 455)
         TxtBox_HDF5_File.Margin = New Padding(5, 4, 5, 4)
         TxtBox_HDF5_File.Name = "TxtBox_HDF5_File"
@@ -1206,7 +1206,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         ' Button_Run2
         ' 
-        Button_Run2.Font = New Font("Calibri", 8.0F)
+        Button_Run2.Font = New Font("Calibri", 8F)
         Button_Run2.Location = New Point(487, 25)
         Button_Run2.Margin = New Padding(5, 4, 5, 4)
         Button_Run2.Name = "Button_Run2"
@@ -1217,7 +1217,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         ' TextProcessIf
         ' 
-        TextProcessIf.Font = New Font("Calibri", 8.0F)
+        TextProcessIf.Font = New Font("Calibri", 8F)
         TextProcessIf.Location = New Point(566, 33)
         TextProcessIf.Name = "TextProcessIf"
         TextProcessIf.Size = New Size(79, 21)
@@ -1239,7 +1239,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         Label_QFile.AutoSize = True
         Label_QFile.BackColor = Color.Transparent
-        Label_QFile.Font = New Font("Segoe UI", 8.0F, FontStyle.Bold)
+        Label_QFile.Font = New Font("Segoe UI", 8F, FontStyle.Bold)
         Label_QFile.ForeColor = Color.Black
         Label_QFile.Location = New Point(857, 26)
         Label_QFile.Margin = New Padding(5, 0, 5, 0)
@@ -1252,7 +1252,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Label3
         ' 
         Label3.AutoSize = True
-        Label3.Font = New Font("Calibri", 8.0F)
+        Label3.Font = New Font("Calibri", 8F)
         Label3.Location = New Point(11, 441)
         Label3.Margin = New Padding(5, 0, 5, 0)
         Label3.Name = "Label3"
@@ -1263,7 +1263,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Label4
         ' 
         Label4.AutoSize = True
-        Label4.Font = New Font("Calibri", 8.0F)
+        Label4.Font = New Font("Calibri", 8F)
         Label4.Location = New Point(14, 354)
         Label4.Margin = New Padding(5, 0, 5, 0)
         Label4.Name = "Label4"
@@ -1274,7 +1274,7 @@ Partial Class Form_Traupixe_H5_2024
         ' TextBox_hdf5_grps
         ' 
         TextBox_hdf5_grps.Enabled = False
-        TextBox_hdf5_grps.Font = New Font("Calibri", 9.0F)
+        TextBox_hdf5_grps.Font = New Font("Calibri", 9F)
         TextBox_hdf5_grps.Location = New Point(11, 493)
         TextBox_hdf5_grps.Margin = New Padding(5, 4, 5, 4)
         TextBox_hdf5_grps.Multiline = True
@@ -1286,7 +1286,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Label12
         ' 
         Label12.AutoSize = True
-        Label12.Font = New Font("Calibri", 8.0F)
+        Label12.Font = New Font("Calibri", 8F)
         Label12.Location = New Point(11, 477)
         Label12.Margin = New Padding(5, 0, 5, 0)
         Label12.Name = "Label12"
@@ -1343,7 +1343,7 @@ Partial Class Form_Traupixe_H5_2024
         Name = "Form_Traupixe_H5_2024"
         RightToLeftLayout = True
         StartPosition = FormStartPosition.Manual
-        Text = "TrauPIXE 25.14 - C2RMF"
+        Text = "TrauPIXE 25.15 - C2RMF"
         MenuStrip1.ResumeLayout(False)
         MenuStrip1.PerformLayout()
         StatusStrip1.ResumeLayout(False)
