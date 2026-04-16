@@ -1,3 +1,7 @@
+####################### Version 25.16 #######################
+04/2026
+Correction Bug: Somme permettant la normalisation à 100% (S_Conc ppm et S_con_100) n'était pas pris dans le calcul des éléments "?" / police en Rouge dans le tab Excel.
+
 ####################### Version 25.15 #######################
 02/2026
 Correction Bug: cas skip Z in matrice pas de recherche de la LOD pour les éléments "N" dans les Traces.
