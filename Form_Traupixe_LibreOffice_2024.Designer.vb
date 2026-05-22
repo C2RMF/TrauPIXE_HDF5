@@ -144,12 +144,12 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         ' LstPar_Mat
         ' 
-        LstPar_Mat.Font = New Font("Segoe UI", 7F)
+        LstPar_Mat.Font = New Font("Segoe UI", 6.0F)
         LstPar_Mat.FormattingEnabled = True
-        LstPar_Mat.Location = New Point(8, 30)
+        LstPar_Mat.Location = New Point(8, 29)
         LstPar_Mat.Margin = New Padding(5, 4, 5, 4)
         LstPar_Mat.Name = "LstPar_Mat"
-        LstPar_Mat.Size = New Size(382, 19)
+        LstPar_Mat.Size = New Size(382, 40)
         LstPar_Mat.TabIndex = 7
         ' 
         ' LstPar_Trc
@@ -222,7 +222,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Par_det0
         ' 
         Par_det0.Font = New Font("Segoe UI", 7.0F)
-        Par_det0.Location = New Point(82, 3)
+        Par_det0.Location = New Point(82, 7)
         Par_det0.Margin = New Padding(5, 4, 5, 4)
         Par_det0.Name = "Par_det0"
         Par_det0.Size = New Size(215, 23)
@@ -231,7 +231,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Par_det1
         ' 
         Par_det1.Font = New Font("Segoe UI", 7.0F)
-        Par_det1.Location = New Point(82, 29)
+        Par_det1.Location = New Point(82, 33)
         Par_det1.Margin = New Padding(5, 4, 5, 4)
         Par_det1.Name = "Par_det1"
         Par_det1.Size = New Size(215, 23)
@@ -241,7 +241,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         Check_det0.AutoSize = True
         Check_det0.Font = New Font("Segoe UI", 7.0F)
-        Check_det0.Location = New Point(10, 5)
+        Check_det0.Location = New Point(10, 9)
         Check_det0.Margin = New Padding(5, 4, 5, 4)
         Check_det0.Name = "Check_det0"
         Check_det0.Size = New Size(48, 19)
@@ -253,7 +253,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         Check_det1.AutoSize = True
         Check_det1.Font = New Font("Segoe UI", 7.0F)
-        Check_det1.Location = New Point(10, 31)
+        Check_det1.Location = New Point(10, 35)
         Check_det1.Margin = New Padding(5, 4, 5, 4)
         Check_det1.Name = "Check_det1"
         Check_det1.Size = New Size(50, 19)
@@ -265,7 +265,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         Check_det2.AutoSize = True
         Check_det2.Font = New Font("Segoe UI", 7.0F)
-        Check_det2.Location = New Point(10, 57)
+        Check_det2.Location = New Point(10, 61)
         Check_det2.Margin = New Padding(5, 4, 5, 4)
         Check_det2.Name = "Check_det2"
         Check_det2.Size = New Size(50, 19)
@@ -276,7 +276,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Par_det2
         ' 
         Par_det2.Font = New Font("Segoe UI", 7.0F)
-        Par_det2.Location = New Point(82, 55)
+        Par_det2.Location = New Point(82, 59)
         Par_det2.Margin = New Padding(5, 4, 5, 4)
         Par_det2.Name = "Par_det2"
         Par_det2.Size = New Size(215, 23)
@@ -285,7 +285,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Par_det5
         ' 
         Par_det5.Font = New Font("Segoe UI", 7.0F)
-        Par_det5.Location = New Point(82, 133)
+        Par_det5.Location = New Point(82, 137)
         Par_det5.Margin = New Padding(5, 4, 5, 4)
         Par_det5.Name = "Par_det5"
         Par_det5.Size = New Size(215, 23)
@@ -296,7 +296,7 @@ Partial Class Form_Traupixe_H5_2024
         Check_det5.AutoSize = True
         Check_det5.BackColor = Color.LightGray
         Check_det5.Font = New Font("Segoe UI", 7.0F)
-        Check_det5.Location = New Point(10, 135)
+        Check_det5.Location = New Point(10, 139)
         Check_det5.Margin = New Padding(5, 4, 5, 4)
         Check_det5.Name = "Check_det5"
         Check_det5.Size = New Size(56, 19)
@@ -308,7 +308,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         Check_det4.AutoSize = True
         Check_det4.Font = New Font("Segoe UI", 7.0F)
-        Check_det4.Location = New Point(10, 109)
+        Check_det4.Location = New Point(10, 113)
         Check_det4.Margin = New Padding(5, 4, 5, 4)
         Check_det4.Name = "Check_det4"
         Check_det4.Size = New Size(50, 19)
@@ -320,7 +320,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         Check_det3.AutoSize = True
         Check_det3.Font = New Font("Segoe UI", 7.0F)
-        Check_det3.Location = New Point(10, 83)
+        Check_det3.Location = New Point(10, 87)
         Check_det3.Margin = New Padding(5, 4, 5, 4)
         Check_det3.Name = "Check_det3"
         Check_det3.Size = New Size(50, 19)
@@ -331,7 +331,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Par_det4
         ' 
         Par_det4.Font = New Font("Segoe UI", 7.0F)
-        Par_det4.Location = New Point(82, 107)
+        Par_det4.Location = New Point(82, 111)
         Par_det4.Margin = New Padding(5, 4, 5, 4)
         Par_det4.Name = "Par_det4"
         Par_det4.Size = New Size(215, 23)
@@ -340,7 +340,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Par_det3
         ' 
         Par_det3.Font = New Font("Segoe UI", 7.0F)
-        Par_det3.Location = New Point(82, 81)
+        Par_det3.Location = New Point(82, 85)
         Par_det3.Margin = New Padding(5, 4, 5, 4)
         Par_det3.Name = "Par_det3"
         Par_det3.Size = New Size(215, 23)
@@ -349,7 +349,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Par_det8
         ' 
         Par_det8.Font = New Font("Segoe UI", 7.0F)
-        Par_det8.Location = New Point(82, 211)
+        Par_det8.Location = New Point(82, 215)
         Par_det8.Margin = New Padding(5, 4, 5, 4)
         Par_det8.Name = "Par_det8"
         Par_det8.Size = New Size(215, 23)
@@ -359,7 +359,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         Check_det8.AutoSize = True
         Check_det8.Font = New Font("Segoe UI", 7.0F)
-        Check_det8.Location = New Point(10, 213)
+        Check_det8.Location = New Point(10, 217)
         Check_det8.Margin = New Padding(5, 4, 5, 4)
         Check_det8.Name = "Check_det8"
         Check_det8.Size = New Size(56, 19)
@@ -371,7 +371,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         Check_det7.AutoSize = True
         Check_det7.Font = New Font("Segoe UI", 7.0F)
-        Check_det7.Location = New Point(10, 187)
+        Check_det7.Location = New Point(10, 191)
         Check_det7.Margin = New Padding(5, 4, 5, 4)
         Check_det7.Name = "Check_det7"
         Check_det7.Size = New Size(56, 19)
@@ -383,7 +383,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         Check_det6.AutoSize = True
         Check_det6.Font = New Font("Segoe UI", 7.0F)
-        Check_det6.Location = New Point(10, 161)
+        Check_det6.Location = New Point(10, 165)
         Check_det6.Margin = New Padding(5, 4, 5, 4)
         Check_det6.Name = "Check_det6"
         Check_det6.Size = New Size(56, 19)
@@ -394,7 +394,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Par_det7
         ' 
         Par_det7.Font = New Font("Segoe UI", 7.0F)
-        Par_det7.Location = New Point(82, 185)
+        Par_det7.Location = New Point(82, 189)
         Par_det7.Margin = New Padding(5, 4, 5, 4)
         Par_det7.Name = "Par_det7"
         Par_det7.Size = New Size(215, 23)
@@ -403,7 +403,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Par_det6
         ' 
         Par_det6.Font = New Font("Segoe UI", 7.0F)
-        Par_det6.Location = New Point(82, 159)
+        Par_det6.Location = New Point(82, 163)
         Par_det6.Margin = New Padding(5, 4, 5, 4)
         Par_det6.Name = "Par_det6"
         Par_det6.Size = New Size(215, 23)
@@ -448,7 +448,7 @@ Partial Class Form_Traupixe_H5_2024
         Label2.AutoSize = True
         Label2.BackColor = Color.LightGray
         Label2.Font = New Font("Segoe UI", 6.0F, FontStyle.Bold)
-        Label2.Location = New Point(802, 92)
+        Label2.Location = New Point(802, 113)
         Label2.Margin = New Padding(5, 0, 5, 0)
         Label2.Name = "Label2"
         Label2.Size = New Size(29, 12)
@@ -604,7 +604,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Pivot_det0
         ' 
         Pivot_det0.Font = New Font("Segoe UI", 7.0F)
-        Pivot_det0.Location = New Point(306, 2)
+        Pivot_det0.Location = New Point(306, 6)
         Pivot_det0.Margin = New Padding(5, 4, 5, 4)
         Pivot_det0.Name = "Pivot_det0"
         Pivot_det0.Size = New Size(85, 23)
@@ -614,7 +614,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Pivot_det1
         ' 
         Pivot_det1.Font = New Font("Calibri", 8.0F)
-        Pivot_det1.Location = New Point(306, 27)
+        Pivot_det1.Location = New Point(306, 31)
         Pivot_det1.Margin = New Padding(5, 4, 5, 4)
         Pivot_det1.Name = "Pivot_det1"
         Pivot_det1.Size = New Size(85, 24)
@@ -624,7 +624,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Pivot_det2
         ' 
         Pivot_det2.Font = New Font("Calibri", 8.0F)
-        Pivot_det2.Location = New Point(306, 53)
+        Pivot_det2.Location = New Point(306, 57)
         Pivot_det2.Margin = New Padding(5, 4, 5, 4)
         Pivot_det2.Name = "Pivot_det2"
         Pivot_det2.Size = New Size(85, 24)
@@ -634,7 +634,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Pivot_det5
         ' 
         Pivot_det5.Font = New Font("Calibri", 8.0F)
-        Pivot_det5.Location = New Point(306, 131)
+        Pivot_det5.Location = New Point(306, 135)
         Pivot_det5.Margin = New Padding(5, 4, 5, 4)
         Pivot_det5.Name = "Pivot_det5"
         Pivot_det5.Size = New Size(85, 24)
@@ -644,7 +644,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Pivot_det4
         ' 
         Pivot_det4.Font = New Font("Calibri", 8.0F)
-        Pivot_det4.Location = New Point(306, 105)
+        Pivot_det4.Location = New Point(306, 109)
         Pivot_det4.Margin = New Padding(5, 4, 5, 4)
         Pivot_det4.Name = "Pivot_det4"
         Pivot_det4.Size = New Size(85, 24)
@@ -654,7 +654,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Pivot_det3
         ' 
         Pivot_det3.Font = New Font("Calibri", 8.0F)
-        Pivot_det3.Location = New Point(306, 79)
+        Pivot_det3.Location = New Point(306, 83)
         Pivot_det3.Margin = New Padding(5, 4, 5, 4)
         Pivot_det3.Name = "Pivot_det3"
         Pivot_det3.Size = New Size(85, 24)
@@ -664,7 +664,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Pivot_det8
         ' 
         Pivot_det8.Font = New Font("Calibri", 8.0F)
-        Pivot_det8.Location = New Point(306, 209)
+        Pivot_det8.Location = New Point(306, 213)
         Pivot_det8.Margin = New Padding(5, 4, 5, 4)
         Pivot_det8.Name = "Pivot_det8"
         Pivot_det8.Size = New Size(85, 24)
@@ -674,7 +674,7 @@ Partial Class Form_Traupixe_H5_2024
         ' Pivot_det7
         ' 
         Pivot_det7.Font = New Font("Calibri", 8.0F)
-        Pivot_det7.Location = New Point(306, 183)
+        Pivot_det7.Location = New Point(306, 187)
         Pivot_det7.Margin = New Padding(5, 4, 5, 4)
         Pivot_det7.Name = "Pivot_det7"
         Pivot_det7.Size = New Size(85, 24)
@@ -685,7 +685,7 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         Pivot_det6.AccessibleDescription = ""
         Pivot_det6.Font = New Font("Calibri", 8.0F)
-        Pivot_det6.Location = New Point(306, 157)
+        Pivot_det6.Location = New Point(306, 161)
         Pivot_det6.Margin = New Padding(5, 4, 5, 4)
         Pivot_det6.Name = "Pivot_det6"
         Pivot_det6.Size = New Size(85, 24)
@@ -1194,10 +1194,10 @@ Partial Class Form_Traupixe_H5_2024
         Panel1.Controls.Add(Par_det0)
         Panel1.Controls.Add(LstPar_Trc)
         Panel1.Font = New Font("Calibri", 9.75F)
-        Panel1.Location = New Point(801, 105)
+        Panel1.Location = New Point(801, 124)
         Panel1.Margin = New Padding(3, 4, 3, 4)
         Panel1.Name = "Panel1"
-        Panel1.Size = New Size(400, 284)
+        Panel1.Size = New Size(400, 279)
         Panel1.TabIndex = 92
         ' 
         ' Panel2
@@ -1210,7 +1210,7 @@ Partial Class Form_Traupixe_H5_2024
         Panel2.Location = New Point(801, 39)
         Panel2.Margin = New Padding(3, 4, 3, 4)
         Panel2.Name = "Panel2"
-        Panel2.Size = New Size(400, 51)
+        Panel2.Size = New Size(400, 74)
         Panel2.TabIndex = 93
         ' 
         ' Button_Run2
@@ -1309,7 +1309,7 @@ Partial Class Form_Traupixe_H5_2024
         AutoScaleMode = AutoScaleMode.Dpi
         AutoScroll = True
         AutoSize = True
-        ClientSize = New Size(1223, 548)
+        ClientSize = New Size(1225, 566)
         Controls.Add(ComboBox_Type_Calc)
         Controls.Add(Label12)
         Controls.Add(TextBox_hdf5_grps)
@@ -1352,7 +1352,7 @@ Partial Class Form_Traupixe_H5_2024
         Name = "Form_Traupixe_H5_2024"
         RightToLeftLayout = True
         StartPosition = FormStartPosition.Manual
-        Text = "TrauPIXE 25.16 - C2RMF"
+        Text = "TrauPIXE 25.19 - C2RMF"
         MenuStrip1.ResumeLayout(False)
         MenuStrip1.PerformLayout()
         StatusStrip1.ResumeLayout(False)
