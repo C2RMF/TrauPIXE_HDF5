@@ -26,6 +26,7 @@ Partial Class Form_Traupixe_H5_2024
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         components = New ComponentModel.Container()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form_Traupixe_H5_2024))
         LstPar_Mat = New ListBox()
         LstPar_Trc = New ListBox()
         ComboBoxDrive = New ComboBox()
@@ -71,6 +72,8 @@ Partial Class Form_Traupixe_H5_2024
         WriteAllValuesToolStripMenuItem = New ToolStripMenuItem()
         RoundConcentrationToolStripMenuItem = New ToolStripMenuItem()
         SkipPbMatrixToolStripMenuItem = New ToolStripMenuItem()
+        TtToolStripMenuItem = New ToolStripSeparator()
+        RenameDetectorsToolStripMenuItem = New ToolStripMenuItem()
         Pivot_det0 = New TextBox()
         Pivot_det1 = New TextBox()
         Pivot_det2 = New TextBox()
@@ -116,12 +119,12 @@ Partial Class Form_Traupixe_H5_2024
         Button_Extract = New Button()
         Button6 = New Button()
         ToolTip1 = New ToolTip(components)
-        Button7 = New Button()
-        Button8 = New Button()
         Box_txtFiltre = New TextBox()
-        Label11 = New Label()
         ListBox_HDF5 = New ListBox()
         TxtBox_HDF5_File = New TextBox()
+        Button7 = New Button()
+        Button8 = New Button()
+        Label11 = New Label()
         Panel1 = New Panel()
         Panel2 = New Panel()
         Button_Run2 = New Button()
@@ -149,8 +152,9 @@ Partial Class Form_Traupixe_H5_2024
         LstPar_Mat.Location = New Point(8, 29)
         LstPar_Mat.Margin = New Padding(5, 4, 5, 4)
         LstPar_Mat.Name = "LstPar_Mat"
-        LstPar_Mat.Size = New Size(382, 40)
+        LstPar_Mat.Size = New Size(382, 37)
         LstPar_Mat.TabIndex = 7
+        ToolTip1.SetToolTip(LstPar_Mat, "Gupix matrix parameter files available" + vbCrLf + "Double-click to select")
         ' 
         ' LstPar_Trc
         ' 
@@ -160,8 +164,9 @@ Partial Class Form_Traupixe_H5_2024
         LstPar_Trc.Margin = New Padding(5, 4, 5, 4)
         LstPar_Trc.Name = "LstPar_Trc"
         LstPar_Trc.SelectionMode = SelectionMode.MultiExtended
-        LstPar_Trc.Size = New Size(383, 34)
+        LstPar_Trc.Size = New Size(383, 28)
         LstPar_Trc.TabIndex = 9
+        ToolTip1.SetToolTip(LstPar_Trc, "Gupix trace parameter file available" + vbCrLf + "Double-click to select" + vbCrLf + vbCrLf)
         ' 
         ' ComboBoxDrive
         ' 
@@ -170,7 +175,7 @@ Partial Class Form_Traupixe_H5_2024
         ComboBoxDrive.Location = New Point(11, 28)
         ComboBoxDrive.Margin = New Padding(5, 4, 5, 4)
         ComboBoxDrive.Name = "ComboBoxDrive"
-        ComboBoxDrive.Size = New Size(194, 23)
+        ComboBoxDrive.Size = New Size(194, 20)
         ComboBoxDrive.TabIndex = 10
         ' 
         ' trvFolders
@@ -183,6 +188,7 @@ Partial Class Form_Traupixe_H5_2024
         trvFolders.ShowRootLines = False
         trvFolders.Size = New Size(339, 428)
         trvFolders.TabIndex = 11
+        ToolTip1.SetToolTip(trvFolders, "browse folder")
         ' 
         ' LvFiles
         ' 
@@ -194,6 +200,7 @@ Partial Class Form_Traupixe_H5_2024
         LvFiles.Size = New Size(420, 313)
         LvFiles.Sorting = SortOrder.Ascending
         LvFiles.TabIndex = 12
+        ToolTip1.SetToolTip(LvFiles, "list of:" + vbCrLf + vbCrLf + "ascii files or hdf5 dataset" + vbCrLf + "or" + vbCrLf + "map parameter (under dev)" + vbCrLf + vbCrLf + vbCrLf + vbCrLf)
         LvFiles.UseCompatibleStateImageBehavior = False
         LvFiles.View = View.List
         ' 
@@ -215,9 +222,10 @@ Partial Class Form_Traupixe_H5_2024
         CbDetMat.Location = New Point(8, 4)
         CbDetMat.Margin = New Padding(5, 4, 5, 4)
         CbDetMat.Name = "CbDetMat"
-        CbDetMat.Size = New Size(67, 23)
+        CbDetMat.Size = New Size(67, 20)
         CbDetMat.TabIndex = 14
         CbDetMat.Text = "X0"
+        ToolTip1.SetToolTip(CbDetMat, "Select det. for matrix processing")
         ' 
         ' Par_det0
         ' 
@@ -225,7 +233,7 @@ Partial Class Form_Traupixe_H5_2024
         Par_det0.Location = New Point(82, 7)
         Par_det0.Margin = New Padding(5, 4, 5, 4)
         Par_det0.Name = "Par_det0"
-        Par_det0.Size = New Size(215, 23)
+        Par_det0.Size = New Size(215, 20)
         Par_det0.TabIndex = 16
         ' 
         ' Par_det1
@@ -234,7 +242,7 @@ Partial Class Form_Traupixe_H5_2024
         Par_det1.Location = New Point(82, 33)
         Par_det1.Margin = New Padding(5, 4, 5, 4)
         Par_det1.Name = "Par_det1"
-        Par_det1.Size = New Size(215, 23)
+        Par_det1.Size = New Size(215, 20)
         Par_det1.TabIndex = 17
         ' 
         ' Check_det0
@@ -244,7 +252,7 @@ Partial Class Form_Traupixe_H5_2024
         Check_det0.Location = New Point(10, 9)
         Check_det0.Margin = New Padding(5, 4, 5, 4)
         Check_det0.Name = "Check_det0"
-        Check_det0.Size = New Size(48, 19)
+        Check_det0.Size = New Size(40, 16)
         Check_det0.TabIndex = 22
         Check_det0.Text = "BE0"
         Check_det0.UseVisualStyleBackColor = True
@@ -256,7 +264,7 @@ Partial Class Form_Traupixe_H5_2024
         Check_det1.Location = New Point(10, 35)
         Check_det1.Margin = New Padding(5, 4, 5, 4)
         Check_det1.Name = "Check_det1"
-        Check_det1.Size = New Size(50, 19)
+        Check_det1.Size = New Size(41, 16)
         Check_det1.TabIndex = 23
         Check_det1.Text = "HE1"
         Check_det1.UseVisualStyleBackColor = True
@@ -268,7 +276,7 @@ Partial Class Form_Traupixe_H5_2024
         Check_det2.Location = New Point(10, 61)
         Check_det2.Margin = New Padding(5, 4, 5, 4)
         Check_det2.Name = "Check_det2"
-        Check_det2.Size = New Size(50, 19)
+        Check_det2.Size = New Size(41, 16)
         Check_det2.TabIndex = 24
         Check_det2.Text = "HE2"
         Check_det2.UseVisualStyleBackColor = True
@@ -279,7 +287,7 @@ Partial Class Form_Traupixe_H5_2024
         Par_det2.Location = New Point(82, 59)
         Par_det2.Margin = New Padding(5, 4, 5, 4)
         Par_det2.Name = "Par_det2"
-        Par_det2.Size = New Size(215, 23)
+        Par_det2.Size = New Size(215, 20)
         Par_det2.TabIndex = 25
         ' 
         ' Par_det5
@@ -288,7 +296,7 @@ Partial Class Form_Traupixe_H5_2024
         Par_det5.Location = New Point(82, 137)
         Par_det5.Margin = New Padding(5, 4, 5, 4)
         Par_det5.Name = "Par_det5"
-        Par_det5.Size = New Size(215, 23)
+        Par_det5.Size = New Size(215, 20)
         Par_det5.TabIndex = 31
         ' 
         ' Check_det5
@@ -299,7 +307,7 @@ Partial Class Form_Traupixe_H5_2024
         Check_det5.Location = New Point(10, 139)
         Check_det5.Margin = New Padding(5, 4, 5, 4)
         Check_det5.Name = "Check_det5"
-        Check_det5.Size = New Size(56, 19)
+        Check_det5.Size = New Size(46, 16)
         Check_det5.TabIndex = 30
         Check_det5.Text = "HE10"
         Check_det5.UseVisualStyleBackColor = False
@@ -311,7 +319,7 @@ Partial Class Form_Traupixe_H5_2024
         Check_det4.Location = New Point(10, 113)
         Check_det4.Margin = New Padding(5, 4, 5, 4)
         Check_det4.Name = "Check_det4"
-        Check_det4.Size = New Size(50, 19)
+        Check_det4.Size = New Size(41, 16)
         Check_det4.TabIndex = 29
         Check_det4.Text = "HE4"
         Check_det4.UseVisualStyleBackColor = True
@@ -323,7 +331,7 @@ Partial Class Form_Traupixe_H5_2024
         Check_det3.Location = New Point(10, 87)
         Check_det3.Margin = New Padding(5, 4, 5, 4)
         Check_det3.Name = "Check_det3"
-        Check_det3.Size = New Size(50, 19)
+        Check_det3.Size = New Size(41, 16)
         Check_det3.TabIndex = 28
         Check_det3.Text = "HE3"
         Check_det3.UseVisualStyleBackColor = True
@@ -334,7 +342,7 @@ Partial Class Form_Traupixe_H5_2024
         Par_det4.Location = New Point(82, 111)
         Par_det4.Margin = New Padding(5, 4, 5, 4)
         Par_det4.Name = "Par_det4"
-        Par_det4.Size = New Size(215, 23)
+        Par_det4.Size = New Size(215, 20)
         Par_det4.TabIndex = 27
         ' 
         ' Par_det3
@@ -343,7 +351,7 @@ Partial Class Form_Traupixe_H5_2024
         Par_det3.Location = New Point(82, 85)
         Par_det3.Margin = New Padding(5, 4, 5, 4)
         Par_det3.Name = "Par_det3"
-        Par_det3.Size = New Size(215, 23)
+        Par_det3.Size = New Size(215, 20)
         Par_det3.TabIndex = 26
         ' 
         ' Par_det8
@@ -352,7 +360,7 @@ Partial Class Form_Traupixe_H5_2024
         Par_det8.Location = New Point(82, 215)
         Par_det8.Margin = New Padding(5, 4, 5, 4)
         Par_det8.Name = "Par_det8"
-        Par_det8.Size = New Size(215, 23)
+        Par_det8.Size = New Size(215, 20)
         Par_det8.TabIndex = 37
         ' 
         ' Check_det8
@@ -362,7 +370,7 @@ Partial Class Form_Traupixe_H5_2024
         Check_det8.Location = New Point(10, 217)
         Check_det8.Margin = New Padding(5, 4, 5, 4)
         Check_det8.Name = "Check_det8"
-        Check_det8.Size = New Size(56, 19)
+        Check_det8.Size = New Size(46, 16)
         Check_det8.TabIndex = 36
         Check_det8.Text = "HE13"
         Check_det8.UseVisualStyleBackColor = True
@@ -374,7 +382,7 @@ Partial Class Form_Traupixe_H5_2024
         Check_det7.Location = New Point(10, 191)
         Check_det7.Margin = New Padding(5, 4, 5, 4)
         Check_det7.Name = "Check_det7"
-        Check_det7.Size = New Size(56, 19)
+        Check_det7.Size = New Size(46, 16)
         Check_det7.TabIndex = 35
         Check_det7.Text = "HE12"
         Check_det7.UseVisualStyleBackColor = True
@@ -386,7 +394,7 @@ Partial Class Form_Traupixe_H5_2024
         Check_det6.Location = New Point(10, 165)
         Check_det6.Margin = New Padding(5, 4, 5, 4)
         Check_det6.Name = "Check_det6"
-        Check_det6.Size = New Size(56, 19)
+        Check_det6.Size = New Size(46, 16)
         Check_det6.TabIndex = 34
         Check_det6.Text = "HE11"
         Check_det6.UseVisualStyleBackColor = True
@@ -397,7 +405,7 @@ Partial Class Form_Traupixe_H5_2024
         Par_det7.Location = New Point(82, 189)
         Par_det7.Margin = New Padding(5, 4, 5, 4)
         Par_det7.Name = "Par_det7"
-        Par_det7.Size = New Size(215, 23)
+        Par_det7.Size = New Size(215, 20)
         Par_det7.TabIndex = 33
         ' 
         ' Par_det6
@@ -406,7 +414,7 @@ Partial Class Form_Traupixe_H5_2024
         Par_det6.Location = New Point(82, 163)
         Par_det6.Margin = New Padding(5, 4, 5, 4)
         Par_det6.Name = "Par_det6"
-        Par_det6.Size = New Size(215, 23)
+        Par_det6.Size = New Size(215, 20)
         Par_det6.TabIndex = 32
         ' 
         ' Par_Mat
@@ -415,9 +423,10 @@ Partial Class Form_Traupixe_H5_2024
         Par_Mat.Location = New Point(86, 4)
         Par_Mat.Margin = New Padding(5, 4, 5, 4)
         Par_Mat.Name = "Par_Mat"
-        Par_Mat.Size = New Size(304, 23)
+        Par_Mat.Size = New Size(304, 20)
         Par_Mat.TabIndex = 38
         Par_Mat.TextAlign = HorizontalAlignment.Center
+        ToolTip1.SetToolTip(Par_Mat, "Gupix parameter file selected")
         ' 
         ' Button2
         ' 
@@ -439,7 +448,7 @@ Partial Class Form_Traupixe_H5_2024
         Label1.Location = New Point(801, 27)
         Label1.Margin = New Padding(5, 0, 5, 0)
         Label1.Name = "Label1"
-        Label1.Size = New Size(37, 12)
+        Label1.Size = New Size(29, 11)
         Label1.TabIndex = 40
         Label1.Text = "Matrix"
         ' 
@@ -451,17 +460,17 @@ Partial Class Form_Traupixe_H5_2024
         Label2.Location = New Point(802, 113)
         Label2.Margin = New Padding(5, 0, 5, 0)
         Label2.Name = "Label2"
-        Label2.Size = New Size(29, 12)
+        Label2.Size = New Size(24, 11)
         Label2.TabIndex = 41
         Label2.Text = "Trace"
         ' 
         ' Nb_Proc
         ' 
         Nb_Proc.Font = New Font("Segoe UI", 6.0F)
-        Nb_Proc.Location = New Point(805, 45)
+        Nb_Proc.Location = New Point(804, 51)
         Nb_Proc.Margin = New Padding(5, 4, 5, 4)
         Nb_Proc.Name = "Nb_Proc"
-        Nb_Proc.Size = New Size(22, 21)
+        Nb_Proc.Size = New Size(22, 18)
         Nb_Proc.TabIndex = 43
         Nb_Proc.Text = "4"
         Nb_Proc.TextAlign = HorizontalAlignment.Center
@@ -471,7 +480,7 @@ Partial Class Form_Traupixe_H5_2024
         ProgressBar1.Location = New Point(566, 500)
         ProgressBar1.Margin = New Padding(5, 4, 5, 4)
         ProgressBar1.Name = "ProgressBar1"
-        ProgressBar1.Size = New Size(608, 24)
+        ProgressBar1.Size = New Size(608, 21)
         ProgressBar1.TabIndex = 44
         ' 
         ' ComboBox_Type_Calc
@@ -483,7 +492,7 @@ Partial Class Form_Traupixe_H5_2024
         ComboBox_Type_Calc.Location = New Point(234, 291)
         ComboBox_Type_Calc.Margin = New Padding(5, 4, 5, 4)
         ComboBox_Type_Calc.Name = "ComboBox_Type_Calc"
-        ComboBox_Type_Calc.Size = New Size(118, 23)
+        ComboBox_Type_Calc.Size = New Size(118, 21)
         ComboBox_Type_Calc.TabIndex = 45
         ComboBox_Type_Calc.Text = "Ponctual hdf5 "
         ComboBox_Type_Calc.Visible = False
@@ -495,7 +504,7 @@ Partial Class Form_Traupixe_H5_2024
         Progress.Location = New Point(555, 11)
         Progress.Margin = New Padding(5, 4, 5, 4)
         Progress.Name = "Progress"
-        Progress.Size = New Size(84, 30)
+        Progress.Size = New Size(84, 25)
         Progress.TabIndex = 46
         Progress.Text = "0 / 0"
         Progress.TextAlign = HorizontalAlignment.Center
@@ -505,7 +514,7 @@ Partial Class Form_Traupixe_H5_2024
         Tps_Calc.Location = New Point(547, 51)
         Tps_Calc.Margin = New Padding(5, 4, 5, 4)
         Tps_Calc.Name = "Tps_Calc"
-        Tps_Calc.Size = New Size(100, 23)
+        Tps_Calc.Size = New Size(100, 20)
         Tps_Calc.TabIndex = 47
         Tps_Calc.Text = "??:??:??"
         Tps_Calc.TextAlign = HorizontalAlignment.Center
@@ -527,7 +536,7 @@ Partial Class Form_Traupixe_H5_2024
         Text_Status.Location = New Point(133, 844)
         Text_Status.Margin = New Padding(5, 4, 5, 4)
         Text_Status.Name = "Text_Status"
-        Text_Status.Size = New Size(660, 21)
+        Text_Status.Size = New Size(660, 18)
         Text_Status.TabIndex = 49
         Text_Status.Text = "??:??:??"
         Text_Status.Visible = False
@@ -540,7 +549,7 @@ Partial Class Form_Traupixe_H5_2024
         MenuStrip1.Location = New Point(0, 0)
         MenuStrip1.Name = "MenuStrip1"
         MenuStrip1.Padding = New Padding(8, 3, 0, 3)
-        MenuStrip1.Size = New Size(1320, 29)
+        MenuStrip1.Size = New Size(1416, 24)
         MenuStrip1.TabIndex = 50
         MenuStrip1.Text = "MenuStrip1"
         ' 
@@ -549,7 +558,7 @@ Partial Class Form_Traupixe_H5_2024
         mnuOxyde.DropDownItems.AddRange(New ToolStripItem() {mnuOxydeOUI, mnuOxydeNON})
         mnuOxyde.Font = New Font("Segoe UI", 7.0F)
         mnuOxyde.Name = "mnuOxyde"
-        mnuOxyde.Size = New Size(51, 23)
+        mnuOxyde.Size = New Size(43, 18)
         mnuOxyde.Text = "Oxide"
         ' 
         ' mnuOxydeOUI
@@ -557,26 +566,26 @@ Partial Class Form_Traupixe_H5_2024
         mnuOxydeOUI.Checked = True
         mnuOxydeOUI.CheckState = CheckState.Checked
         mnuOxydeOUI.Name = "mnuOxydeOUI"
-        mnuOxydeOUI.Size = New Size(105, 26)
+        mnuOxydeOUI.Size = New Size(84, 22)
         mnuOxydeOUI.Text = "Yes"
         ' 
         ' mnuOxydeNON
         ' 
         mnuOxydeNON.Name = "mnuOxydeNON"
-        mnuOxydeNON.Size = New Size(105, 26)
+        mnuOxydeNON.Size = New Size(84, 22)
         mnuOxydeNON.Text = "No"
         ' 
         ' LODToolStripMenuItem
         ' 
-        LODToolStripMenuItem.DropDownItems.AddRange(New ToolStripItem() {GupixLODNWrite0ToolStripMenuItem, WriteAllValuesToolStripMenuItem, RoundConcentrationToolStripMenuItem, SkipPbMatrixToolStripMenuItem})
+        LODToolStripMenuItem.DropDownItems.AddRange(New ToolStripItem() {GupixLODNWrite0ToolStripMenuItem, WriteAllValuesToolStripMenuItem, RoundConcentrationToolStripMenuItem, SkipPbMatrixToolStripMenuItem, TtToolStripMenuItem, RenameDetectorsToolStripMenuItem})
         LODToolStripMenuItem.Name = "LODToolStripMenuItem"
-        LODToolStripMenuItem.Size = New Size(58, 23)
+        LODToolStripMenuItem.Size = New Size(49, 18)
         LODToolStripMenuItem.Text = "Setup"
         ' 
         ' GupixLODNWrite0ToolStripMenuItem
         ' 
         GupixLODNWrite0ToolStripMenuItem.Name = "GupixLODNWrite0ToolStripMenuItem"
-        GupixLODNWrite0ToolStripMenuItem.Size = New Size(233, 26)
+        GupixLODNWrite0ToolStripMenuItem.Size = New Size(189, 22)
         GupixLODNWrite0ToolStripMenuItem.Text = "Gupix LOD = N write 0"
         ' 
         ' WriteAllValuesToolStripMenuItem
@@ -584,7 +593,7 @@ Partial Class Form_Traupixe_H5_2024
         WriteAllValuesToolStripMenuItem.Checked = True
         WriteAllValuesToolStripMenuItem.CheckState = CheckState.Checked
         WriteAllValuesToolStripMenuItem.Name = "WriteAllValuesToolStripMenuItem"
-        WriteAllValuesToolStripMenuItem.Size = New Size(233, 26)
+        WriteAllValuesToolStripMenuItem.Size = New Size(189, 22)
         WriteAllValuesToolStripMenuItem.Text = "Write all values"
         ' 
         ' RoundConcentrationToolStripMenuItem
@@ -592,14 +601,25 @@ Partial Class Form_Traupixe_H5_2024
         RoundConcentrationToolStripMenuItem.Checked = True
         RoundConcentrationToolStripMenuItem.CheckState = CheckState.Checked
         RoundConcentrationToolStripMenuItem.Name = "RoundConcentrationToolStripMenuItem"
-        RoundConcentrationToolStripMenuItem.Size = New Size(233, 26)
+        RoundConcentrationToolStripMenuItem.Size = New Size(189, 22)
         RoundConcentrationToolStripMenuItem.Text = "Round Concentration"
         ' 
         ' SkipPbMatrixToolStripMenuItem
         ' 
         SkipPbMatrixToolStripMenuItem.Name = "SkipPbMatrixToolStripMenuItem"
-        SkipPbMatrixToolStripMenuItem.Size = New Size(233, 26)
+        SkipPbMatrixToolStripMenuItem.Size = New Size(189, 22)
         SkipPbMatrixToolStripMenuItem.Text = "Skip element in matrix"
+        ' 
+        ' TtToolStripMenuItem
+        ' 
+        TtToolStripMenuItem.Name = "TtToolStripMenuItem"
+        TtToolStripMenuItem.Size = New Size(186, 6)
+        ' 
+        ' RenameDetectorsToolStripMenuItem
+        ' 
+        RenameDetectorsToolStripMenuItem.Name = "RenameDetectorsToolStripMenuItem"
+        RenameDetectorsToolStripMenuItem.Size = New Size(189, 22)
+        RenameDetectorsToolStripMenuItem.Text = "Rename detectors"
         ' 
         ' Pivot_det0
         ' 
@@ -607,7 +627,7 @@ Partial Class Form_Traupixe_H5_2024
         Pivot_det0.Location = New Point(306, 6)
         Pivot_det0.Margin = New Padding(5, 4, 5, 4)
         Pivot_det0.Name = "Pivot_det0"
-        Pivot_det0.Size = New Size(85, 23)
+        Pivot_det0.Size = New Size(85, 20)
         Pivot_det0.TabIndex = 51
         Pivot_det0.TextAlign = HorizontalAlignment.Center
         ' 
@@ -617,7 +637,7 @@ Partial Class Form_Traupixe_H5_2024
         Pivot_det1.Location = New Point(306, 31)
         Pivot_det1.Margin = New Padding(5, 4, 5, 4)
         Pivot_det1.Name = "Pivot_det1"
-        Pivot_det1.Size = New Size(85, 24)
+        Pivot_det1.Size = New Size(85, 21)
         Pivot_det1.TabIndex = 53
         Pivot_det1.TextAlign = HorizontalAlignment.Center
         ' 
@@ -627,7 +647,7 @@ Partial Class Form_Traupixe_H5_2024
         Pivot_det2.Location = New Point(306, 57)
         Pivot_det2.Margin = New Padding(5, 4, 5, 4)
         Pivot_det2.Name = "Pivot_det2"
-        Pivot_det2.Size = New Size(85, 24)
+        Pivot_det2.Size = New Size(85, 21)
         Pivot_det2.TabIndex = 54
         Pivot_det2.TextAlign = HorizontalAlignment.Center
         ' 
@@ -637,7 +657,7 @@ Partial Class Form_Traupixe_H5_2024
         Pivot_det5.Location = New Point(306, 135)
         Pivot_det5.Margin = New Padding(5, 4, 5, 4)
         Pivot_det5.Name = "Pivot_det5"
-        Pivot_det5.Size = New Size(85, 24)
+        Pivot_det5.Size = New Size(85, 21)
         Pivot_det5.TabIndex = 57
         Pivot_det5.TextAlign = HorizontalAlignment.Center
         ' 
@@ -647,7 +667,7 @@ Partial Class Form_Traupixe_H5_2024
         Pivot_det4.Location = New Point(306, 109)
         Pivot_det4.Margin = New Padding(5, 4, 5, 4)
         Pivot_det4.Name = "Pivot_det4"
-        Pivot_det4.Size = New Size(85, 24)
+        Pivot_det4.Size = New Size(85, 21)
         Pivot_det4.TabIndex = 56
         Pivot_det4.TextAlign = HorizontalAlignment.Center
         ' 
@@ -657,7 +677,7 @@ Partial Class Form_Traupixe_H5_2024
         Pivot_det3.Location = New Point(306, 83)
         Pivot_det3.Margin = New Padding(5, 4, 5, 4)
         Pivot_det3.Name = "Pivot_det3"
-        Pivot_det3.Size = New Size(85, 24)
+        Pivot_det3.Size = New Size(85, 21)
         Pivot_det3.TabIndex = 55
         Pivot_det3.TextAlign = HorizontalAlignment.Center
         ' 
@@ -667,7 +687,7 @@ Partial Class Form_Traupixe_H5_2024
         Pivot_det8.Location = New Point(306, 213)
         Pivot_det8.Margin = New Padding(5, 4, 5, 4)
         Pivot_det8.Name = "Pivot_det8"
-        Pivot_det8.Size = New Size(85, 24)
+        Pivot_det8.Size = New Size(85, 21)
         Pivot_det8.TabIndex = 60
         Pivot_det8.TextAlign = HorizontalAlignment.Center
         ' 
@@ -677,7 +697,7 @@ Partial Class Form_Traupixe_H5_2024
         Pivot_det7.Location = New Point(306, 187)
         Pivot_det7.Margin = New Padding(5, 4, 5, 4)
         Pivot_det7.Name = "Pivot_det7"
-        Pivot_det7.Size = New Size(85, 24)
+        Pivot_det7.Size = New Size(85, 21)
         Pivot_det7.TabIndex = 59
         Pivot_det7.TextAlign = HorizontalAlignment.Center
         ' 
@@ -688,7 +708,7 @@ Partial Class Form_Traupixe_H5_2024
         Pivot_det6.Location = New Point(306, 161)
         Pivot_det6.Margin = New Padding(5, 4, 5, 4)
         Pivot_det6.Name = "Pivot_det6"
-        Pivot_det6.Size = New Size(85, 24)
+        Pivot_det6.Size = New Size(85, 21)
         Pivot_det6.TabIndex = 58
         Pivot_det6.TextAlign = HorizontalAlignment.Center
         ' 
@@ -699,7 +719,7 @@ Partial Class Form_Traupixe_H5_2024
         Same_Z.Location = New Point(1209, 43)
         Same_Z.Margin = New Padding(5, 4, 5, 4)
         Same_Z.Name = "Same_Z"
-        Same_Z.Size = New Size(52, 17)
+        Same_Z.Size = New Size(42, 14)
         Same_Z.TabIndex = 61
         Same_Z.Text = "Same"
         Same_Z.UseVisualStyleBackColor = True
@@ -712,7 +732,7 @@ Partial Class Form_Traupixe_H5_2024
         TextXLS.Location = New Point(91, 498)
         TextXLS.Margin = New Padding(5, 4, 5, 4)
         TextXLS.Name = "TextXLS"
-        TextXLS.Size = New Size(467, 27)
+        TextXLS.Size = New Size(467, 23)
         TextXLS.TabIndex = 62
         TextXLS.Text = "Gupix-?????_Mat-??_Trc-??_Pivot-??.xls"
         ' 
@@ -723,7 +743,7 @@ Partial Class Form_Traupixe_H5_2024
         LabelAppend.Location = New Point(11, 502)
         LabelAppend.Margin = New Padding(5, 0, 5, 0)
         LabelAppend.Name = "LabelAppend"
-        LabelAppend.Size = New Size(74, 19)
+        LabelAppend.Size = New Size(62, 13)
         LabelAppend.TabIndex = 64
         LabelAppend.Text = "Append to"
         ' 
@@ -734,7 +754,7 @@ Partial Class Form_Traupixe_H5_2024
         LabelNew.Location = New Point(13, 502)
         LabelNew.Margin = New Padding(5, 0, 5, 0)
         LabelNew.Name = "LabelNew"
-        LabelNew.Size = New Size(77, 19)
+        LabelNew.Size = New Size(61, 13)
         LabelNew.TabIndex = 65
         LabelNew.Text = "Create       "
         ' 
@@ -747,7 +767,7 @@ Partial Class Form_Traupixe_H5_2024
         Check_Trc_As_Oxy.Location = New Point(15, 5)
         Check_Trc_As_Oxy.Margin = New Padding(5, 4, 5, 4)
         Check_Trc_As_Oxy.Name = "Check_Trc_As_Oxy"
-        Check_Trc_As_Oxy.Size = New Size(81, 19)
+        Check_Trc_As_Oxy.Size = New Size(69, 16)
         Check_Trc_As_Oxy.TabIndex = 74
         Check_Trc_As_Oxy.Text = "Z as oxide"
         Check_Trc_As_Oxy.UseVisualStyleBackColor = True
@@ -758,9 +778,10 @@ Partial Class Form_Traupixe_H5_2024
         Text_Lst_Ox_Trc.Location = New Point(10, 25)
         Text_Lst_Ox_Trc.Margin = New Padding(5, 4, 5, 4)
         Text_Lst_Ox_Trc.Name = "Text_Lst_Ox_Trc"
-        Text_Lst_Ox_Trc.Size = New Size(207, 23)
+        Text_Lst_Ox_Trc.Size = New Size(207, 20)
         Text_Lst_Ox_Trc.TabIndex = 75
         Text_Lst_Ox_Trc.Text = "19,20,25,26,29,82"
+        ToolTip1.SetToolTip(Text_Lst_Ox_Trc, resources.GetString("Text_Lst_Ox_Trc.ToolTip"))
         ' 
         ' Ck_AllAsOxy
         ' 
@@ -769,18 +790,19 @@ Partial Class Form_Traupixe_H5_2024
         Ck_AllAsOxy.Location = New Point(117, 5)
         Ck_AllAsOxy.Margin = New Padding(5, 4, 5, 4)
         Ck_AllAsOxy.Name = "Ck_AllAsOxy"
-        Ck_AllAsOxy.Size = New Size(98, 19)
+        Ck_AllAsOxy.Size = New Size(82, 16)
         Ck_AllAsOxy.TabIndex = 76
         Ck_AllAsOxy.Text = "All Z as oxide"
+        ToolTip1.SetToolTip(Ck_AllAsOxy, "All elements set as oxide into ""S_"" sheets")
         Ck_AllAsOxy.UseVisualStyleBackColor = True
         ' 
         ' ListFileInit
         ' 
         ListFileInit.GridLines = True
-        ListFileInit.Location = New Point(1209, 120)
+        ListFileInit.Location = New Point(1333, 65)
         ListFileInit.Margin = New Padding(5, 4, 5, 4)
         ListFileInit.Name = "ListFileInit"
-        ListFileInit.Size = New Size(111, 211)
+        ListFileInit.Size = New Size(83, 456)
         ListFileInit.Sorting = SortOrder.Ascending
         ListFileInit.TabIndex = 79
         ListFileInit.UseCompatibleStateImageBehavior = False
@@ -791,24 +813,24 @@ Partial Class Form_Traupixe_H5_2024
         ' 
         StatusStrip1.ImageScalingSize = New Size(24, 24)
         StatusStrip1.Items.AddRange(New ToolStripItem() {ToolStripStatusLabel2, ToolStripStatusLabel1})
-        StatusStrip1.Location = New Point(0, 865)
+        StatusStrip1.Location = New Point(0, 862)
         StatusStrip1.Name = "StatusStrip1"
         StatusStrip1.Padding = New Padding(1, 0, 18, 0)
-        StatusStrip1.Size = New Size(1320, 27)
+        StatusStrip1.Size = New Size(1416, 22)
         StatusStrip1.TabIndex = 80
         StatusStrip1.Text = "StatusStrip1"
         ' 
         ' ToolStripStatusLabel2
         ' 
         ToolStripStatusLabel2.Name = "ToolStripStatusLabel2"
-        ToolStripStatusLabel2.Size = New Size(0, 21)
+        ToolStripStatusLabel2.Size = New Size(0, 17)
         ' 
         ' ToolStripStatusLabel1
         ' 
         ToolStripStatusLabel1.Font = New Font("Arial Narrow", 9.75F)
         ToolStripStatusLabel1.Margin = New Padding(200, 3, 0, 2)
         ToolStripStatusLabel1.Name = "ToolStripStatusLabel1"
-        ToolStripStatusLabel1.Size = New Size(336, 22)
+        ToolStripStatusLabel1.Size = New Size(254, 17)
         ToolStripStatusLabel1.Text = "                             Status TRAUPIXE                         "
         ' 
         ' Chk_RoundValue
@@ -820,9 +842,10 @@ Partial Class Form_Traupixe_H5_2024
         Chk_RoundValue.Location = New Point(421, 53)
         Chk_RoundValue.Margin = New Padding(5, 4, 5, 4)
         Chk_RoundValue.Name = "Chk_RoundValue"
-        Chk_RoundValue.Size = New Size(104, 21)
+        Chk_RoundValue.Size = New Size(89, 17)
         Chk_RoundValue.TabIndex = 81
         Chk_RoundValue.Text = "Round values"
+        ToolTip1.SetToolTip(Chk_RoundValue, resources.GetString("Chk_RoundValue.ToolTip"))
         Chk_RoundValue.UseVisualStyleBackColor = True
         ' 
         ' Adjust_Filter
@@ -866,11 +889,11 @@ Partial Class Form_Traupixe_H5_2024
         Calcul.Controls.Add(Ck_AllAsOxy)
         Calcul.Controls.Add(Progress)
         Calcul.Controls.Add(Tps_Calc)
-        Calcul.Location = New Point(4, 27)
+        Calcul.Location = New Point(4, 24)
         Calcul.Margin = New Padding(5, 4, 5, 4)
         Calcul.Name = "Calcul"
         Calcul.Padding = New Padding(5, 4, 5, 4)
-        Calcul.Size = New Size(832, 79)
+        Calcul.Size = New Size(832, 82)
         Calcul.TabIndex = 0
         Calcul.Text = "Process Spectra"
         ' 
@@ -881,9 +904,10 @@ Partial Class Form_Traupixe_H5_2024
         chb_skip_elem.Location = New Point(239, 5)
         chb_skip_elem.Margin = New Padding(5, 4, 5, 4)
         chb_skip_elem.Name = "chb_skip_elem"
-        chb_skip_elem.Size = New Size(83, 19)
+        chb_skip_elem.Size = New Size(70, 16)
         chb_skip_elem.TabIndex = 84
         chb_skip_elem.Text = "skip Z mtx"
+        ToolTip1.SetToolTip(chb_skip_elem, resources.GetString("chb_skip_elem.ToolTip"))
         chb_skip_elem.UseVisualStyleBackColor = True
         chb_skip_elem.Visible = False
         ' 
@@ -893,23 +917,23 @@ Partial Class Form_Traupixe_H5_2024
         txt_skip_elem.Location = New Point(239, 25)
         txt_skip_elem.Margin = New Padding(5, 4, 5, 4)
         txt_skip_elem.Name = "txt_skip_elem"
-        txt_skip_elem.Size = New Size(87, 23)
+        txt_skip_elem.Size = New Size(87, 20)
         txt_skip_elem.TabIndex = 83
         txt_skip_elem.Text = "82"
+        ToolTip1.SetToolTip(txt_skip_elem, "Z matrix element that will be not include " + vbCrLf + "during the search of best uncertainty/LOD algorithm" + vbCrLf)
         txt_skip_elem.Visible = False
         ' 
         ' chk_external_ok
         ' 
         chk_external_ok.AutoSize = True
-        chk_external_ok.Checked = True
-        chk_external_ok.CheckState = CheckState.Checked
         chk_external_ok.Font = New Font("Calibri", 8.0F)
         chk_external_ok.Location = New Point(228, 53)
         chk_external_ok.Margin = New Padding(5, 4, 5, 4)
         chk_external_ok.Name = "chk_external_ok"
-        chk_external_ok.Size = New Size(135, 21)
+        chk_external_ok.Size = New Size(112, 17)
         chk_external_ok.TabIndex = 77
         chk_external_ok.Text = "Conc. from CSV file"
+        ToolTip1.SetToolTip(chk_external_ok, "Use or not ""external-conc.csv"" data")
         chk_external_ok.UseVisualStyleBackColor = True
         chk_external_ok.Visible = False
         ' 
@@ -919,9 +943,10 @@ Partial Class Form_Traupixe_H5_2024
         Text_gamma.Location = New Point(11, 52)
         Text_gamma.Margin = New Padding(5, 4, 5, 4)
         Text_gamma.Name = "Text_gamma"
-        Text_gamma.Size = New Size(207, 24)
+        Text_gamma.Size = New Size(207, 21)
         Text_gamma.TabIndex = 82
         Text_gamma.Text = "File ""external-conc.csv"" not found"
+        ToolTip1.SetToolTip(Text_gamma, "External concentration element found into ""external-conc.csv""")
         ' 
         ' Tab_Adjust
         ' 
@@ -937,11 +962,11 @@ Partial Class Form_Traupixe_H5_2024
         Tab_Adjust.Controls.Add(ComboBox_Type_F)
         Tab_Adjust.Controls.Add(TextF_From)
         Tab_Adjust.Controls.Add(Adjust_Filter)
-        Tab_Adjust.Location = New Point(4, 27)
+        Tab_Adjust.Location = New Point(4, 24)
         Tab_Adjust.Margin = New Padding(5, 4, 5, 4)
         Tab_Adjust.Name = "Tab_Adjust"
         Tab_Adjust.Padding = New Padding(5, 4, 5, 4)
-        Tab_Adjust.Size = New Size(832, 79)
+        Tab_Adjust.Size = New Size(832, 82)
         Tab_Adjust.TabIndex = 1
         Tab_Adjust.Text = "Adjust Absorbers"
         Tab_Adjust.UseVisualStyleBackColor = True
@@ -952,7 +977,7 @@ Partial Class Form_Traupixe_H5_2024
         Label10.Location = New Point(440, 37)
         Label10.Margin = New Padding(5, 0, 5, 0)
         Label10.Name = "Label10"
-        Label10.Size = New Size(117, 15)
+        Label10.Size = New Size(96, 12)
         Label10.TabIndex = 88
         Label10.Text = "mm / inert gas or Air"
         ' 
@@ -962,7 +987,7 @@ Partial Class Form_Traupixe_H5_2024
         Label9.Location = New Point(439, 23)
         Label9.Margin = New Padding(5, 0, 5, 0)
         Label9.Name = "Label9"
-        Label9.Size = New Size(115, 15)
+        Label9.Size = New Size(95, 12)
         Label9.TabIndex = 87
         Label9.Text = "µm / solid absorbers"
         ' 
@@ -972,7 +997,7 @@ Partial Class Form_Traupixe_H5_2024
         Label8.Location = New Point(130, 19)
         Label8.Margin = New Padding(5, 0, 5, 0)
         Label8.Name = "Label8"
-        Label8.Size = New Size(63, 15)
+        Label8.Size = New Size(52, 12)
         Label8.TabIndex = 85
         Label8.Text = "Z absorber"
         ' 
@@ -982,7 +1007,7 @@ Partial Class Form_Traupixe_H5_2024
         Label7.Location = New Point(226, 46)
         Label7.Margin = New Padding(5, 0, 5, 0)
         Label7.Name = "Label7"
-        Label7.Size = New Size(30, 15)
+        Label7.Size = New Size(24, 12)
         Label7.TabIndex = 85
         Label7.Text = "Step"
         ' 
@@ -992,7 +1017,7 @@ Partial Class Form_Traupixe_H5_2024
         Label6.Location = New Point(112, 44)
         Label6.Margin = New Padding(5, 0, 5, 0)
         Label6.Name = "Label6"
-        Label6.Size = New Size(20, 15)
+        Label6.Size = New Size(15, 12)
         Label6.TabIndex = 85
         Label6.Text = "To"
         ' 
@@ -1002,7 +1027,7 @@ Partial Class Form_Traupixe_H5_2024
         Label5.Location = New Point(9, 46)
         Label5.Margin = New Padding(5, 0, 5, 0)
         Label5.Name = "Label5"
-        Label5.Size = New Size(35, 15)
+        Label5.Size = New Size(28, 12)
         Label5.TabIndex = 84
         Label5.Text = "From"
         ' 
@@ -1011,7 +1036,7 @@ Partial Class Form_Traupixe_H5_2024
         TextF_Z.Location = New Point(216, 13)
         TextF_Z.Margin = New Padding(5, 4, 5, 4)
         TextF_Z.Name = "TextF_Z"
-        TextF_Z.Size = New Size(47, 23)
+        TextF_Z.Size = New Size(47, 20)
         TextF_Z.TabIndex = 83
         TextF_Z.Text = "102"
         TextF_Z.TextAlign = HorizontalAlignment.Center
@@ -1021,7 +1046,7 @@ Partial Class Form_Traupixe_H5_2024
         TextF_Step.Location = New Point(266, 40)
         TextF_Step.Margin = New Padding(5, 4, 5, 4)
         TextF_Step.Name = "TextF_Step"
-        TextF_Step.Size = New Size(69, 23)
+        TextF_Step.Size = New Size(69, 20)
         TextF_Step.TabIndex = 86
         TextF_Step.Text = "0.1"
         TextF_Step.TextAlign = HorizontalAlignment.Center
@@ -1031,7 +1056,7 @@ Partial Class Form_Traupixe_H5_2024
         TextF_To.Location = New Point(146, 40)
         TextF_To.Margin = New Padding(5, 4, 5, 4)
         TextF_To.Name = "TextF_To"
-        TextF_To.Size = New Size(54, 23)
+        TextF_To.Size = New Size(54, 20)
         TextF_To.TabIndex = 85
         TextF_To.Text = "1"
         TextF_To.TextAlign = HorizontalAlignment.Center
@@ -1042,7 +1067,7 @@ Partial Class Form_Traupixe_H5_2024
         ComboBox_Type_F.Location = New Point(18, 13)
         ComboBox_Type_F.Margin = New Padding(5, 4, 5, 4)
         ComboBox_Type_F.Name = "ComboBox_Type_F"
-        ComboBox_Type_F.Size = New Size(91, 23)
+        ComboBox_Type_F.Size = New Size(91, 20)
         ComboBox_Type_F.TabIndex = 10
         ComboBox_Type_F.TabStop = False
         ' 
@@ -1051,7 +1076,7 @@ Partial Class Form_Traupixe_H5_2024
         TextF_From.Location = New Point(56, 40)
         TextF_From.Margin = New Padding(5, 4, 5, 4)
         TextF_From.Name = "TextF_From"
-        TextF_From.Size = New Size(53, 23)
+        TextF_From.Size = New Size(53, 20)
         TextF_From.TabIndex = 84
         TextF_From.Text = "0.1"
         TextF_From.TextAlign = HorizontalAlignment.Center
@@ -1059,11 +1084,11 @@ Partial Class Form_Traupixe_H5_2024
         ' TabPage1
         ' 
         TabPage1.Controls.Add(Button_Extract)
-        TabPage1.Location = New Point(4, 27)
+        TabPage1.Location = New Point(4, 24)
         TabPage1.Margin = New Padding(3, 4, 3, 4)
         TabPage1.Name = "TabPage1"
         TabPage1.Padding = New Padding(3, 4, 3, 4)
-        TabPage1.Size = New Size(832, 79)
+        TabPage1.Size = New Size(832, 82)
         TabPage1.TabIndex = 2
         TabPage1.Text = "Extract hdf5 to ASCII"
         TabPage1.UseVisualStyleBackColor = True
@@ -1098,6 +1123,40 @@ Partial Class Form_Traupixe_H5_2024
         ToolTip1.InitialDelay = 400
         ToolTip1.ReshowDelay = 80
         ' 
+        ' Box_txtFiltre
+        ' 
+        Box_txtFiltre.AcceptsReturn = True
+        Box_txtFiltre.Font = New Font("Segoe UI", 6.0F, FontStyle.Regular, GraphicsUnit.Point, 0)
+        Box_txtFiltre.Location = New Point(654, 33)
+        Box_txtFiltre.Margin = New Padding(5, 4, 5, 4)
+        Box_txtFiltre.Name = "Box_txtFiltre"
+        Box_txtFiltre.Size = New Size(127, 18)
+        Box_txtFiltre.TabIndex = 88
+        Box_txtFiltre.TextAlign = HorizontalAlignment.Center
+        ToolTip1.SetToolTip(Box_txtFiltre, "filter data here")
+        ' 
+        ' ListBox_HDF5
+        ' 
+        ListBox_HDF5.Font = New Font("Segoe UI", 7.0F)
+        ListBox_HDF5.FormattingEnabled = True
+        ListBox_HDF5.Location = New Point(12, 319)
+        ListBox_HDF5.Margin = New Padding(5, 4, 5, 4)
+        ListBox_HDF5.Name = "ListBox_HDF5"
+        ListBox_HDF5.Size = New Size(339, 40)
+        ListBox_HDF5.TabIndex = 90
+        ToolTip1.SetToolTip(ListBox_HDF5, "hdf5 files available" + vbCrLf + "Double-click to select" + vbCrLf + vbCrLf)
+        ' 
+        ' TxtBox_HDF5_File
+        ' 
+        TxtBox_HDF5_File.Font = New Font("Segoe UI", 7.0F)
+        TxtBox_HDF5_File.Location = New Point(12, 399)
+        TxtBox_HDF5_File.Margin = New Padding(5, 4, 5, 4)
+        TxtBox_HDF5_File.Name = "TxtBox_HDF5_File"
+        TxtBox_HDF5_File.Size = New Size(339, 20)
+        TxtBox_HDF5_File.TabIndex = 91
+        TxtBox_HDF5_File.TextAlign = HorizontalAlignment.Center
+        ToolTip1.SetToolTip(TxtBox_HDF5_File, "hdf5 file selected")
+        ' 
         ' Button7
         ' 
         Button7.Location = New Point(1209, 65)
@@ -1120,17 +1179,6 @@ Partial Class Form_Traupixe_H5_2024
         Button8.UseVisualStyleBackColor = True
         Button8.Visible = False
         ' 
-        ' Box_txtFiltre
-        ' 
-        Box_txtFiltre.AcceptsReturn = True
-        Box_txtFiltre.Font = New Font("Segoe UI", 6.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
-        Box_txtFiltre.Location = New Point(654, 33)
-        Box_txtFiltre.Margin = New Padding(5, 4, 5, 4)
-        Box_txtFiltre.Name = "Box_txtFiltre"
-        Box_txtFiltre.Size = New Size(127, 21)
-        Box_txtFiltre.TabIndex = 88
-        Box_txtFiltre.TextAlign = HorizontalAlignment.Center
-        ' 
         ' Label11
         ' 
         Label11.AutoSize = True
@@ -1138,29 +1186,9 @@ Partial Class Form_Traupixe_H5_2024
         Label11.Location = New Point(655, 21)
         Label11.Margin = New Padding(5, 0, 5, 0)
         Label11.Name = "Label11"
-        Label11.Size = New Size(65, 12)
+        Label11.Size = New Size(56, 11)
         Label11.TabIndex = 89
         Label11.Text = "Filter filename"
-        ' 
-        ' ListBox_HDF5
-        ' 
-        ListBox_HDF5.Font = New Font("Segoe UI", 7.0F)
-        ListBox_HDF5.FormattingEnabled = True
-        ListBox_HDF5.Location = New Point(12, 319)
-        ListBox_HDF5.Margin = New Padding(5, 4, 5, 4)
-        ListBox_HDF5.Name = "ListBox_HDF5"
-        ListBox_HDF5.Size = New Size(339, 49)
-        ListBox_HDF5.TabIndex = 90
-        ' 
-        ' TxtBox_HDF5_File
-        ' 
-        TxtBox_HDF5_File.Font = New Font("Segoe UI", 7.0F)
-        TxtBox_HDF5_File.Location = New Point(12, 399)
-        TxtBox_HDF5_File.Margin = New Padding(5, 4, 5, 4)
-        TxtBox_HDF5_File.Name = "TxtBox_HDF5_File"
-        TxtBox_HDF5_File.Size = New Size(339, 23)
-        TxtBox_HDF5_File.TabIndex = 91
-        TxtBox_HDF5_File.TextAlign = HorizontalAlignment.Center
         ' 
         ' Panel1
         ' 
@@ -1229,18 +1257,19 @@ Partial Class Form_Traupixe_H5_2024
         TextProcessIf.Font = New Font("Calibri", 8.0F)
         TextProcessIf.Location = New Point(566, 29)
         TextProcessIf.Name = "TextProcessIf"
-        TextProcessIf.Size = New Size(79, 24)
+        TextProcessIf.Size = New Size(79, 21)
         TextProcessIf.TabIndex = 95
         TextProcessIf.Visible = False
         ' 
         ' Button1
         ' 
-        Button1.Location = New Point(1217, 430)
+        Button1.Font = New Font("Segoe UI", 7.0F)
+        Button1.Location = New Point(666, 366)
         Button1.Margin = New Padding(3, 4, 3, 4)
         Button1.Name = "Button1"
-        Button1.Size = New Size(98, 34)
+        Button1.Size = New Size(105, 20)
         Button1.TabIndex = 96
-        Button1.Text = "Button1"
+        Button1.Text = "config TrauPIXE det."
         Button1.UseVisualStyleBackColor = True
         Button1.Visible = False
         ' 
@@ -1253,7 +1282,7 @@ Partial Class Form_Traupixe_H5_2024
         Label_QFile.Location = New Point(840, 27)
         Label_QFile.Margin = New Padding(5, 0, 5, 0)
         Label_QFile.Name = "Label_QFile"
-        Label_QFile.Size = New Size(33, 12)
+        Label_QFile.Size = New Size(26, 11)
         Label_QFile.TabIndex = 97
         Label_QFile.Text = "Q-File"
         Label_QFile.Visible = False
@@ -1265,7 +1294,7 @@ Partial Class Form_Traupixe_H5_2024
         Label3.Location = New Point(12, 385)
         Label3.Margin = New Padding(5, 0, 5, 0)
         Label3.Name = "Label3"
-        Label3.Size = New Size(96, 15)
+        Label3.Size = New Size(78, 12)
         Label3.TabIndex = 98
         Label3.Text = "hdf5 selected file"
         ' 
@@ -1276,7 +1305,7 @@ Partial Class Form_Traupixe_H5_2024
         Label4.Location = New Point(15, 298)
         Label4.Margin = New Padding(5, 0, 5, 0)
         Label4.Name = "Label4"
-        Label4.Size = New Size(55, 15)
+        Label4.Size = New Size(44, 12)
         Label4.TabIndex = 99
         Label4.Text = "hdf5 files"
         ' 
@@ -1299,17 +1328,17 @@ Partial Class Form_Traupixe_H5_2024
         Label12.Location = New Point(12, 421)
         Label12.Margin = New Padding(5, 0, 5, 0)
         Label12.Name = "Label12"
-        Label12.Size = New Size(106, 15)
+        Label12.Size = New Size(87, 12)
         Label12.TabIndex = 101
         Label12.Text = "hdf5 data available"
         ' 
         ' Form_Traupixe_H5_2024
         ' 
-        AutoScaleDimensions = New SizeF(120.0F, 120.0F)
+        AutoScaleDimensions = New SizeF(96.0F, 96.0F)
         AutoScaleMode = AutoScaleMode.Dpi
         AutoScroll = True
         AutoSize = True
-        ClientSize = New Size(1225, 566)
+        ClientSize = New Size(1215, 548)
         Controls.Add(ComboBox_Type_Calc)
         Controls.Add(Label12)
         Controls.Add(TextBox_hdf5_grps)
@@ -1344,7 +1373,7 @@ Partial Class Form_Traupixe_H5_2024
         Controls.Add(trvFolders)
         Controls.Add(ComboBoxDrive)
         Controls.Add(MenuStrip1)
-        Font = New Font("Segoe UI", 6.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        Font = New Font("Segoe UI", 6.0F, FontStyle.Regular, GraphicsUnit.Point, 0)
         FormBorderStyle = FormBorderStyle.FixedSingle
         MainMenuStrip = MenuStrip1
         Margin = New Padding(5, 4, 5, 4)
@@ -1352,7 +1381,7 @@ Partial Class Form_Traupixe_H5_2024
         Name = "Form_Traupixe_H5_2024"
         RightToLeftLayout = True
         StartPosition = FormStartPosition.Manual
-        Text = "TrauPIXE 25.19 - C2RMF"
+        Text = "TrauPIXE 25.21 - C2RMF"
         MenuStrip1.ResumeLayout(False)
         MenuStrip1.PerformLayout()
         StatusStrip1.ResumeLayout(False)
@@ -1386,15 +1415,15 @@ Partial Class Form_Traupixe_H5_2024
         '  Me.Width = Screen.PrimaryScreen.Bounds.Width * 0.6
         Me.BringToFront()
         ToolTip1.SetToolTip(Text_Lst_Ox_Trc, "Set Z as oxyde only for 'S Sheets : S_Conc 100% & S_Conc ppm, '")
-        ToolTip1.SetToolTip(Pivot_det0, "Z of the PIVOT element, Single or multiple separate Z with ',' (e.g.: 26,20)" & vbCrLf & "Select the one with lower Total error (Quadratic sum of Fit & Pivot Error)")
-        ToolTip1.SetToolTip(Pivot_det1, "Z of the PIVOT element, Single or multiple separate Z with ',' (e.g.: 26,20)" & vbCrLf & "Select the one with lower Total error (Quadratic sum of Fit & Pivot Error)")
-        ToolTip1.SetToolTip(Pivot_det2, "Z of the PIVOT element, Single or multiple separate Z with ',' (e.g.: 26,20)" & vbCrLf & "Select the one with lower Total error (Quadratic sum of Fit & Pivot Error)")
-        ToolTip1.SetToolTip(Pivot_det3, "Z of the PIVOT element, Single or multiple separate Z with ',' (e.g.: 26,20)" & vbCrLf & "Select the one with lower Total error (Quadratic sum of Fit & Pivot Error)")
-        ToolTip1.SetToolTip(Pivot_det4, "Z of the PIVOT element, Single or multiple separate Z with ',' (e.g.: 26,20)" & vbCrLf & "Select the one with lower Total error (Quadratic sum of Fit & Pivot Error)")
-        ToolTip1.SetToolTip(Pivot_det6, "Z of the PIVOT element, Single or multiple separate Z with ',' (e.g.: 26,20)" & vbCrLf & "Select the one with lower Total error (Quadratic sum of Fit & Pivot Error)")
-        ToolTip1.SetToolTip(Pivot_det7, "Z of the PIVOT element, Single or multiple separate Z with ',' (e.g.: 26,20)" & vbCrLf & "Select the one with lower Total error (Quadratic sum of Fit & Pivot Error)")
-        ToolTip1.SetToolTip(Pivot_det8, "Z of the PIVOT element, Single or multiple separate Z with ',' (e.g.: 26,20)" & vbCrLf & "Select the one with lower Total error (Quadratic sum of Fit & Pivot Error)")
-        ToolTip1.SetToolTip(Pivot_det5, "Z of the PIVOT element, Single or multiple separate Z with ',' (e.g.: 26,20)" & vbCrLf & "Select the one with lower Total error (Quadratic sum of Fit & Pivot Error)")
+        ToolTip1.SetToolTip(Pivot_det0, "Z of the PIVOT element, Single or multiple separate Z with ',' (e.g.: 26,20)" & vbCrLf & "Select the one with lower uncertainty (Quadratic sum of Fit & Pivot Error)")
+        ToolTip1.SetToolTip(Pivot_det1, "Z of the PIVOT element, Single or multiple separate Z with ',' (e.g.: 26,20)" & vbCrLf & "Select the one with lower uncertainty (Quadratic sum of Fit & Pivot Error)")
+        ToolTip1.SetToolTip(Pivot_det2, "Z of the PIVOT element, Single or multiple separate Z with ',' (e.g.: 26,20)" & vbCrLf & "Select the one with lower uncertainty (Quadratic sum of Fit & Pivot Error)")
+        ToolTip1.SetToolTip(Pivot_det3, "Z of the PIVOT element, Single or multiple separate Z with ',' (e.g.: 26,20)" & vbCrLf & "Select the one with lower uncertainty (Quadratic sum of Fit & Pivot Error)")
+        ToolTip1.SetToolTip(Pivot_det4, "Z of the PIVOT element, Single or multiple separate Z with ',' (e.g.: 26,20)" & vbCrLf & "Select the one with lower uncertainty (Quadratic sum of Fit & Pivot Error)")
+        ToolTip1.SetToolTip(Pivot_det6, "Z of the PIVOT element, Single or multiple separate Z with ',' (e.g.: 26,20)" & vbCrLf & "Select the one with lower uncertainty (Quadratic sum of Fit & Pivot Error)")
+        ToolTip1.SetToolTip(Pivot_det7, "Z of the PIVOT element, Single or multiple separate Z with ',' (e.g.: 26,20)" & vbCrLf & "Select the one with lower uncertainty (Quadratic sum of Fit & Pivot Error)")
+        ToolTip1.SetToolTip(Pivot_det8, "Z of the PIVOT element, Single or multiple separate Z with ',' (e.g.: 26,20)" & vbCrLf & "Select the one with lower uncertainty (Quadratic sum of Fit & Pivot Error)")
+        ToolTip1.SetToolTip(Pivot_det5, "Z of the PIVOT element, Single or multiple separate Z with ',' (e.g.: 26,20)" & vbCrLf & "Select the one with lower uncertainty (Quadratic sum of Fit & Pivot Error)")
 
         ' ToolTip1.SetToolTip(txtAge, "Enter Your age")
         'ToolTip1.SetToolTip(btnSave, "Save record")
@@ -1421,7 +1450,6 @@ Partial Class Form_Traupixe_H5_2024
             ' ComboBoxDrive.Items.Add(disque)
         Next
 
-
         Try
 
             Me.Chemin_GupixWin = "c:\gupixwin\gupix"
@@ -1430,7 +1458,7 @@ Partial Class Form_Traupixe_H5_2024
             SplitText = Split(MyConfig, vbCrLf)
             Dim ind1 = 0
             Dim str_hdf5 As String
-            Dim h5_analyses_location As String
+            ' Dim h5_analyses_location As String
 
             Me.chb_skip_elem.Checked = False
             Me.chb_skip_elem.Visible = False
@@ -1558,6 +1586,7 @@ Partial Class Form_Traupixe_H5_2024
             Me.Check_det1.Text = "X1"
 
         End Try
+
         Me.CbDetMat.Text = Me.Ext_Mat
         Dim factor
         Dim screenwidth As Integer = My.Computer.Screen.Bounds.Width
@@ -1576,7 +1605,7 @@ Partial Class Form_Traupixe_H5_2024
         Me.Label12.Visible = False
         Me.TxtBox_HDF5_File.Visible = False
         Me.TextBox_hdf5_grps.Visible = False
-
+        SR.Close()
     End Sub
 
     Friend WithEvents LvFiles As System.Windows.Forms.ListView
@@ -1681,4 +1710,6 @@ Partial Class Form_Traupixe_H5_2024
     Friend WithEvents Label4 As Label
     Friend WithEvents TextBox_hdf5_grps As TextBox
     Friend WithEvents Label12 As Label
+    Friend WithEvents TtToolStripMenuItem As ToolStripSeparator
+    Friend WithEvents RenameDetectorsToolStripMenuItem As ToolStripMenuItem
 End Class
